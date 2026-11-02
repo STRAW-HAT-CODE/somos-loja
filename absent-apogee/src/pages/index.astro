@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
+import EventoFlotante from '../components/EventoFlotante.astro';
 import { capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sabores, sello } from '../data/somos-loja';
 const cinta = [...productos, ...productos];
 ---
@@ -129,6 +130,7 @@ const cinta = [...productos, ...productos];
 		<p>Somos Loja, Coopser. Productos de emprendedores y productores locales.</p>
 		<Pendiente dato="enlaces legales" />
 	</footer>
+	<EventoFlotante />
 </Layout>
 
 <script>
@@ -144,6 +146,8 @@ const cinta = [...productos, ...productos];
 	if (!reducir) {
 		document.documentElement.classList.add('animado');
 		const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.85 });
+		window.addEventListener('evento:abrir', () => lenis.stop());
+		window.addEventListener('evento:cerrar', () => lenis.start());
 		lenis.on('scroll', ScrollTrigger.update);
 		gsap.ticker.add((s) => lenis.raf(s * 1000));
 		gsap.ticker.lagSmoothing(0);
