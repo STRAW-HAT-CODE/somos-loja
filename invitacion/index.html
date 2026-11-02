@@ -27,6 +27,7 @@ html.intro, html.intro body { height: 100%; overflow: hidden; }
 
 .fondo { position: fixed; inset: 0; background: radial-gradient(ellipse 80% 62% at 50% 64%, var(--tinta-suave), var(--tinta) 74%); }
 #scene, .respaldo { position: fixed; inset: 0; width: 100%; height: 100%; }
+#scene { z-index: 12; }
 .respaldo { display: grid; place-items: center; padding: 16px; }
 .respaldo[hidden], #scene[hidden] { display: none; }
 .respaldo svg { width: min(100%, 720px); height: 100%; }
@@ -43,16 +44,8 @@ html.intro, html.intro body { height: 100%; overflow: hidden; }
 @media (hover: hover) and (pointer: fine) { .boton--linea:hover { background: rgb(27 47 107 / 0.08); } .boton--saltar:hover { background: #fffaf0; } }
 .boton[hidden] { display: none; }
 
-/* The envelope: same colors as the 3D one, split in layers so the card can come out from inside. */
-.sobre { position: fixed; left: 0; top: 0; width: var(--w); height: var(--h); pointer-events: none; visibility: hidden; transform-origin: 50% 50%; will-change: transform, opacity; }
-#sobreDorso { z-index: 20; background: #eadfc7; box-shadow: 0 16px 40px rgb(27 47 107 / 0.35); }
-#sobreFrente { z-index: 40; background: #efe4cc; clip-path: polygon(0 0, 50% 22%, 100% 0, 100% 100%, 0 100%); }
-#sobreSolapa { z-index: 45; perspective: 900px; }
-#sobreSolapa i { position: absolute; inset: 0 0 auto; height: 62%; background: var(--ocre); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 0; }
-#sobreSolapa b { position: absolute; left: 50%; top: 50%; width: 11%; aspect-ratio: 1; translate: -50% -50%; border-radius: 9999px; background: var(--cafe); }
-
 /* Flashes of the coffee world, behind the card. */
-.montaje { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+.montaje { position: fixed; inset: 0; z-index: 10; pointer-events: none; perspective: 900px; }
 .fragmento { position: absolute; margin: 0; width: var(--t); aspect-ratio: 4 / 5; overflow: hidden; opacity: 0; visibility: hidden; background: var(--tinta-suave); will-change: transform, opacity; }
 .fragmento img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .fragmento figcaption { position: absolute; left: 8px; bottom: 8px; padding: 0 8px; border-radius: 4px; background: rgb(27 47 107 / 0.86); color: var(--papel); font-size: 0.75rem; line-height: 1.25rem; }
@@ -129,9 +122,6 @@ html.js.intro .postal { opacity: 0; }
   <figure class="fragmento f5"><img src="recursos/olla-negra.webp" alt="" width="800" height="1067"></figure>
 </div>
 
-<div class="sobre" id="sobreDorso" aria-hidden="true"></div>
-<div class="sobre" id="sobreFrente" aria-hidden="true"></div>
-<div class="sobre" id="sobreSolapa" aria-hidden="true"><i id="solapa"><b></b></i></div>
 
 <button class="boton boton--saltar" id="saltar" type="button">Ver invitación</button>
 
@@ -193,10 +183,12 @@ void main() {
 <script type="x-shader/x-fragment" id="fragment-shader">
 precision mediump float;
 uniform vec3 uColor, uLight;
-uniform float uShadow;
+uniform float uShadow, uFunde, uPlano;
 varying vec3 vNormal;
 void main() {
-  if (uShadow > 0.5) { gl_FragColor = vec4(0.106, 0.184, 0.42, 0.34); return; }
+  if (uShadow > 0.5) { gl_FragColor = vec4(0.106, 0.184, 0.42, 0.34 * (1.0 - uFunde)); return; }
+  // Printed paper is shown flat, so it matches the HTML postcard it turns into.
+  if (uPlano > 0.5) { gl_FragColor = vec4(uColor, 1.0); return; }
   vec3 n = normalize(vNormal);
   float sun = max(dot(n, uLight), 0.0);
   float sky = 0.5 + 0.5 * n.y;
@@ -204,7 +196,8 @@ void main() {
   vec3 color = uColor * (ambient + vec3(1.0, 0.92, 0.76) * sun * 0.56);
   // Faint print grain, so flat faces read as paper rather than plastic.
   float grain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
-  gl_FragColor = vec4(color + (grain - 0.5) * 0.016, 1.0);
+  // The stage melts into the night-blue background when the camera is close to the letter.
+  gl_FragColor = vec4(mix(color + (grain - 0.5) * 0.016, vec3(0.106, 0.184, 0.42), uFunde), 1.0);
 }
 </script>
 
@@ -231,7 +224,7 @@ function createMiniature(canvas, { onLost }) {
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
   gl.useProgram(program);
   const uniform = {};
-  for (const name of ['uViewProj', 'uRigid', 'uScale', 'uLight', 'uShadow', 'uColor']) uniform[name] = gl.getUniformLocation(program, name);
+  for (const name of ['uViewProj', 'uRigid', 'uScale', 'uLight', 'uShadow', 'uColor', 'uFunde', 'uPlano']) uniform[name] = gl.getUniformLocation(program, name);
 
   // Colors are the design tokens, or mixes of them for skin tone.
   const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
@@ -286,6 +279,11 @@ function createMiniature(canvas, { onLost }) {
       const ab = mid(v[a], v[b]), bc = mid(v[b], v[c]), ca = mid(v[c], v[a]);
       tri(v[a], ab, ca); tri(v[b], bc, ab); tri(v[c], ca, bc); tri(ab, bc, ca);
     }
+  });
+  const TRIANGULO = primitive(() => {
+    const a = (z) => [-0.5, 0.5, z], b = (z) => [0.5, 0.5, z], c = (z) => [0, -0.5, z];
+    tri(a(0.5), b(0.5), c(0.5)); tri(a(-0.5), b(-0.5), c(-0.5));
+    quad(a(-0.5), b(-0.5), b(0.5), a(0.5)); quad(b(-0.5), c(-0.5), c(0.5), b(0.5)); quad(c(-0.5), a(-0.5), a(0.5), c(0.5));
   });
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
@@ -432,6 +430,7 @@ function createMiniature(canvas, { onLost }) {
     at(CYL, SKIN, 0, 0, 0, 0.1, 0.12, 0.1);
     move(0, 0.3, 0);
     rotY(look);
+    rotX(pose.nod);
     at(BALL, SKIN, 0, 0, 0, 0.34, 0.33, 0.33);
     for (const side of [-1, 1]) {
       at(BALL, TINTA, side * 0.125, 0.05, 0.3, 0.042);
@@ -478,7 +477,7 @@ function createMiniature(canvas, { onLost }) {
     pop();
     drawHead(pose.look);
     // Near arm carries the envelope and offers it; the other one waves.
-    drawArm(-1, -pose.gesture * 1.28 - swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.08, -pose.gesture * 0.34 - 0.14, (armAngle) => {
+    drawArm(-1, -pose.gesture * 1.72 - swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.98, -pose.gesture * 0.12 - 0.14, (armAngle) => {
       push();
       move(0, -0.36, 0.03);
       rotX(-armAngle);
@@ -487,38 +486,37 @@ function createMiniature(canvas, { onLost }) {
       rotY(-pose.heading);
       rotZ(0.08);
       enManoMatriz.set(top);
-      if (pose.handoff < 1) drawEnvelope(1);
       pop();
     });
-    drawArm(1, swing * 0.7 * (1 - pose.gesture), pose.gesture * 2.36 + 0.05, -pose.gesture * 0.5 - 0.14);
+    drawArm(1, swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.4 + 0.05, -pose.gesture * 0.3 - 0.14);
     pop();
     pop();
   }
 
-  // --- Timeline. t is seconds along one delivery take.
-  const WALK = 2.5, TURN = 0.45, OFFER = 0.75, END = WALK + TURN + OFFER;
+  // --- Courier timeline: walks, stops and looks at the visitor, raises the letter.
+  const WALK = 1.2, TURN = 0.3, RAISE = 0.5, END = WALK + TURN + RAISE;
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
   const smooth = (v) => { const x = clamp01(v); return x * x * (3 - 2 * x); };
   const mix = (a, b, v) => a + (b - a) * v;
   const START_X = -2.36, STOP_X = 0.5, PATH_Z = 1.14;
-  const pose = { x: 0, z: PATH_Z, heading: 0, phase: 0, stride: 0, gesture: 0, look: 0, handoff: 0 };
-  function poseAt(time, handoff) {
+  const pose = { x: 0, z: PATH_Z, heading: 0, phase: 0, stride: 0, gesture: 0, look: 0, nod: 0, handoff: 1 };
+  function poseAt(time) {
     const walked = clamp01(time / WALK);
     const eased = walked * walked * (3 - 2 * walked) * 0.35 + walked * 0.65;
     pose.x = mix(START_X, STOP_X, eased);
     pose.phase = ((pose.x - START_X) * Math.PI * 2) / 1.1;
-    pose.stride = Math.min(smooth(time / 0.3), smooth((WALK - time) / 0.3));
-    const facing = time < WALK ? mix(0.7, Math.PI / 2, smooth(time / 0.3)) : mix(Math.PI / 2, 0, smooth((time - WALK) / TURN));
-    pose.heading = facing;
-    pose.look = time < WALK ? -0.5 * smooth(time / 0.3) : -0.5 * (1 - smooth((time - WALK) / TURN));
-    pose.gesture = smooth((time - WALK - TURN * 0.7) / OFFER);
-    pose.handoff = handoff;
+    pose.stride = Math.min(smooth(time / 0.2), smooth((WALK - time) / 0.2));
+    pose.heading = time < WALK ? mix(0.7, Math.PI / 2, smooth(time / 0.2)) : mix(Math.PI / 2, 0, smooth((time - WALK) / TURN));
+    pose.gesture = smooth((time - WALK - TURN * 0.6) / RAISE);
+    // Head first: turns to the visitor, glances at the letter while lifting it, then back.
+    const mira = smooth((time - WALK * 0.85) / TURN);
+    pose.look = mix(-0.5 * smooth(time / 0.2), 0, mira) - Math.sin(pose.gesture * Math.PI) * 0.42;
+    pose.nod = -Math.sin(pose.gesture * Math.PI) * 0.16;
   }
 
-
   const LIGHT = (() => { const l = Math.hypot(-0.55, 1, 0.62); return [-0.55 / l, 1 / l, 0.62 / l]; })();
-  const YAW = -0.42;
   let width = 1, height = 1, frames = 0, lost = false, vista = null;
+
   function perspective(fovY, aspect, near, far) {
     const f = 1 / Math.tan(fovY / 2);
     return [f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) / (near - far), -1, 0, 0, (2 * far * near) / (near - far), 0];
@@ -539,23 +537,111 @@ function createMiniature(canvas, { onLost }) {
     return out;
   }
 
-  // The stage is drawn only when the controller asks: nothing here runs on its own.
-  function render(time, handoff, acercar) {
+  // Beans that jump out of the letter when it opens, toward the camera.
+  const GRANOS = Array.from({ length: 34 }, (_, i) => {
+    const r = (n) => { const v = Math.sin((i + 1) * n) * 43758.5453; return v - Math.floor(v); };
+    return { vx: (r(12.9) - 0.5) * 3.4, vy: 0.5 + r(78.2) * 2.2, vz: 0.4 + r(37.7) * 2.2, giro: 4 + r(5.3) * 9, tam: 0.8 + r(9.1) * 0.7, fruto: i % 6 === 0 };
+  });
+  const DORSO = mixColor(PAPEL, CAFE, 0.18);
+  const E = 1.25, SOBRE_A = 0.62 * E, SOBRE_H = 0.42 * E;
+  const manoMezclada = new Float32Array(16);
+
+  function plano(activo) { gl.uniform1f(uniform.uPlano, activo ? 1 : 0); }
+
+  // The letter: a real 3D object with its own flap, front and card.
+  function dibujarCarta(p, ajuste, tarjeta) {
+    for (let i = 0; i < 16; i++) manoMezclada[i] = enManoMatriz[i] + ([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1][i] - enManoMatriz[i]) * (i < 12 ? ajuste : 0);
+    manoMezclada[12] += 0.08 * (1 - ajuste);
+    manoMezclada[14] += 0.1 + ajuste * 0.5;
+    push();
+    top.set(manoMezclada);
+    plano(true);
+    const cae = p.crece;
+    // Back and front drop away once the card has come out.
+    if (cae < 0.98) {
+      at(BOX, DORSO, 0, -cae * 1.6, -0.016 * E, SOBRE_A, SOBRE_H, 0.01);
+      at(BOX, PAPEL, 0, -0.07 * E - cae * 1.6, 0.014 * E, SOBRE_A, 0.28 * E, 0.012);
+      // Diagonal folds of the front
+      for (const lado of [-1, 1]) {
+        push(); move(lado * 0.155 * E, -0.075 * E - cae * 1.6, 0.022 * E); rotZ(lado * 0.56); draw(BOX, DORSO, 0.36 * E, 0.006, 0.004); pop();
+      }
+      push();
+      // Once past the top, the flap stays behind the card that comes out.
+      move(0, SOBRE_H / 2 - cae * 1.6, p.abre > 0.5 ? -0.03 * E : 0.024 * E);
+      rotX(-p.abre * Math.PI * 0.94);
+      push(); move(0, -0.13 * E, 0); draw(TRIANGULO, mixColor(OCRE, CAFE, Math.sin(p.abre * Math.PI) * 0.3), SOBRE_A, 0.26 * E, 0.008); pop();
+      at(BALL, CAFE, 0, -0.17 * E, 0.012, 0.042 * E, 0.042 * E, 0.016);
+      pop();
+    }
+    // The card: same size and place as the HTML postcard at the end of its growth.
+    if (p.abre > 0.3) {
+      const w = mix(0.56 * E, tarjeta.w, p.crece), h = mix(0.25 * E, tarjeta.h, p.crece);
+      const x = mix(0, tarjeta.x, p.crece), y = mix(-0.07 * E + p.sale * 0.32 * E, tarjeta.y, p.crece);
+      const z = mix(0.002, 0.05, p.crece);
+      at(BOX, PAPEL, x, y, z, w, h, 0.006);
+      // Printed details that give way to the real text.
+      const u = w / (0.56 * E);
+      if (p.crece < 1) {
+        at(BOX, TINTA, x - w * 0.14, y + h * 0.26, z + 0.005, w * 0.5, Math.max(0.018, h * 0.08), 0.002);
+        at(BOX, TINTA, x - w * 0.2, y + h * 0.12, z + 0.005, w * 0.38, Math.max(0.018, h * 0.08), 0.002);
+        at(BOX, SUAVE, x - w * 0.12, y - h * 0.08, z + 0.005, w * 0.54, Math.max(0.008, h * 0.025), 0.002);
+        at(BOX, SUAVE, x - w * 0.16, y - h * 0.16, z + 0.005, w * 0.46, Math.max(0.008, h * 0.025), 0.002);
+        at(BOX, TINTA, x + w * 0.37, y + h * 0.26, z + 0.005, 0.1 * u, 0.13 * u, 0.002);
+        at(BOX, OCRE, x + w * 0.37, y + h * 0.25, z + 0.008, 0.05 * u, 0.05 * u, 0.002);
+      }
+    }
+    plano(false);
+    pop();
+  }
+
+  function dibujarGranos(p, c) {
+    if (p.salto <= 0 || p.salto > 1.4) return;
+    const t = p.salto;
+    for (const g of GRANOS) {
+      push();
+      move(c[0] + g.vx * t, c[1] + 0.1 + g.vy * t - 2.2 * t * t, c[2] + 0.05 + g.vz * t);
+      rotX(t * g.giro); rotZ(t * g.giro * 0.7);
+      draw(BALL, g.fruto ? OCRE : CAFE, 0.05 * g.tam, 0.034 * g.tam, 0.034 * g.tam);
+      pop();
+    }
+  }
+
+  function dibujarHumo(tiempo) {
+    for (let i = 0; i < 5; i++) {
+      const f = (tiempo * 0.45 + i / 5) % 1;
+      at(BALL, mixColor(PAPEL, HILL, f * 0.3), 1.96 + Math.sin(f * 5 + i) * 0.1 * f, 2.95 + f * 0.9, -1.35, 0.05 + f * 0.1);
+    }
+  }
+
+  // Everything comes from the controller's values: this function has no clock of its own.
+  function render(p) {
     if (lost) return;
-    poseAt(time, handoff);
+    poseAt(p.camino);
     const aspect = width / height;
-    const close = smooth((time - WALK * 0.7) / (END - WALK * 0.7));
     const vertical = aspect < 1.05;
+    const close = smooth((p.camino - WALK * 0.7) / (END - WALK * 0.7));
     const base = Math.max(12.2, (vertical ? 9.4 : 13.8) / aspect);
-    const distance = base * mix(1, vertical ? 0.62 : 0.74, close) * mix(1.07, 1, acercar);
-    const target = [mix(0, 0.24, close), mix(vertical ? 1.5 : 1.3, 1.32, close), mix(0, 0.8, close)];
-    const pitch = 0.36;
-    const yaw = YAW + (1 - acercar) * 0.06;
-    const eye = [
-      target[0] + Math.sin(yaw) * Math.cos(pitch) * distance,
-      target[1] + Math.sin(pitch) * distance,
-      target[2] + Math.cos(yaw) * Math.cos(pitch) * distance,
-    ];
+    // The camera swings around the stage as the courier arrives.
+    const yaw = mix(-0.95, -0.34, smooth(p.camino / END));
+    const pitch = mix(0.46, 0.3, smooth(p.camino / END));
+    const distance = base * mix(1, vertical ? 0.6 : 0.68, close);
+    const t0 = [mix(0, 0.3, close), mix(vertical ? 1.5 : 1.3, 1.5, close), mix(0, 0.8, close)];
+    const e0 = [t0[0] + Math.sin(yaw) * Math.cos(pitch) * distance, t0[1] + Math.sin(pitch) * distance, t0[2] + Math.cos(yaw) * Math.cos(pitch) * distance];
+
+    // First pass of the courier only to learn where the letter is this frame.
+    gl.colorMask(false, false, false, false);
+    gl.depthMask(false);
+    drawCourier(pose);
+    gl.colorMask(true, true, true, true);
+    gl.depthMask(true);
+    const c = [enManoMatriz[12], enManoMatriz[13], enManoMatriz[14]];
+
+    // Close-up: straight in front of the letter, near enough to fill the phone or the screen.
+    const cerca = Math.max(1.79, 1.82 / aspect);
+    const z = p.zoom;
+    const eye = [mix(e0[0], c[0], z), mix(e0[1], c[1], z), mix(e0[2], c[2] + cerca, z)];
+    const target = [mix(t0[0], c[0], z), mix(t0[1], c[1], z), mix(t0[2], c[2], z)];
+
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0, 0, 0, 0);
     gl.clearStencil(0);
@@ -564,36 +650,43 @@ function createMiniature(canvas, { onLost }) {
     gl.disable(gl.BLEND);
     gl.depthMask(true);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-    vista = multiply(perspective(0.52, aspect, 1, 60), lookAt(eye, target));
+    vista = multiply(perspective(0.52, aspect, 0.1, 60), lookAt(eye, target));
     gl.uniformMatrix4fv(uniform.uViewProj, false, vista);
     gl.uniform3fv(uniform.uLight, LIGHT);
     gl.uniform1f(uniform.uShadow, 0);
-    drawPlinth();
-    drawHills();
-    drawShop();
-    drawCourier(pose);
-    // Planar shadows: stencil limits them to the plinth and prevents double-darkening.
-    gl.uniform1f(uniform.uShadow, 1);
-    gl.disable(gl.CULL_FACE);
-    gl.enable(gl.BLEND);
-    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.depthMask(false);
-    gl.enable(gl.STENCIL_TEST);
-    gl.stencilFunc(gl.EQUAL, 1, 255);
-    gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
-    drawHills();
-    drawShop();
-    drawCourier(pose);
-    gl.disable(gl.STENCIL_TEST);
-    frames++;
-  }
+    plano(false);
 
-  function aPantalla(x, y, z) {
-    const m = vista, w = m[3] * x + m[7] * y + m[11] * z + m[15];
-    return [
-      ((m[0] * x + m[4] * y + m[8] * z + m[12]) / w * 0.5 + 0.5) * width,
-      (1 - ((m[1] * x + m[5] * y + m[9] * z + m[13]) / w * 0.5 + 0.5)) * height,
-    ];
+    if (p.funde < 1) {
+      gl.uniform1f(uniform.uFunde, p.funde);
+      drawPlinth();
+      drawHills();
+      drawShop();
+      dibujarHumo(p.reloj);
+      drawCourier(pose);
+      gl.uniform1f(uniform.uShadow, 1);
+      gl.disable(gl.CULL_FACE);
+      gl.enable(gl.BLEND);
+      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.depthMask(false);
+      gl.enable(gl.STENCIL_TEST);
+      gl.stencilFunc(gl.EQUAL, 1, 255);
+      gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+      drawHills();
+      drawShop();
+      drawCourier(pose);
+      gl.disable(gl.STENCIL_TEST);
+      gl.disable(gl.BLEND);
+      gl.enable(gl.CULL_FACE);
+      gl.depthMask(true);
+      gl.uniform1f(uniform.uShadow, 0);
+    }
+    gl.uniform1f(uniform.uFunde, 0);
+    // Card size in world units, so that on screen it lands exactly on the HTML rectangle.
+    const porPixel = (2 * cerca * Math.tan(0.26)) / height;
+    const tarjeta = { w: p.rect.w * porPixel, h: p.rect.h * porPixel, x: (p.rect.cx - width / 2) * porPixel, y: (height / 2 - p.rect.cy) * porPixel };
+    dibujarCarta(p, z, tarjeta);
+    dibujarGranos(p, c);
+    frames++;
   }
 
   function resize() {
@@ -611,141 +704,90 @@ function createMiniature(canvas, { onLost }) {
     render,
     resize,
     frames: () => frames,
-    // Screen position, width and angle of the envelope in the courier's hand.
-    sobre() {
-      const m = enManoMatriz, cx = m[12], cy = m[13], cz = m[14], r = 0.31;
-      const c = aPantalla(cx, cy, cz);
-      const b = aPantalla(cx + m[0] * r, cy + m[1] * r, cz + m[2] * r);
-      return { x: c[0], y: c[1], ancho: Math.hypot(b[0] - c[0], b[1] - c[1]) * 2, angulo: Math.atan2(b[1] - c[1], b[0] - c[0]) };
-    },
     stop() { lost = true; },
   };
 }
-
 </script>
 <script id="app">
 (function () {
   const raiz = document.documentElement;
   const $ = (id) => document.getElementById(id);
   const canvas = $('scene'), respaldo = $('respaldo'), postal = $('postal'), saltar = $('saltar'), repetir = $('repetir'), frase = $('frase');
-  const dorso = $('sobreDorso'), frente = $('sobreFrente'), solapaCapa = $('sobreSolapa'), solapa = $('solapa');
-  const partesSobre = [dorso, frente, solapaCapa];
   const fragmentos = [...document.querySelectorAll('.fragmento')];
   const reducido = matchMedia('(prefers-reduced-motion: reduce)');
-  const forzarRespaldo = new URLSearchParams(location.search).get('fallback') === '1';
+  const parametros = new URLSearchParams(location.search);
+  const forzarRespaldo = parametros.get('fallback') === '1';
+  const lento = Math.max(1, Number(parametros.get('lento')) || 1); // Only for reviewing frames.
 
   document.querySelectorAll('[data-courier-art]').forEach((g) => { g.innerHTML = '\n    <ellipse cx="96" cy="262" rx="82" ry="14" fill="#1b2f6b" fill-opacity=".22"/>\n    <path d="M62 180h28v70H62zM102 180h28v70h-28z" fill="#3c4c80"/>\n    <path d="M56 244h36v16H56zM100 244h36v16h-36z" fill="#5a331c"/>\n    <path d="M58 96h76l10 92H48z" fill="#1b2f6b"/>\n    <path d="M50 158h92v9H50z" fill="#e0a93b"/>\n    <path d="m124 96 7 7-74 90-7-7z" fill="#5a331c"/>\n    <path d="M18 154h44v44H18z" fill="#5a331c"/><path d="M16 152h48v14H16z" fill="#e0a93b"/>\n    <path d="M134 100l12-6 38-34 11 12-41 42z" fill="#1b2f6b"/><circle cx="192" cy="60" r="11" fill="#e0a93b"/>\n    <path d="M58 100 46 94 14 128l12 12 34-26z" fill="#1b2f6b"/>\n    <g transform="rotate(-6 -6 118)"><path d="M-44 96h52v36h-52z" fill="#f6eedd" stroke="#5a331c" stroke-width="2"/><path d="M-44 96l26 20 26-20z" fill="#e0a93b"/></g>\n    <circle cx="96" cy="58" r="40" fill="#e0a93b"/><circle cx="96" cy="58" r="40" fill="#5a331c" fill-opacity=".18"/>\n    <circle cx="82" cy="58" r="4.5" fill="#1b2f6b"/><circle cx="110" cy="58" r="4.5" fill="#1b2f6b"/>\n    <path d="M76 74c8-6 14-6 20-1 6-5 12-5 20 1-10 5-16 4-20 1-4 3-10 4-20-1z" fill="#5a331c"/>\n    <path d="M58 24c0-20 76-20 76 0v14H58z" fill="#1b2f6b"/><path d="M58 30h76v8H58z" fill="#e0a93b"/>\n    <path d="M52 38h88l10 10H42z" fill="#5a331c"/><circle cx="96" cy="16" r="6" fill="#e0a93b"/>'; });
 
-  // A fragment only appears if its image really loaded; a slow or broken one is skipped.
-  fragmentos.forEach((f) => {
-    const img = f.querySelector('img');
-    img.addEventListener('error', () => f.remove());
-  });
+  fragmentos.forEach((f) => f.querySelector('img').addEventListener('error', () => f.remove()));
 
   // --- Timeline, in seconds. This is the one clock: every visual is a function of T.
-  const ENTREGA = 1.2, APERTURA = 5.1, SALE = 6.1, MONTAJE = 7.0, EXPANDE = 9.6, FIN = 10.4;
-  const SOLAPA = 5.7, CALMA = 9.3;
-  const INICIOS = [7.15, 7.6, 8.05, 8.5, 8.95];
+  const MANO = 2.0, ZOOM = 2.2, ZOOM_FIN = 3.2, ABRE = 3.05, ABRE_FIN = 3.45, SALTO = 3.2, SALE = 3.4, SALE_FIN = 3.9;
+  const CRECE = 4.55, CRECE_FIN = 5.3, FIN = 5.6, SIN_RESPALDO = 4.6;
+  const INICIOS = [3.65, 3.8, 3.95, 4.1, 4.25];
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const suave = (v) => { const x = clamp(v); return x * x * (3 - 2 * x); };
+  const fuerte = (v) => { const x = clamp(v); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
   const salida = (v) => 1 - Math.pow(1 - clamp(v), 3);
-  const mezcla = (a, b, t) => a + (b - a) * t;
 
   let escena = null, T = 0, corrida = 0, raf = 0, ultimo = 0, activa = false, guardia = 0;
-  let inicioSobre = null, medida = null, estado = '';
+  let rect = null, centros = [], estado = '';
 
   function ponerEstado(e) { if (e !== estado) { estado = e; raiz.dataset.estado = e; } }
-  function etapa(t) { return t < ENTREGA ? 'llegada' : t < APERTURA ? 'entrega' : t < MONTAJE ? 'apertura' : t < FIN ? 'montaje' : 'invitacion'; }
+  function etapa(t) { return t < 1.2 ? 'llegada' : t < ZOOM ? 'entrega' : t < SALE ? 'apertura' : t < FIN ? 'montaje' : 'invitacion'; }
 
   function medir() {
     postal.style.transform = 'none';
-    postal.style.clipPath = 'none';
     const r = postal.getBoundingClientRect();
-    const w = Math.min(innerWidth * 0.78, 360);
-    medida = { x: r.left, y: r.top, ancho: r.width, alto: r.height, w, h: w / 1.48 };
-    for (const p of partesSobre) { p.style.setProperty('--w', w + 'px'); p.style.setProperty('--h', medida.h + 'px'); }
+    rect = { w: r.width, h: r.height, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+    centros = fragmentos.map((f) => { f.style.transform = 'none'; const q = f.getBoundingClientRect(); return [innerWidth / 2 - (q.left + q.width / 2), innerHeight / 2 - (q.top + q.height / 2)]; });
   }
 
-  function sobreEn(x, y, escala, angulo, opacidad) {
-    const t = `translate(${x - medida.w / 2}px, ${y - medida.h / 2}px) rotate(${angulo}rad) scale(${escala})`;
-    for (const p of partesSobre) { p.style.visibility = 'visible'; p.style.transform = t; p.style.opacity = opacidad; }
-  }
-
-  function postalEn(cx, arriba, escala, recorte) {
-    const dx = cx - (escala * medida.ancho) / 2 - medida.x, dy = arriba - medida.y;
-    postal.style.transform = `translate(${dx}px, ${dy}px) scale(${escala})`;
-    postal.style.clipPath = recorte > 0 ? `inset(0 0 ${recorte * 100}% 0)` : 'none';
-  }
-
-  // Draws the moment T. Pure with respect to the clock, so skipping can never leave a half state.
+  // Draws the moment T. A pure function of the clock, so skipping can never leave a half state.
   function pintar(t) {
     ponerEstado(etapa(t));
-    const alto = innerHeight, ancho = innerWidth;
-
-    if (escena && t < MONTAJE) {
-      escena.render(Math.min(Math.max(0, t - ENTREGA), escena.DURACION), t >= APERTURA ? 1 : 0, suave(t / ENTREGA));
+    if (escena && t < FIN) {
+      escena.render({
+        reloj: t,
+        camino: Math.min(t, MANO),
+        zoom: fuerte((t - ZOOM) / (ZOOM_FIN - ZOOM)),
+        funde: suave((t - (ZOOM + 0.3)) / 0.5),
+        abre: fuerte((t - ABRE) / (ABRE_FIN - ABRE)),
+        sale: salida((t - SALE) / (SALE_FIN - SALE)),
+        crece: fuerte((t - CRECE) / (CRECE_FIN - CRECE)),
+        salto: Math.max(0, (t - SALTO) * 0.8),
+        rect,
+      });
       raiz.dataset.frames = escena.frames();
     }
-    const visual = escena ? canvas : respaldo;
-    visual.style.opacity = mezcla(1, 0.14, suave((t - APERTURA) / (MONTAJE - APERTURA)));
-    frase.style.opacity = 1 - suave((t - (APERTURA - 0.5)) / 0.5);
-
-    if (t < APERTURA) {
-      inicioSobre = null;
-      for (const p of partesSobre) p.style.visibility = 'hidden';
-      postal.style.opacity = 0;
-    } else {
-      if (!inicioSobre) {
-        // The instant the 3D envelope disappears, the HTML one takes its exact place.
-        inicioSobre = escena ? escena.sobre() : { x: ancho / 2, y: alto * 0.55, ancho: medida.w * 0.4, angulo: 0 };
-      }
-      const centroX = ancho / 2, centroY = alto * 0.46;
-      const llega = salida((t - APERTURA) / 0.6);
-      const baja = suave((t - MONTAJE) / 0.5);
-      const x = mezcla(inicioSobre.x, centroX, llega), y = mezcla(inicioSobre.y, centroY, llega) + baja * 80;
-      const escala = mezcla(inicioSobre.ancho / medida.w, 1, llega);
-      if (t < MONTAJE + 0.5) sobreEn(x, y, escala, mezcla(inicioSobre.angulo, 0, llega), 1 - baja);
-      else for (const p of partesSobre) p.style.visibility = 'hidden';
-
-      const abre = suave((t - SOLAPA) / 0.45);
-      solapa.style.transform = `rotateX(${abre * -176}deg)`;
-      solapaCapa.style.zIndex = abre > 0.5 ? 25 : 45;
-
-      // The card: same HTML element all the way from inside the envelope to its final place.
-      const s0 = (medida.w * 0.88) / medida.ancho;
-      const sMedio = Math.min(0.62, (alto * 0.62) / medida.alto, (ancho * 0.66) / medida.ancho);
-      const sale = suave((t - SALE) / 0.8);
-      const arribaSobre = centroY - medida.h / 2;
-      const crece = suave((t - MONTAJE) / 0.6), final = suave((t - EXPANDE) / (FIN - EXPANDE));
-      const arribaDentro = mezcla(arribaSobre + 6, arribaSobre - medida.h * 0.62, sale);
-      const arribaMedio = (alto - sMedio * medida.alto) / 2;
-      const s = final > 0 ? mezcla(sMedio, 1, final) : mezcla(s0, sMedio, crece);
-      const arriba = final > 0 ? mezcla(arribaMedio, medida.y, final) : mezcla(arribaDentro, arribaMedio, crece);
-      const cx = mezcla(centroX, medida.x + medida.ancho / 2, final);
-      const base = arribaSobre + medida.h - 2;
-      const visible = base - arribaDentro;
-      const recorte = clamp(1 - visible / (s0 * medida.alto)) * (1 - crece);
-      postal.style.opacity = t >= SALE - 0.05 ? 1 : 0;
-      postalEn(cx, arriba, s, recorte);
+    if (!escena) {
+      respaldo.style.opacity = 1 - suave((t - 4.9) / 0.5);
     }
+    frase.style.opacity = 1 - suave((t - 1.4) / 0.4);
+
+    // The card in the scene is already in place: the real text simply appears on it.
+    const aparece = suave((t - (CRECE_FIN - 0.1)) / 0.25);
+    postal.style.opacity = aparece;
+    if (!escena) postal.style.transform = `translateY(${(1 - aparece) * 16}px)`;
 
     fragmentos.forEach((f, i) => {
       const img = f.querySelector('img');
       const entra = salida((t - INICIOS[i]) / 0.55);
-      const sale = suave((t - CALMA) / 0.55);
-      const listo = img && img.complete && img.naturalWidth > 0;
-      if (!listo || entra <= 0 || sale >= 1) { f.style.visibility = 'hidden'; return; }
+      const sale = suave((t - (CRECE + 0.25)) / 0.45);
+      if (!img.complete || !img.naturalWidth || entra <= 0 || sale >= 1) { f.style.visibility = 'hidden'; return; }
       f.style.visibility = 'visible';
       f.style.opacity = entra * (1 - sale);
-      f.style.transform = `translateY(${(1 - entra) * 24}px)`;
-      img.style.transform = `scale(${mezcla(1.12, 1, clamp((t - INICIOS[i]) / 2.4))})`;
+      const lado = i % 2 ? 1 : -1;
+      f.style.transform = `translate3d(${centros[i][0] * (1 - entra)}px, ${centros[i][1] * (1 - entra)}px, ${(1 - entra) * -420}px) rotateY(${(1 - entra) * lado * 48}deg) rotateZ(${lado * 2 + (1 - entra) * lado * 10}deg)`;
     });
   }
 
   function bucle(ahora) {
     raf = 0;
     if (!activa) return;
-    T += Math.min(ahora - ultimo, 100) / 1000;
+    T += Math.min(ahora - ultimo, 100) / 1000 / lento;
     ultimo = ahora;
     if (T >= FIN) { irA('invitacion'); return; }
     pintar(T);
@@ -766,14 +808,12 @@ function createMiniature(canvas, { onLost }) {
       T = FIN;
       ponerEstado('invitacion');
       raiz.classList.remove('intro');
-      for (const p of partesSobre) p.style.visibility = 'hidden';
       for (const f of fragmentos) f.style.visibility = 'hidden';
       postal.style.opacity = 1;
       postal.style.transform = 'none';
-      postal.style.clipPath = 'none';
       frase.style.opacity = 0;
-      (escena ? canvas : respaldo).style.opacity = 0.14;
-      // Hiding a focused button would drop keyboard users back to the top of the page.
+      canvas.style.visibility = 'hidden';
+      respaldo.style.opacity = 0;
       const moverFoco = conFoco || document.activeElement === saltar;
       saltar.hidden = true;
       repetir.hidden = reducido.matches;
@@ -786,15 +826,16 @@ function createMiniature(canvas, { onLost }) {
     raiz.classList.add('intro');
     saltar.hidden = false;
     repetir.hidden = true;
+    canvas.style.visibility = 'visible';
+    respaldo.style.opacity = 1;
     medir();
-    T = escena ? 0 : APERTURA - 0.2;
-    inicioSobre = null;
+    T = escena ? 0 : SIN_RESPALDO;
     pintar(T);
     activa = true;
     ultimo = performance.now();
     raf = requestAnimationFrame(bucle);
     // Whatever happens, nobody waits for the invitation.
-    guardia = setTimeout(() => { if (!document.hidden) irA('invitacion'); }, 20000);
+    guardia = setTimeout(() => { if (!document.hidden) irA('invitacion'); }, 12000 * lento);
   }
 
   function usarRespaldo(motivo) {
@@ -802,13 +843,10 @@ function createMiniature(canvas, { onLost }) {
     escena = null;
     canvas.hidden = true;
     respaldo.hidden = false;
-    if (estado === 'invitacion') respaldo.style.opacity = 0.14;
+    if (estado === 'invitacion') respaldo.style.opacity = 0;
     raiz.dataset.renderer = 'respaldo';
     raiz.dataset.motivo = motivo;
-    if (activa) {
-      inicioSobre = null;
-      T = Math.max(T, APERTURA - 0.2);
-    }
+    if (activa) T = Math.max(T, SIN_RESPALDO);
   }
 
   saltar.addEventListener('click', () => irA('invitacion', true));
@@ -823,14 +861,13 @@ function createMiniature(canvas, { onLost }) {
     } else if (activa && !raf) {
       ultimo = performance.now();
       raf = requestAnimationFrame(bucle);
-      guardia = setTimeout(() => irA('invitacion'), 20000);
+      guardia = setTimeout(() => irA('invitacion'), 12000 * lento);
     }
   });
 
   new ResizeObserver(() => {
     if (escena) escena.resize();
     if (activa) { medir(); pintar(T); }
-    else if (escena) escena.render(escena.DURACION, 1, 1);
   }).observe(document.documentElement);
 
   // --- Start
@@ -840,11 +877,8 @@ function createMiniature(canvas, { onLost }) {
     try { escena = createMiniature(canvas, { onLost: () => usarRespaldo('contexto-perdido') }); } catch (e) { escena = null; }
     if (!escena) usarRespaldo('sin-webgl');
   }
-  if (reducido.matches) {
-    medir();
-    if (escena) escena.render(escena.DURACION, 0, 1);
-    irA('invitacion');
-  } else irA('llegada');
+  if (reducido.matches) irA('invitacion');
+  else irA('llegada');
 })();
 </script>
 </body>
