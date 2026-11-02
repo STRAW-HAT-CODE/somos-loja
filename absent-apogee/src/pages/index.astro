@@ -100,13 +100,13 @@ import { cifras, enlaces, evento, final, fondo, logo, momentos, otrasCategorias,
 	if (reducir) document.querySelector<HTMLVideoElement>('.portada__video')?.pause();
 
 	if (!reducir) {
-		const lenis = new Lenis({ lerp: 0.28 });
+		const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.8 });
 		lenis.on('scroll', ScrollTrigger.update);
 		gsap.ticker.add((s) => lenis.raf(s * 1000));
 		gsap.ticker.lagSmoothing(0);
 
 		if (portada && canvasGranos && !ahorro) {
-			const arrancar = () => import('../scripts/granos-flotando.js').then((m) => m.iniciarGranos(canvasGranos, portada)).catch(() => canvasGranos.remove());
+			const arrancar = () => import('../scripts/granos-cincuenta.js').then((m) => m.iniciarGranos(canvasGranos, portada)).catch(() => canvasGranos.remove());
 			'requestIdleCallback' in window ? requestIdleCallback(arrancar, { timeout: 1200 }) : setTimeout(arrancar, 300);
 		}
 
@@ -116,10 +116,18 @@ import { cifras, enlaces, evento, final, fondo, logo, momentos, otrasCategorias,
 		const rutas = cuadros(movil);
 		const imgs: HTMLImageElement[] = new Array(rutas.length);
 		let dibujado = -1, pedido = 0;
+		// Blends the two nearest frames so slow scrolling never shows a step between them.
 		function dibujar() {
-			let f = pedido, d = 0;
-			while (!imgs[f] && d < rutas.length) { d++; f = imgs[pedido - d] ? pedido - d : pedido + d; }
-			if (imgs[f] && f !== dibujado) { ctx.drawImage(imgs[f], 0, 0); dibujado = f; }
+			const a = Math.floor(pedido), mezcla = pedido - a;
+			let f = a, d = 0;
+			while (!imgs[f] && d < rutas.length) { d++; f = imgs[a - d] ? a - d : a + d; }
+			if (!imgs[f]) return;
+			const clave = f + Math.round(mezcla * 8) / 8;
+			if (clave === dibujado) return;
+			ctx.globalAlpha = 1;
+			ctx.drawImage(imgs[f], 0, 0);
+			if (f === a && imgs[a + 1] && mezcla > 0.05) { ctx.globalAlpha = mezcla; ctx.drawImage(imgs[a + 1], 0, 0); }
+			dibujado = clave;
 		}
 		function cargar() {
 			const orden: number[] = [0, rutas.length - 1];
@@ -147,9 +155,9 @@ import { cifras, enlaces, evento, final, fondo, logo, momentos, otrasCategorias,
 		const momentos = gsap.utils.toArray<HTMLElement>('.momento');
 		const tl = gsap.timeline({
 			defaults: { ease: 'none' },
-			scrollTrigger: { trigger: '.escena', start: 'top top', end: 'bottom bottom', scrub: 0.25 },
+			scrollTrigger: { trigger: '.escena', start: 'top top', end: 'bottom bottom', scrub: true },
 		});
-		tl.to(estado, { i: rutas.length - 1, duration: 6, onUpdate: () => { pedido = Math.round(estado.i); dibujar(); } }, 0);
+		tl.to(estado, { i: rutas.length - 1, duration: 6, onUpdate: () => { pedido = estado.i; dibujar(); } }, 0);
 		const barras = gsap.utils.toArray<HTMLElement>('.avance i');
 		// Each stretch lasts 6/9 of the timeline: words follow what the footage is showing.
 		const tiempos = [[0, 0.7], [0.7, 2], [2.7, 2], [4.7, 1.3]];

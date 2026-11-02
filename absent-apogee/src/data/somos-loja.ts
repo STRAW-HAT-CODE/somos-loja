@@ -52,7 +52,7 @@ export const tarjetas = [
 ];
 
 // Sequence for the process: 9 stretches, sampled down so it stays light.
-const PASO = { d: 3, m: 2 };
+const PASO = { d: 2, m: 2 };
 const TOTAL = { d: 60, m: 40 };
 export function cuadros(movil: boolean) {
   const k = movil ? 'm' : 'd';

@@ -66,7 +66,7 @@ p { text-wrap: pretty; }
 #granos { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 
 .display { font-size: clamp(2.75rem, 6.6vw, 6rem); line-height: 1; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance; }
-.velo { position: absolute; inset: 0; background: rgb(19 18 9 / 0.5); pointer-events: none; }
+.velo { position: absolute; inset: 0; background: rgb(19 18 9 / 0.58); pointer-events: none; }
 
 /* First screen: who they are, what is on now, and the numbers, all in one view. */
 .portada { position: relative; height: 100dvh; min-height: 640px; overflow: hidden; background: var(--sw-bg); }
@@ -84,7 +84,7 @@ p { text-wrap: pretty; }
 .cifras .caption-2 { color: #e6e0d3; }
 
 /* Second part: process and store share one short scene. */
-.escena { position: relative; height: 320vh; background: var(--sw-bg); }
+.escena { position: relative; height: 680vh; background: var(--sw-bg); }
 .escena__fijo { position: sticky; top: 0; height: 100dvh; overflow: hidden; }
 #proceso, .escena__respaldo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .escena__respaldo { display: none; }
