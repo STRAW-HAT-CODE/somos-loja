@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ScrollWorld from '../components/ScrollWorld.astro';
+import Secciones from '../components/Secciones.astro';
+import { logo } from '../data/somos-loja';
+---
+<Layout>
+	<a class="saltar button-sm" href="#contenido">Saltar el recorrido</a>
+	<header class="cabecera">
+		<a class="cabecera__logo" href="#proceso" aria-label="Somos Loja, volver al inicio"><img src={logo} alt="" width="36" height="36" /></a>
+		<nav aria-label="Principal" class="cabecera__nav">
+			<a class="caption-1" href="#evento">Evento</a>
+			<a class="caption-1" href="#historia">Quiénes somos</a>
+			<a class="caption-1" href="#tienda">La tienda</a>
+		</nav>
+		<a class="boton boton--primario button-sm" href="#visita">Visita la tienda</a>
+	</header>
+	<ScrollWorld />
+	<Secciones />
+</Layout>
