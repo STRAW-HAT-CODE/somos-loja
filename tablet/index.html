@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f8f4" />
+    <title>SOMOS LOJA</title>
+    <style>
+      @font-face {
+        font-family: Manrope;
+        src: url("./fuentes/manrope-latin-var.woff2") format("woff2");
+        font-style: normal;
+        font-weight: 200 800;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: Cormorant;
+        src: url("./fuentes/cormorant-latin-var.woff2") format("woff2");
+        font-style: normal italic;
+        font-weight: 300 700;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: light;
+        --navy: #092d4d;
+        --blue: #0866ae;
+        --turquoise: #2bc3c6;
+        --entrance-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      body { font-family: Manrope, Arial, sans-serif; }
+
+      .canvas {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        isolation: isolate;
+        overflow: hidden;
+        background: #dfd8c4;
+      }
+
+      .scene,
+      .scene video,
+      .scene::after {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .scene {
+        z-index: -2;
+        background: #d8cfb9 url("./recursos/plaza.jpg") center center / cover no-repeat;
+      }
+
+      .scene video { object-fit: cover; object-position: center; filter: sepia(0.65) saturate(1.15); }
+      .scene video.is-unavailable { display: none; }
+
+      .scene::after {
+        content: "";
+        background: linear-gradient(90deg,
+          rgba(255, 255, 255, 0.98) 0%,
+          rgba(255, 255, 255, 0.94) 25%,
+          rgba(255, 255, 255, 0.74) 38%,
+          rgba(255, 255, 255, 0.16) 56%,
+          rgba(255, 255, 255, 0) 73%);
+        pointer-events: none;
+      }
+
+      .intro {
+        position: absolute;
+        top: clamp(54px, 8.2vh, 110px);
+        left: clamp(38px, 6vw, 94px);
+        width: min(48vw, 625px);
+        color: var(--navy);
+      }
+
+      .rule {
+        display: block;
+        width: clamp(76px, 9vw, 128px);
+        height: clamp(4px, 0.55vh, 7px);
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--blue), var(--turquoise));
+      }
+
+      h1 {
+        margin: clamp(21px, 3vh, 38px) 0 0;
+        font-weight: 800;
+        line-height: 0.87;
+        letter-spacing: -0.075em;
+      }
+
+      h1 span { display: block; }
+
+      .somos {
+        font-size: clamp(36px, 4.15vw, 64px);
+        letter-spacing: 0.075em;
+        color: var(--navy);
+      }
+
+      .loja {
+        margin-top: clamp(7px, 1.2vh, 17px);
+        font-size: clamp(116px, 13.3vw, 199px);
+        font-weight: 800;
+        letter-spacing: -0.09em;
+        line-height: 0.94;
+        padding-right: 0.1em;
+        background: linear-gradient(180deg, #167dc0 0%, #07558e 49%, #071724 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .tagline {
+        max-width: 25ch;
+        margin: clamp(19px, 2.4vh, 30px) 0 clamp(24px, 3vh, 40px);
+        font-family: Cormorant, Georgia, serif;
+        font-size: clamp(29px, 3vw, 45px);
+        font-style: italic;
+        font-weight: 500;
+        line-height: 1.06;
+        letter-spacing: -0.025em;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0.9em 1.9em;
+        border-radius: 999px;
+        background: linear-gradient(100deg, #0961a9, #19b9c4);
+        box-shadow: 0 11px 23px rgba(5, 74, 111, 0.18);
+        color: white;
+        font-size: clamp(13px, 1.2vw, 17px);
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        line-height: 1.1;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: transform 180ms var(--entrance-ease), box-shadow 180ms ease;
+      }
+
+      .cta:hover { transform: translateY(-2px); box-shadow: 0 14px 26px rgba(5, 74, 111, 0.24); }
+      .cta:active { transform: translateY(2px) scale(0.98); box-shadow: 0 5px 12px rgba(5, 74, 111, 0.18); }
+      .cta:focus-visible { outline: 4px solid #092d4d; outline-offset: 5px; }
+
+      .flag-card {
+        position: absolute;
+        left: 53%;
+        bottom: clamp(117px, 15vh, 173px);
+        width: clamp(215px, 23vw, 312px);
+        margin: 0;
+        padding: clamp(11px, 1.2vw, 17px);
+        border: 1px solid rgba(255,255,255,0.8);
+        border-radius: 21px;
+        background: rgba(255,255,255,0.91);
+        box-shadow: 0 18px 50px rgba(32, 39, 37, 0.17);
+        text-align: center;
+      }
+
+      .flag {
+        position: relative;
+        display: block;
+        height: clamp(97px, 11vw, 145px);
+        overflow: hidden;
+        border-radius: 11px;
+        background: linear-gradient(to bottom,
+          #d62f3d 0% 20%, #064a98 20% 40%, #f6ca2f 40% 60%,
+          #064a98 60% 80%, #d62f3d 80% 100%);
+      }
+
+      .flag::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background-image: radial-gradient(rgba(255,255,255,0.23) 0.7px, transparent 0.9px);
+        background-size: 5px 5px;
+        mix-blend-mode: soft-light;
+      }
+
+      .flag-card figcaption {
+        padding: 13px 1px 3px;
+        color: var(--navy);
+        font-size: clamp(10px, 1.1vw, 15px);
+        font-weight: 800;
+        letter-spacing: 0.19em;
+        white-space: nowrap;
+      }
+
+      .footer {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: clamp(106px, 14vh, 154px);
+        color: var(--navy);
+      }
+
+      .footer svg { position: absolute; inset: 0; width: 100%; height: calc(100% + 2px); }
+
+      .footer-label {
+        position: absolute;
+        right: 0;
+        bottom: clamp(25px, 3.5vh, 44px);
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(12px, 1.7vw, 23px);
+        font-size: clamp(12px, 1.35vw, 19px);
+        font-weight: 800;
+        letter-spacing: 0.25em;
+        white-space: nowrap;
+      }
+
+      .footer-label .rule { width: clamp(28px, 4vw, 58px); height: 4px; }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .intro, .flag-card, .footer-label {
+          animation: arrive 850ms var(--entrance-ease) both;
+        }
+        .flag-card { animation-delay: 120ms; }
+        .footer-label { animation-delay: 210ms; }
+        @keyframes arrive {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      }
+
+      @media (orientation: portrait) {
+        .scene::after { background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.83) 48%, rgba(255,255,255,0.1) 83%); }
+        .intro { top: 5.5vh; left: 7vw; width: 86vw; }
+        h1 { margin-top: 2.5vh; }
+        .somos { font-size: clamp(32px, 7vw, 59px); }
+        .loja { font-size: clamp(85px, 19vw, 165px); }
+        .tagline { max-width: 25ch; margin: 1.5vh 0 2vh; font-size: clamp(25px, 5vw, 42px); }
+        .flag-card { left: 50%; bottom: clamp(98px, 14vh, 150px); width: clamp(192px, 40vw, 300px); transform: translateX(-50%); }
+        .flag { height: clamp(84px, 16vw, 125px); }
+        .flag-card figcaption { font-size: clamp(10px, 1.5vw, 14px); }
+        .footer { height: clamp(94px, 12vh, 145px); }
+        .footer-label { font-size: clamp(10px, 1.8vw, 17px); letter-spacing: 0.15em; }
+        @media (prefers-reduced-motion: no-preference) {
+          .flag-card { animation: none; }
+        }
+      }
+
+      @media (max-width: 600px) {
+        .intro { top: 5vh; left: 7vw; width: 86vw; }
+        .rule { width: 72px; }
+        h1 { margin-top: 18px; }
+        .somos { font-size: clamp(29px, 8vw, 43px); }
+        .loja { font-size: clamp(78px, 23vw, 120px); }
+        .tagline { font-size: clamp(25px, 7vw, 34px); margin: 12px 0 17px; }
+        .cta { min-height: 46px; font-size: 12px; }
+        .flag-card { left: 50%; bottom: 92px; width: min(55vw, 215px); padding: 9px; transform: translateX(-50%); }
+        .flag { height: clamp(70px, 20vw, 93px); }
+        .flag-card figcaption { padding-top: 9px; font-size: 9px; letter-spacing: 0.12em; }
+        .footer { height: 91px; }
+        .footer-label { bottom: 24px; font-size: 10px; letter-spacing: 0.1em; gap: 8px; }
+        .footer-label .rule { width: 22px; height: 3px; }
+      }
+
+      @media (max-width: 600px) and (max-height: 700px) {
+        .intro { top: 3vh; }
+        h1 { margin-top: 12px; }
+        .loja { font-size: clamp(72px, 20vw, 100px); }
+        .tagline { font-size: 25px; margin: 9px 0 12px; }
+        .flag-card { bottom: 78px; width: 175px; }
+        .flag { height: 65px; }
+        .footer { height: 77px; }
+        .footer-label { bottom: 17px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="canvas">
+      <div class="scene" aria-hidden="true">
+        <video id="plaza-video" autoplay muted loop playsinline poster="./recursos/plaza.jpg"></video>
+      </div>
+
+      <section class="intro">
+        <span class="rule" aria-hidden="true"></span>
+        <h1><span class="somos">SOMOS</span><span class="loja">LOJA</span></h1>
+        <p class="tagline">Tierra de gente noble, historia viva y tradición que inspira.</p>
+        <a class="cta" id="courier-link" href="#">CONOCE MÁS →</a>
+      </section>
+
+      <figure class="flag-card">
+        <span class="flag" role="img" aria-label="Bandera de Loja"></span>
+        <figcaption>FIDELIS LOXA LIBERIS</figcaption>
+      </figure>
+
+      <footer class="footer">
+        <svg viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
+          <path fill="#fff" d="M0 57C245 8 440 54 665 38c246-17 458-49 775 20v102H0Z" />
+        </svg>
+        <div class="footer-label"><span class="rule" aria-hidden="true"></span>TIENDA DE EMPRENDIMIENTOS</div>
+      </footer>
+    </main>
+
+    <script>
+      // Replace this when the public courier invitation URL is available.
+      const COURIER_INVITATION_URL = "http://localhost:4325/";
+
+      const link = document.getElementById("courier-link");
+      const video = document.getElementById("plaza-video");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      link.href = COURIER_INVITATION_URL;
+      video.addEventListener("error", () => video.classList.add("is-unavailable"));
+
+      function syncVideo() {
+        if (reducedMotion.matches) {
+          video.pause();
+          video.removeAttribute("src");
+          video.load();
+          video.classList.add("is-unavailable");
+          return;
+        }
+
+        video.classList.remove("is-unavailable");
+        if (!video.hasAttribute("src")) video.src = "./recursos/plaza.mp4";
+        video.play().catch(() => video.classList.add("is-unavailable"));
+      }
+
+      reducedMotion.addEventListener("change", syncVideo);
+      syncVideo();
+    </script>
+  </body>
+</html>
