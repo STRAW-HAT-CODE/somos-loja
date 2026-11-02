@@ -1,7 +1,8 @@
-# Somos Loja
+# Somos Loja, vintage
 
-Dark, warm and photographic: the coffee and its people lead, type stays large and direct.
+Illustrated and warm, like an old print of Loja: indigo ink and coffee watercolor on cream paper. The store is the destination and the only dark surface.
 
-- Palette (provisional): coffee black #131209, surface #1F1F1F, cream #F5EFE3, brand turquoise #45BBC3 as the only accent.
-- Type: Manrope, one family, self hosted.
-- Structure: three beats. Who they are over live footage and floating 3D beans; the process scrubbed behind big words; the store with animated product cards and social links.
+- Palette (provisional): paper #F6EEDD, indigo #1B2F6B, ochre #E0A93B, coffee #5A331C.
+- Type: Yellowtail for the signature, Cormorant Garamond for headlines, Manrope for reading.
+- Signature motion: the town gives way to one large bean, a ribbon of coffee draws through the process, and beans form the 50.
+- Illustrations are AI generated and must not be read as documentary. Store and product photos are real.
