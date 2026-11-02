@@ -79,7 +79,12 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 .capitulo { position: relative; display: grid; grid-template-columns: 7fr 5fr; align-items: center; gap: 48px; }
 .capitulo--der { grid-template-columns: 5fr 7fr; }
 .capitulo--der .capitulo__img { order: 2; }
-.capitulo__texto { display: grid; gap: 16px; padding: 24px; background: var(--papel); border-radius: 24px; }
+.capitulo__img {
+  --borde: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent), linear-gradient(transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: var(--borde); mask-image: var(--borde);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.capitulo__texto { display: grid; gap: 16px; padding: 24px; background: var(--papel); border-radius: 48px; box-shadow: 0 0 48px 32px var(--papel); }
 
 /* The 50 */
 .cincuenta { height: 260vh; }
