@@ -1,20 +1,142 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ScrollWorld from '../components/ScrollWorld.astro';
-import Secciones from '../components/Secciones.astro';
-import { logo } from '../data/somos-loja';
+import Pendiente from '../components/Pendiente.astro';
+import Flecha from '../components/Flecha.astro';
+import { enlaces, final, fondo, hechos, logo, momentos, pendiente, tarjetas } from '../data/somos-loja';
 ---
 <Layout>
-	<a class="saltar button-sm" href="#contenido">Saltar el recorrido</a>
+	<a class="saltar button-sm" href="#tienda">Saltar a la tienda</a>
 	<header class="cabecera">
-		<a class="cabecera__logo" href="#proceso" aria-label="Somos Loja, volver al inicio"><img src={logo} alt="" width="36" height="36" /></a>
-		<nav aria-label="Principal" class="cabecera__nav">
-			<a class="caption-1" href="#evento">Evento</a>
-			<a class="caption-1" href="#historia">Quiénes somos</a>
-			<a class="caption-1" href="#tienda">La tienda</a>
-		</nav>
-		<a class="boton boton--primario button-sm" href="#visita">Visita la tienda</a>
+		<a class="cabecera__logo" href="#inicio" aria-label="Somos Loja, volver al inicio"><img src={logo} alt="" width="36" height="36" /></a>
+		<a class="boton boton--primario button-sm" href={enlaces.mapa} target="_blank" rel="noopener">Cómo llegar</a>
 	</header>
-	<ScrollWorld />
-	<Secciones />
+
+	<main>
+		<section id="inicio" class="portada">
+			<video class="portada__video" autoplay muted loop playsinline preload="metadata" poster={fondo.poster} aria-hidden="true" tabindex="-1">
+				<source src={fondo.video} type="video/mp4" />
+			</video>
+			<div class="velo"></div>
+			<canvas id="granos" aria-hidden="true"></canvas>
+			<div class="portada__texto">
+				<h1 class="display">Todo lo que Loja produce, en una sola tienda.</h1>
+				<p class="body-grande">Somos Loja es la cooperativa que lleva a tu mano el café, las artesanías y los productos de emprendedores lojanos.</p>
+				<ul class="hechos">{hechos.map((h) => <li class="caption-1">{h}</li>)}</ul>
+				<p class="body-3">{pendiente.direccion ?? <Pendiente dato="direccion" />} {pendiente.horario ?? <Pendiente dato="horario" />}</p>
+			</div>
+		</section>
+
+		<section class="escena" aria-label="Del café a la tienda">
+			<div class="escena__fijo">
+				<canvas id="proceso" aria-hidden="true"></canvas>
+				<img class="escena__respaldo" src={final} alt="" width="1024" height="576" loading="lazy" />
+				<div class="velo velo--escena"></div>
+				<div class="momentos" aria-label={momentos.join(' ')}>
+					{momentos.map((m) => <p class="display momento" aria-hidden="true">{m}</p>)}
+				</div>
+				<div id="tienda" class="tienda">
+					<h2 class="display tienda__titulo">Llévate Loja contigo</h2>
+					<ul class="tarjetas">
+						{tarjetas.map((t, i) => (
+							<li class="tarjeta" style={`--i:${i}`}>
+								<img src={t.src} alt={t.alt} width="800" height="1067" loading="lazy" decoding="async" />
+								<h3 class="caption-1">{t.titulo}</h3>
+							</li>
+						))}
+					</ul>
+					<div class="acciones">
+						<a class="boton boton--primario button-md" href={enlaces.mapa} target="_blank" rel="noopener">Visita la tienda<Flecha /></a>
+						<a class="boton boton--secundario button-md" href={enlaces.instagram} target="_blank" rel="noopener">Instagram</a>
+						{pendiente.facebook ?? <Pendiente dato="facebook" />}
+						{pendiente.tiktok ?? <Pendiente dato="tiktok" />}
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
 </Layout>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import Lenis from 'lenis';
+	import { cuadros } from '../data/somos-loja';
+
+	const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const ahorro = (navigator as any).connection?.saveData;
+	const movil = innerWidth <= 860;
+	gsap.registerPlugin(ScrollTrigger);
+
+	const portada = document.querySelector<HTMLElement>('.portada');
+	const canvasGranos = document.getElementById('granos') as HTMLCanvasElement | null;
+	if (reducir) document.querySelector<HTMLVideoElement>('.portada__video')?.pause();
+
+	if (!reducir) {
+		const lenis = new Lenis({ lerp: 0.28 });
+		lenis.on('scroll', ScrollTrigger.update);
+		gsap.ticker.add((s) => lenis.raf(s * 1000));
+		gsap.ticker.lagSmoothing(0);
+
+		if (portada && canvasGranos && !ahorro) {
+			const arrancar = () => import('../scripts/granos-flotando.js').then((m) => m.iniciarGranos(canvasGranos, portada)).catch(() => canvasGranos.remove());
+			'requestIdleCallback' in window ? requestIdleCallback(arrancar, { timeout: 1200 }) : setTimeout(arrancar, 300);
+		}
+
+		// Process sequence: loads ends first, then fills in, and always draws the nearest ready frame.
+		const canvas = document.getElementById('proceso') as HTMLCanvasElement;
+		const ctx = canvas.getContext('2d', { alpha: false })!;
+		const rutas = cuadros(movil);
+		const imgs: HTMLImageElement[] = new Array(rutas.length);
+		let dibujado = -1, pedido = 0;
+		function dibujar() {
+			let f = pedido, d = 0;
+			while (!imgs[f] && d < rutas.length) { d++; f = imgs[pedido - d] ? pedido - d : pedido + d; }
+			if (imgs[f] && f !== dibujado) { ctx.drawImage(imgs[f], 0, 0); dibujado = f; }
+		}
+		function cargar() {
+			const orden: number[] = [0, rutas.length - 1];
+			for (let paso = 32; paso >= 1; paso = paso >> 1) for (let i = paso; i < rutas.length - 1; i += paso) if (!orden.includes(i)) orden.push(i);
+			let sig = 0;
+			const obrero = async () => {
+				while (sig < orden.length) {
+					const i = orden[sig++];
+					const img = new Image();
+					img.src = rutas[i];
+					try { await img.decode(); } catch { continue; }
+					if (!canvas.width || canvas.width === 300) { canvas.width = img.naturalWidth; canvas.height = img.naturalHeight; }
+					imgs[i] = img;
+					dibujado = -1;
+					dibujar();
+				}
+			};
+			for (let k = 0; k < 6; k++) obrero();
+		}
+		const vigia = new IntersectionObserver(([e]) => { if (e.isIntersecting) { vigia.disconnect(); cargar(); } }, { rootMargin: '100% 0px' });
+		vigia.observe(canvas);
+
+		// One timeline drives the whole second part: process first, then the store and its cards.
+		const estado = { i: 0 };
+		const momentos = gsap.utils.toArray<HTMLElement>('.momento');
+		const tl = gsap.timeline({
+			defaults: { ease: 'none' },
+			scrollTrigger: { trigger: '.escena', start: 'top top', end: 'bottom bottom', scrub: 0.25 },
+		});
+		tl.to(estado, { i: rutas.length - 1, duration: 6, onUpdate: () => { pedido = Math.round(estado.i); dibujar(); } }, 0);
+		momentos.forEach((m, n) => {
+			const ini = n * 1.5;
+			tl.fromTo(m, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, ini);
+			tl.to(m, { autoAlpha: 0, y: -40, duration: 0.35 }, ini + 1.05);
+		});
+		tl.to('.velo--escena', { opacity: 1, duration: 0.8 }, 5.7);
+		tl.fromTo('.tienda__titulo', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 6);
+		tl.fromTo('.tarjeta', { autoAlpha: 0, y: 180, rotate: (i) => (i - 2) * 9 }, { autoAlpha: 1, y: 0, rotate: (i) => (i - 2) * (movil ? 0 : 2.5), duration: 0.9, stagger: 0.14, ease: 'power3.out' }, 6.2);
+		tl.fromTo('.acciones', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.5 }, 7.2);
+		tl.to({}, { duration: 0.5 });
+
+		document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
+			const id = a.getAttribute('href')!;
+			e.preventDefault();
+			lenis.scrollTo(id === '#tienda' ? document.documentElement.scrollHeight : 0, { duration: 1.2 });
+		}));
+	}
+</script>
