@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
-import { enlaces, final, fondo, hechos, logo, momentos, pendiente, tarjetas } from '../data/somos-loja';
+import { cifras, enlaces, evento, final, fondo, logo, momentos, otrasCategorias, pendiente, tarjetas } from '../data/somos-loja';
 ---
 <Layout>
 	<a class="saltar button-sm" href="#tienda">Saltar a la tienda</a>
@@ -18,11 +18,25 @@ import { enlaces, final, fondo, hechos, logo, momentos, pendiente, tarjetas } fr
 			</video>
 			<div class="velo"></div>
 			<canvas id="granos" aria-hidden="true"></canvas>
-			<div class="portada__texto">
-				<h1 class="display">Todo lo que Loja produce, en una sola tienda.</h1>
-				<p class="body-grande">Somos Loja es la cooperativa que lleva a tu mano el café, las artesanías y los productos de emprendedores lojanos.</p>
-				<ul class="hechos">{hechos.map((h) => <li class="caption-1">{h}</li>)}</ul>
-				<p class="body-3">{pendiente.direccion ?? <Pendiente dato="direccion" />} {pendiente.horario ?? <Pendiente dato="horario" />}</p>
+			<div class="portada__contenido">
+				<div class="portada__texto">
+					<h1 class="display">Todo lo que Loja produce, en una sola tienda.</h1>
+					<p class="body-grande">Somos Loja es la cooperativa que reúne el café, las artesanías y los productos de emprendedores lojanos.</p>
+					<div class="portada__acciones">
+						<a class="boton boton--primario button-md" href={enlaces.mapa} target="_blank" rel="noopener">Visita la tienda<Flecha /></a>
+						<p class="caption-1 portada__lugar">Loja, Ecuador {pendiente.direccion ?? <Pendiente dato="direccion" />} {pendiente.horario ?? <Pendiente dato="horario" />}</p>
+					</div>
+				</div>
+				<aside class="evento">
+					<img src={evento.sello} alt={`Sello ${evento.nombre}`} width="96" height="96" />
+					<div>
+						<h2 class="heading-5">{evento.nombre}</h2>
+						<p class="caption-2">{evento.edicion}. {evento.detalle}</p>
+					</div>
+				</aside>
+				<ul class="cifras">
+					{cifras.map(([n, d]) => <li><strong class="heading-3">{n}</strong><span class="caption-2">{d}</span></li>)}
+				</ul>
 			</div>
 		</section>
 
@@ -31,11 +45,25 @@ import { enlaces, final, fondo, hechos, logo, momentos, pendiente, tarjetas } fr
 				<canvas id="proceso" aria-hidden="true"></canvas>
 				<img class="escena__respaldo" src={final} alt="" width="1024" height="576" loading="lazy" />
 				<div class="velo velo--escena"></div>
-				<div class="momentos" aria-label={momentos.join(' ')}>
-					{momentos.map((m) => <p class="display momento" aria-hidden="true">{m}</p>)}
+				<div class="momentos">
+					{momentos.map((m) => (
+						<div class="momento">
+							<p class="display momento__palabra">{m.palabra}</p>
+							<figure class="ficha">
+								<img src={m.foto} alt={m.alt} width="720" height="960" loading="lazy" decoding="async" />
+								<figcaption class="body-3">{m.dato}</figcaption>
+							</figure>
+						</div>
+					))}
 				</div>
+				<ol class="avance" aria-label="Etapas del café">
+					{momentos.map((m) => <li class="caption-1"><i></i>{m.etapa}</li>)}
+				</ol>
 				<div id="tienda" class="tienda">
-					<h2 class="display tienda__titulo">Llévate Loja contigo</h2>
+					<div class="tienda__titulo">
+						<h2 class="display">Llévate Loja contigo</h2>
+						<ul class="fichas">{otrasCategorias.map((c) => <li class="caption-1">También {c.toLowerCase()}</li>)}</ul>
+					</div>
 					<ul class="tarjetas">
 						{tarjetas.map((t, i) => (
 							<li class="tarjeta" style={`--i:${i}`}>
@@ -122,11 +150,17 @@ import { enlaces, final, fondo, hechos, logo, momentos, pendiente, tarjetas } fr
 			scrollTrigger: { trigger: '.escena', start: 'top top', end: 'bottom bottom', scrub: 0.25 },
 		});
 		tl.to(estado, { i: rutas.length - 1, duration: 6, onUpdate: () => { pedido = Math.round(estado.i); dibujar(); } }, 0);
+		const barras = gsap.utils.toArray<HTMLElement>('.avance i');
+		// Each stretch lasts 6/9 of the timeline: words follow what the footage is showing.
+		const tiempos = [[0, 0.7], [0.7, 2], [2.7, 2], [4.7, 1.3]];
 		momentos.forEach((m, n) => {
-			const ini = n * 1.5;
-			tl.fromTo(m, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, ini);
-			tl.to(m, { autoAlpha: 0, y: -40, duration: 0.35 }, ini + 1.05);
+			const [ini, dur] = tiempos[n];
+			if (n === 0) tl.set(m, { autoAlpha: 1, y: 0 }, 0);
+			else tl.fromTo(m, { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: 0.25, ease: 'power2.out' }, ini);
+			tl.to(m, { autoAlpha: 0, y: -32, duration: 0.2 }, ini + dur - 0.2);
+			tl.fromTo(barras[n], { scaleX: 0 }, { scaleX: 1, duration: dur }, ini);
 		});
+		tl.to('.avance', { autoAlpha: 0, duration: 0.3 }, 5.8);
 		tl.to('.velo--escena', { opacity: 1, duration: 0.8 }, 5.7);
 		tl.fromTo('.tienda__titulo', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 6);
 		tl.fromTo('.tarjeta', { autoAlpha: 0, y: 180, rotate: (i) => (i - 2) * 9 }, { autoAlpha: 1, y: 0, rotate: (i) => (i - 2) * (movil ? 0 : 2.5), duration: 0.9, stagger: 0.14, ease: 'power3.out' }, 6.2);

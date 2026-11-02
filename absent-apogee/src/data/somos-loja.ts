@@ -19,8 +19,28 @@ export const logo = `${base}/logo-somos-loja-tienda.webp`;
 export const fondo = { video: `${base}/fondo.mp4`, poster: `${base}/paradas/parada-01.webp` };
 export const final = `${base}/paradas/parada-10.webp`;
 
-export const hechos = ['300 emprendedores', 'Unas 50 marcas y fincas de café', 'Loja, Ecuador'];
-export const momentos = ['De la finca', 'a la cosecha', 'al grano', 'a tu taza'];
+export const cifras = [
+  ['300', 'emprendedores y productores'],
+  ['50', 'marcas y fincas de café, aprox.'],
+  ['14', 'marcas de vinos y licores'],
+  ['10', 'años de trayectoria, el próximo año'],
+];
+
+export const evento = {
+  nombre: 'Loja 100 % Café Especial',
+  edicion: 'Tercera edición',
+  detalle: 'Campeonato interno, top 10 de especialidad y 10 días de actividades.',
+  sello: `${base}/sello-circular.webp`,
+};
+
+export const otrasCategorias = ['Valor agregado', 'Vinos y licores', 'Salud y belleza', 'Textiles'];
+
+export const momentos = [
+  { palabra: 'De la finca', etapa: 'Finca', dato: 'Familias productoras cuidan cada planta en las laderas de Loja.', foto: `${base}/galeria/cereza-verde.webp`, alt: 'Cerezas de café verdes en la rama' },
+  { palabra: 'a la cosecha', etapa: 'Cosecha', dato: 'La cereza se recoge a mano cuando está madura, y luego se lava y se selecciona.', foto: `${base}/galeria/cereza-roja.webp`, alt: 'Cerezas de café rojas recién cosechadas' },
+  { palabra: 'al grano', etapa: 'Grano', dato: 'Se despulpa, se seca al sol y se tuesta hasta sacar sus aromas.', foto: `${base}/galeria/grano-cayendo.webp`, alt: 'Grano de café cayendo de la despulpadora' },
+  { palabra: 'a tu taza', etapa: 'Taza', dato: 'Unas 50 marcas y fincas llegan a un solo lugar: la tienda Somos Loja.', foto: `${base}/galeria/cafe-yarazs.webp`, alt: 'Bolsa de café Yaraz\u2019s en la tienda' },
+];
 
 const g = `${base}/galeria`;
 export const tarjetas = [
