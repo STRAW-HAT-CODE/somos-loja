@@ -854,11 +854,12 @@ function createMiniature(canvas, { onLost }) {
           } catch (_) { /* Missing effects never block visuals. */ }
         })).then(() => {
           raiz.dataset.audio = mudo ? 'silenciado' : buffers.size ? 'on' : 'fallo';
+          mostrarControlesAudio();
         });
       }
     } catch (_) {
       habilitado = false;
-      raiz.dataset.audio = 'fallo'; mostrarControlesAudio();
+      raiz.dataset.audio = 'fallo';
       mostrarControlesAudio();
     }
   }
