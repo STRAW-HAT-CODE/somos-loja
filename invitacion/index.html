@@ -764,6 +764,8 @@ function createMiniature(canvas, { onLost }) {
     { t: MANO, pista: 'sobre-entrega', grupo: 'entrega' },
     { t: INICIOS[3], pista: 'cafe-servido', grupo: 'cafe' },
   ];
+  const ESPERA_AUDIO = 1200;
+  let pedidoSonido = 0;
   let contexto = null, carga = null, habilitado = false, mudo = false, siguienteCue = 0;
   const buffers = new Map(), fuentes = new Set();
   raiz.dataset.audio = 'off';
@@ -857,6 +859,7 @@ function createMiniature(canvas, { onLost }) {
           mostrarControlesAudio();
         });
       }
+      await carga;
     } catch (_) {
       habilitado = false;
       raiz.dataset.audio = 'fallo';
@@ -987,9 +990,15 @@ function createMiniature(canvas, { onLost }) {
     mostrarControlesAudio();
   }
 
-  saltar.addEventListener('click', () => irA('invitacion', true));
-  repetir.addEventListener('click', () => { irA('llegada'); saltar.focus({ preventScroll: true }); });
-  sonido.addEventListener('click', () => { habilitarAudio(); irA('llegada'); });
+  saltar.addEventListener('click', () => { pedidoSonido++; irA('invitacion', true); });
+  repetir.addEventListener('click', () => { pedidoSonido++; irA('llegada'); saltar.focus({ preventScroll: true }); });
+  // The run restarts once the effects are ready, or after a short wait on a slow network,
+  // so the first footsteps are not lost. Skip or repeat cancels the pending restart.
+  sonido.addEventListener('click', async () => {
+    const pedido = ++pedidoSonido;
+    await Promise.race([habilitarAudio(), new Promise((listo) => setTimeout(listo, ESPERA_AUDIO))]);
+    if (pedido === pedidoSonido) irA('llegada');
+  });
   silenciar.addEventListener('click', () => {
     mudo = !mudo;
     silenciar.setAttribute('aria-pressed', String(mudo));
