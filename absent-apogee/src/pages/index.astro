@@ -2,43 +2,58 @@
 import Layout from '../layouts/Layout.astro';
 import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
-import { capitulos, categorias, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sello } from '../data/somos-loja';
+import { capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sabores, sello } from '../data/somos-loja';
+const cinta = [...productos, ...productos];
 ---
 <Layout>
 	<a class="saltar" href="#tienda">Saltar a la tienda</a>
 	<header class="cabecera">
 		<a class="cabecera__logo" href="#inicio" aria-label="Somos Loja, volver al inicio"><img src={logo} alt="" width="40" height="40" /></a>
-		<a class="boton boton--tinta boton--chico" href="#tienda">Ver la tienda</a>
+		<a class="boton boton--tinta boton--chico" href="#tienda">Dónde estamos</a>
 	</header>
 
 	<main>
 		<section id="inicio" class="apertura">
 			<div class="apertura__fijo">
 				<img class="apertura__rama" src={ilustraciones.rama} alt="" width="800" height="800" fetchpriority="high" />
-				<div class="apertura__titulo">
-					<p class="firma">Somos Loja</p>
-					<h1 class="versal">Café y productos de Loja, en una sola tienda</h1>
+				<div class="escenario">
+					<img class="escenario__img" src={ilustraciones.fachada} alt="Ilustración de la Catedral de Loja con su torre del reloj, palmeras y el Parque Central" width="1672" height="941" fetchpriority="high" />
+					<video class="escenario__video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+					<div class="titulo">
+						<p class="firma titulo__somos"><span>Somos</span></p>
+						<p class="firma titulo__loja"><span>Loja</span></p>
+						<h1 class="versal titulo__lema">El sabor de Loja, a pasos de la Catedral</h1>
+						<a class="boton boton--ocre titulo__cta" href="#tienda">Conoce la tienda<Flecha /></a>
+					</div>
 				</div>
-				<img class="apertura__ciudad" src={ilustraciones.portada} alt="Ilustración de un pueblo andino con casas coloniales y montañas azules" width="1672" height="941" fetchpriority="high" />
 				<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
 				<h2 class="titular apertura__frase">En Loja, cada grano<br />tiene una historia</h2>
 			</div>
 		</section>
 
-		<section class="recorrido" aria-label="El camino del café">
-			<svg class="cinta" viewBox="0 0 1000 2400" preserveAspectRatio="none" aria-hidden="true">
-				<path class="cinta__ancha" d="M500 0C820 240 900 520 620 760S120 1040 240 1320 860 1560 780 1880 420 2240 500 2400" />
-				<path class="cinta__fina" d="M520 0C860 240 930 540 640 780S150 1060 270 1330 890 1580 800 1890 450 2240 520 2400" />
-			</svg>
-			{capitulos.map((c, i) => (
-				<article class={`capitulo capitulo--${i % 2 ? 'der' : 'izq'}`}>
-					<img class="capitulo__img" src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />
-					<div class="capitulo__texto">
-						<h2 class="titular">{c.titulo}</h2>
+		<section class="proceso" aria-labelledby="titulo-proceso">
+			<h2 id="titulo-proceso" class="titular proceso__titulo">Del cafetal a tu taza</h2>
+			<div class="proceso__fila">
+				<svg class="cinta" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
+					<path class="cinta__ancha" d="M0 60C160 -10 250 190 420 110S640 10 780 110 930 170 1000 90" />
+					<path class="cinta__fina" d="M0 72C160 2 250 202 420 122S640 22 780 122 930 182 1000 102" />
+				</svg>
+				{capitulos.map((c, i) => (
+					<article class="capitulo">
+						<div class="capitulo__marco">
+							<img src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />
+							{i === 2 && (
+								<svg class="vapor" viewBox="0 0 60 90" aria-hidden="true">
+									<path d="M18 88c-10-16 12-24 2-42S18 16 26 4" />
+									<path d="M34 88c-10-16 12-24 2-42S34 16 42 4" />
+								</svg>
+							)}
+						</div>
+						<h3 class="titular titular--media">{c.titulo}</h3>
 						<p class="cuerpo">{c.texto}</p>
-					</div>
-				</article>
-			))}
+					</article>
+				))}
+			</div>
 		</section>
 
 		<section id="evento" class="cincuenta">
@@ -53,44 +68,59 @@ import { capitulos, categorias, cifras, enlaces, ilustraciones, interior, letrer
 			</div>
 		</section>
 
-		<section id="tienda" class="tienda">
-			<div class="tienda__cabeza">
-				<figure class="tienda__foto"><img src={interior} alt="Interior de la tienda Somos Loja con una vitrina llena de productos" width="1200" height="1600" loading="lazy" decoding="async" /></figure>
-				<div class="tienda__texto">
-					<p class="firma firma--clara">La tienda</p>
-					<h2 class="titular">Todo esto te espera en un solo lugar</h2>
-					<p class="cuerpo">Somos Loja es la cooperativa que reúne el trabajo de emprendedores y productores lojanos, para que te lleves un pedazo de Loja.</p>
-					<ul class="cifras">
-						{cifras.map(([n, d]) => <li><strong>{n}</strong><span>{d}</span></li>)}
-					</ul>
-					<ul class="categorias">{categorias.map((c) => <li>{c}</li>)}</ul>
-					<a class="boton boton--ocre" href={enlaces.mapa} target="_blank" rel="noopener">Cómo llegar a la tienda<Flecha /></a>
-				</div>
+		<section class="sabores" aria-labelledby="titulo-sabores">
+			<div class="sabores__cabeza">
+				<p class="firma firma--media">Sabe a Loja</p>
+				<h2 id="titulo-sabores" class="titular titular--media">Lo que hacemos aquí, para que te lo lleves</h2>
+				<img class="sabores__guitarra" src={ilustraciones.guitarra} alt="Ilustración de una guitarra antigua con hojas de café" width="800" height="800" loading="lazy" decoding="async" />
+				<p class="cuerpo">Loja es café, música, arte y cultura. Todo eso cabe en una bolsa de la tienda.</p>
 			</div>
-			<ul class="productos">
-				{productos.map((p, i) => (
-					<li class="producto" style={`--r:${(i - 2.5) * 1.6}deg`}>
-						<img src={p.src} alt={p.alt} width="800" height="1067" loading="lazy" decoding="async" />
-						<h3>{p.titulo}</h3>
+			<ul class="sabores__lista">
+				{sabores.map((s) => (
+					<li class="sabor">
+						<img src={s.img} alt={s.alt} width="700" height="700" loading="lazy" decoding="async" />
+						<h3 class="titular titular--chica">{s.titulo}</h3>
+						<p class="nota">{s.texto}</p>
 					</li>
 				))}
 			</ul>
 		</section>
 
-		<section id="visita" class="visita">
-			<img class="visita__rama" src={ilustraciones.rama} alt="" width="800" height="800" loading="lazy" />
-			<div class="visita__texto">
-				<p class="firma firma--media">Te esperamos</p>
-				<h2 class="titular">Ven por un café y llévate algo hecho aquí</h2>
-				<p class="cuerpo">Loja, Ecuador {pendiente.direccion ?? <Pendiente dato="direccion" />} {pendiente.horario ?? <Pendiente dato="horario" />}</p>
-				<div class="visita__acciones">
-					<a class="boton boton--ocre" href={enlaces.mapa} target="_blank" rel="noopener">Visita la tienda<Flecha /></a>
-					<a class="boton boton--linea" href={enlaces.instagram} target="_blank" rel="noopener">Instagram</a>
-					{pendiente.facebook ?? <Pendiente dato="facebook" />}
-					{pendiente.tiktok ?? <Pendiente dato="tiktok" />}
+		<section id="tienda" class="tienda">
+			<div class="tienda__rejilla">
+				<div class="tienda__texto">
+					<p class="firma firma--clara">Aquí estamos</p>
+					<h2 class="titular">A pasos de la Catedral de Loja</h2>
+					<p class="cuerpo">Somos Loja es la cooperativa que reúne el trabajo de emprendedores y productores lojanos, en el centro de la ciudad.</p>
+					<p class="cuerpo">{pendiente.direccion ?? <Pendiente dato="direccion" />} {pendiente.horario ?? <Pendiente dato="horario" />}</p>
+					<ul class="cifras">
+						{cifras.map(([n, d]) => <li><strong>{n}</strong><span>{d}</span></li>)}
+					</ul>
+					<div class="tienda__acciones">
+						<a class="boton boton--ocre" href={enlaces.mapa} target="_blank" rel="noopener">Cómo llegar a la tienda<Flecha /></a>
+						<a class="boton boton--clara" href={enlaces.instagram} target="_blank" rel="noopener">Instagram</a>
+						{pendiente.facebook ?? <Pendiente dato="facebook" />}
+						{pendiente.tiktok ?? <Pendiente dato="tiktok" />}
+					</div>
 				</div>
+				<figure class="mapa">
+					<img src={ilustraciones.plaza} alt="Ilustración del Parque Central de Loja con la Catedral, palmeras y tejados" width="1400" height="788" loading="lazy" decoding="async" />
+					<span class="mapa__marca mapa__marca--catedral"><i></i>Catedral</span>
+					<figcaption class="nota">Vista ilustrada del Parque Central. No indica la ubicación exacta.</figcaption>
+				</figure>
+				<figure class="foto foto--interior"><img src={interior} alt="Interior de la tienda Somos Loja con una vitrina llena de productos" width="1200" height="1600" loading="lazy" decoding="async" /></figure>
+				<figure class="foto foto--letrero"><img src={letrero} alt="Letrero de Somos Loja sobre los estantes de la tienda" width="1024" height="576" loading="lazy" decoding="async" /></figure>
 			</div>
-			<img class="visita__letrero" src={letrero} alt="Letrero de Somos Loja sobre los estantes de la tienda" width="1024" height="576" loading="lazy" decoding="async" />
+			<div class="carrusel" tabindex="0" aria-label="Algunos productos de la tienda">
+				<ul class="carrusel__pista">
+					{cinta.map((p, i) => (
+						<li class="producto" aria-hidden={i >= productos.length ? 'true' : undefined}>
+							<img src={p.src} alt={i >= productos.length ? '' : p.alt} width="800" height="1067" loading="lazy" decoding="async" />
+							<h3>{p.titulo}</h3>
+						</li>
+					))}
+				</ul>
+			</div>
 		</section>
 	</main>
 
@@ -107,6 +137,8 @@ import { capitulos, categorias, cifras, enlaces, ilustraciones, interior, letrer
 	import Lenis from 'lenis';
 
 	const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const ahorro = (navigator as any).connection?.saveData;
+	const movil = innerWidth <= 860;
 	gsap.registerPlugin(ScrollTrigger);
 
 	if (!reducir) {
@@ -120,33 +152,48 @@ import { capitulos, categorias, cifras, enlaces, ilustraciones, interior, letrer
 			lenis.scrollTo(a.getAttribute('href')!, { duration: 1.6 });
 		}));
 
-		// Opening: the town gives way to one large bean, as if the camera looked closer.
-		gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.apertura', start: 'top top', end: 'bottom bottom', scrub: true } })
-			.to('.apertura__titulo', { y: -120, autoAlpha: 0, duration: 0.3 }, 0)
-			.to('.apertura__rama', { x: -120, y: -120, rotate: -8, duration: 0.5 }, 0)
-			.to('.apertura__ciudad', { scale: 1.16, y: 220, autoAlpha: 0, duration: 0.55, transformOrigin: '50% 80%' }, 0.05)
-			.fromTo('.apertura__grano', { yPercent: -180, rotate: -50, scale: 0.55 }, { yPercent: 0, rotate: 18, scale: 1, duration: 0.65 }, 0)
-			.fromTo('.apertura__frase', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 0.55)
-			.to('.apertura__grano', { rotate: 40, duration: 0.3 }, 0.65);
+		// Opening: the name is written by hand, then the rest settles in.
+		gsap.timeline({ defaults: { ease: 'power2.out' } })
+			.from('.escenario__img', { autoAlpha: 0, scale: 1.03, duration: 1.2 }, 0)
+			.fromTo('.titulo__somos span', { clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% -5% -20% 0)', duration: 0.9, ease: 'power1.inOut' }, 0.2)
+			.fromTo('.titulo__loja span', { clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% -5% -20% 0)', duration: 0.7, ease: 'power1.inOut' }, 1)
+			.from('.titulo__lema', { autoAlpha: 0, y: 16, duration: 0.6 }, 1.5)
+			.from('.titulo__cta', { autoAlpha: 0, y: 16, duration: 0.6 }, 1.65);
+		gsap.to('.apertura__rama', { rotate: 3, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, transformOrigin: '0% 0%' });
 
-		// A ribbon of coffee draws itself through the three chapters.
+		// A living cathedral, only where it costs little.
+		const video = document.querySelector<HTMLVideoElement>('.escenario__video');
+		const urlVideo = document.documentElement.dataset.video;
+		if (video && urlVideo && !movil && !ahorro) {
+			video.src = urlVideo;
+			video.addEventListener('canplay', () => { video.classList.add('listo'); video.play().catch(() => {}); }, { once: true });
+			video.load();
+			new IntersectionObserver(([e]) => { if (e.isIntersecting) video.play().catch(() => {}); else video.pause(); }).observe(video);
+		}
+
+		// Scroll: the square gives way to one large bean.
+		gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.apertura', start: 'top top', end: 'bottom bottom', scrub: true } })
+			.to('.titulo', { y: -90, autoAlpha: 0, duration: 0.35 }, 0)
+			.to('.apertura__rama', { x: -120, y: -120, autoAlpha: 0, duration: 0.4 }, 0)
+			.to('.escenario', { scale: 1.18, y: 120, autoAlpha: 0, duration: 0.6, transformOrigin: '50% 45%' }, 0.05)
+			.fromTo('.apertura__grano', { yPercent: -230, rotate: -60, scale: 0.45 }, { yPercent: 0, rotate: 12, scale: 1, duration: 0.7 }, 0)
+			.fromTo('.apertura__frase', { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.6)
+			.to('.apertura__grano', { rotate: 28, duration: 0.3 }, 0.7);
+
+		// Process: a ribbon of coffee links the three moments.
 		gsap.utils.toArray<SVGPathElement>('.cinta path').forEach((p) => {
 			const largo = p.getTotalLength();
-			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.recorrido', start: 'top 60%', end: 'bottom 70%', scrub: true } });
+			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top 75%', end: 'center 45%', scrub: true } });
 		});
-		gsap.utils.toArray<HTMLElement>('.capitulo').forEach((c) => {
-			gsap.from(c.querySelector('.capitulo__img'), { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
-			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 68%' } });
-		});
+		gsap.from('.capitulo', { autoAlpha: 0, y: 40, duration: 0.8, stagger: 0.12, ease: 'power3.out', scrollTrigger: { trigger: '.proceso__fila', start: 'top 75%' } });
 
-		// The 50: scroll drives the beans; text arrives when they have landed.
+		// The 50: scroll drives real 3D beans.
 		const etapa = document.querySelector<HTMLElement>('.cincuenta')!;
 		const canvas = document.getElementById('granos') as HTMLCanvasElement | null;
 		function progreso() {
 			const r = etapa.getBoundingClientRect();
-			return Math.min(1, Math.max(0, (innerHeight * 0.5 - r.top) / ((r.height - innerHeight) * 0.75 + innerHeight * 0.5)));
+			return Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / ((r.height - innerHeight) * 0.7 + innerHeight * 0.6)));
 		}
-		const ahorro = (navigator as any).connection?.saveData;
 		if (canvas && !ahorro) {
 			const vigia = new IntersectionObserver(([e]) => {
 				if (!e.isIntersecting) return;
@@ -155,16 +202,33 @@ import { capitulos, categorias, cifras, enlaces, ilustraciones, interior, letrer
 					.then((m) => m.iniciarGranos(canvas, document.querySelector('.cincuenta__fijo')!, progreso))
 					.then(() => document.documentElement.classList.add('con-granos'))
 					.catch(() => canvas.remove());
-			}, { rootMargin: '150% 0px' });
+			}, { rootMargin: '120% 0px' });
 			vigia.observe(etapa);
 		}
-		gsap.fromTo('.cincuenta__texto', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, ease: 'none', scrollTrigger: { trigger: etapa, start: () => 'top+=' + etapa.offsetHeight * 0.32 + ' top', end: () => 'top+=' + etapa.offsetHeight * 0.46 + ' top', scrub: true } });
+		gsap.fromTo('.cincuenta__texto', { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, ease: 'none', scrollTrigger: { trigger: etapa, start: () => 'top+=' + etapa.offsetHeight * 0.14 + ' top', end: () => 'top+=' + etapa.offsetHeight * 0.34 + ' top', scrub: true } });
 
-		// Store: its elements arrive one after another; products fan out.
-		gsap.from('.tienda__foto', { autoAlpha: 0, y: 60, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.tienda', start: 'top 65%' } });
-		gsap.from('.tienda__texto > *', { autoAlpha: 0, y: 28, duration: 0.7, stagger: 0.07, ease: 'power3.out', scrollTrigger: { trigger: '.tienda', start: 'top 60%' } });
-		gsap.from('.producto', { autoAlpha: 0, y: 120, rotate: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.productos', start: 'top 85%' } });
-		gsap.from('.visita__letrero', { autoAlpha: 0, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.visita', start: 'top 70%' } });
+		// Flavours: each illustration tilts toward the pointer like an object in hand.
+		gsap.from('.sabores__cabeza > *', { autoAlpha: 0, y: 28, duration: 0.7, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.sabores', start: 'top 72%' } });
+		gsap.from('.sabor', { autoAlpha: 0, y: 48, scale: 0.94, duration: 0.8, stagger: 0.07, ease: 'power3.out', scrollTrigger: { trigger: '.sabores__lista', start: 'top 78%' } });
+		if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+			document.querySelectorAll<HTMLElement>('.sabor').forEach((s) => {
+				const img = s.querySelector('img')!;
+				const rx = gsap.quickTo(img, 'rotationX', { duration: 0.5, ease: 'power3.out' });
+				const ry = gsap.quickTo(img, 'rotationY', { duration: 0.5, ease: 'power3.out' });
+				const sc = gsap.quickTo(img, 'scale', { duration: 0.5, ease: 'power3.out' });
+				s.addEventListener('pointermove', (e) => {
+					const r = s.getBoundingClientRect();
+					ry(((e.clientX - r.left) / r.width - 0.5) * 22);
+					rx(((e.clientY - r.top) / r.height - 0.5) * -22);
+					sc(1.07);
+				});
+				s.addEventListener('pointerleave', () => { rx(0); ry(0); sc(1); });
+			});
+		}
+
+		// Store.
+		gsap.from('.tienda__texto > *', { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.tienda', start: 'top 68%' } });
+		gsap.from('.mapa, .foto', { autoAlpha: 0, y: 48, duration: 0.9, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.tienda__rejilla', start: 'top 70%' } });
 		addEventListener('load', () => ScrollTrigger.refresh());
 	}
 </script>
