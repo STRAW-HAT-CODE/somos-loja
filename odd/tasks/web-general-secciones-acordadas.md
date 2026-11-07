@@ -18,12 +18,14 @@ S10. Do not reorder the existing narrative (300vh opening stage and its scroll t
 
 ## Tasks
 
-- T1 — data model for events, social links and invitation. `src/data/somos-loja.ts`. inline.
-- T2 — `src/components/Eventos.astro` accordion, scoped styles. inline.
-- T3 — `src/components/Invitacion.astro` with 9:16 video frame. inline.
-- T4 — mount both in `src/pages/index.astro`. inline.
-- T5 — verify: build, desktop and mobile screenshots. inline.
-- T6 — commit work units. inline.
+- [x] T1 — data model for events, social links and invitation. `src/data/somos-loja.ts`. inline. c79ad0f
+- [x] T2 — `src/components/Eventos.astro` accordion, scoped styles. inline. c79ad0f
+- [x] T3 — `src/components/Invitacion.astro` with 9:16 video frame. inline. c79ad0f
+- [x] T4 — mount both in `src/pages/index.astro`. inline. c79ad0f
+- [x] T5 — verify: build, desktop and mobile screenshots. inline. build green, 1440x900 and 390x844 checked.
+- [x] T6 — commit work units. inline. c79ad0f
+- [ ] T7 — pending client answers: dates of the third edition, past editions, Facebook and TikTok URLs, real vertical footage.
+- [ ] T8 — pending product decision: interactive activity ("aún por definir").
 
 ## Log
 
@@ -42,3 +44,7 @@ L3 (assumption): the four sections are added rather than reordering the page. Re
 L4 (assumption): no event names or dates exist in the repository. The accordion ships with the structure filled by real known facts (third edition, store location) and everything else behind `Pendiente`, so the client can answer the open questions while looking at the prototype.
 
 L5 (discovery): the worktree had uncommitted work from Nov 2–3 (header redesign, hero rework, cartero page). It was preserved first in `7893d59` so the new work stays reviewable on its own.
+
+L6 (deviation, S5): the meeting wrote `100%`, the site already writes `100 %` in the seal and the event section. Normalised to `100 %` so the two do not disagree on the same page.
+
+L7 (verification): `npx astro build` green. Screenshots at 1440x900 and 390x844. In development the two empty groups are visible with `{{fecha}}` / `{{facebook}}` markers; the production build drops the empty groups and the markers, leaving only the confirmed event. Video and poster both answer 200.
