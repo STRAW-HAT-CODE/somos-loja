@@ -9,8 +9,14 @@ const cinta = [...productos, ...productos];
 <Layout>
 	<a class="saltar" href="#tienda">Saltar a la tienda</a>
 	<header class="cabecera">
-		<a class="cabecera__logo" href="#inicio" aria-label="Somos Loja, volver al inicio"><img src={logo} alt="" width="40" height="40" /></a>
-		<a class="boton boton--tinta boton--chico" href="#tienda">Dónde estamos</a>
+		<a class="cabecera__logo" href="#inicio" aria-label="Somos Loja, volver al inicio"><img src={logo} alt="" width="88" height="120" /></a>
+		<nav class="cabecera__nav" aria-label="Navegación principal">
+			<a href="#inicio" aria-current="page">Inicio</a>
+			<a href="#tienda">Tienda</a>
+			<a href="#evento">Evento</a>
+			<a href="#nosotros">Nosotros</a>
+		</nav>
+		<a class="boton boton--tinta cabecera__lugar" href="#tienda"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg><span>Dónde estamos</span></a>
 	</header>
 
 	<main>
@@ -21,40 +27,46 @@ const cinta = [...productos, ...productos];
 					<img class="escenario__img" src={ilustraciones.fachada} alt="Ilustración de la Catedral de Loja con su torre del reloj, palmeras y el Parque Central" width="1672" height="941" fetchpriority="high" />
 					<video class="escenario__video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
 					<div class="titulo">
-						<p class="firma titulo__somos"><span>Somos</span></p>
-						<p class="firma titulo__loja"><span>Loja</span></p>
-						<h1 class="versal titulo__lema">El sabor de Loja, a pasos de la Catedral</h1>
-						<a class="boton boton--ocre titulo__cta" href="#tienda">Conoce la tienda<Flecha /></a>
+						<div class="titulo__nombre" aria-label="Somos Loja">
+							<p class="firma titulo__somos"><span>Somos</span></p>
+							<p class="firma titulo__loja"><span>Loja</span></p>
+						</div>
+						<h1 class="titulo__lema">El sabor de Loja, a pasos de la Catedral</h1>
+						<div class="titulo__adorno" aria-hidden="true"><span>✻</span></div>
 					</div>
+					<a class="hero-ticket hero-ticket--tienda" href="#tienda">
+						<svg class="hero-ticket__icono" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M8 16h32l-2 26H10L8 16Z M17 19v-8a7 7 0 0 1 14 0v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+						<span class="hero-ticket__titulo">Tienda</span>
+						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
+						<span class="hero-ticket__accion">Conoce la tienda <span class="hero-ticket__flecha" aria-hidden="true">→</span></span>
+					</a>
+					<a class="hero-ticket hero-ticket--evento" href="#evento">
+						<span class="hero-ticket__sello" aria-hidden="true">Loja<br />✦<br />Café</span>
+						<span class="hero-ticket__etiqueta">Evento</span>
+						<span class="hero-ticket__titulo"><strong>50</strong> marcas<br />de café</span>
+						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
+					</a>
 				</div>
 				<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
 				<h2 class="titular apertura__frase">En Loja, cada grano<br />tiene una historia</h2>
+				<a class="apertura__seguir" href="#proceso"><span aria-hidden="true">⌄</span>Explora Loja</a>
 			</div>
 		</section>
 
-		<section class="proceso" aria-labelledby="titulo-proceso">
-			<h2 id="titulo-proceso" class="titular proceso__titulo">Del cafetal a tu taza</h2>
-			<div class="proceso__fila">
-				<svg class="cinta" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
-					<path class="cinta__ancha" d="M0 60C160 -10 250 190 420 110S640 10 780 110 930 170 1000 90" />
-					<path class="cinta__fina" d="M0 72C160 2 250 202 420 122S640 22 780 122 930 182 1000 102" />
-				</svg>
-				{capitulos.map((c, i) => (
-					<article class="capitulo">
-						<div class="capitulo__marco">
-							<img src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />
-							{i === 2 && (
-								<svg class="vapor" viewBox="0 0 60 90" aria-hidden="true">
-									<path d="M18 88c-10-16 12-24 2-42S18 16 26 4" />
-									<path d="M34 88c-10-16 12-24 2-42S34 16 42 4" />
-								</svg>
-							)}
-						</div>
-						<h3 class="titular titular--media">{c.titulo}</h3>
+		<section id="proceso" class="proceso" aria-label="El camino del café">
+			<svg class="cinta" viewBox="0 0 1000 2400" preserveAspectRatio="none" aria-hidden="true">
+				<path class="cinta__ancha" d="M500 0C820 240 900 520 620 760S120 1040 240 1320 860 1560 780 1880 420 2240 500 2400" />
+				<path class="cinta__fina" d="M520 0C860 240 930 540 640 780S150 1060 270 1330 890 1580 800 1890 450 2240 520 2400" />
+			</svg>
+			{capitulos.map((c, i) => (
+				<article class={`capitulo capitulo--${i % 2 ? 'der' : 'izq'}`}>
+					<img class="capitulo__img" src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />
+					<div class="capitulo__texto">
+						<h2 class="titular">{c.titulo}</h2>
 						<p class="cuerpo">{c.texto}</p>
-					</article>
-				))}
-			</div>
+					</div>
+				</article>
+			))}
 		</section>
 
 		<section id="evento" class="cincuenta">
@@ -69,7 +81,7 @@ const cinta = [...productos, ...productos];
 			</div>
 		</section>
 
-		<section class="sabores" aria-labelledby="titulo-sabores">
+		<section id="nosotros" class="sabores" aria-labelledby="titulo-sabores">
 			<div class="sabores__cabeza">
 				<p class="firma firma--media">Sabe a Loja</p>
 				<h2 id="titulo-sabores" class="titular titular--media">Lo que hacemos aquí, para que te lo lleves</h2>
@@ -162,7 +174,7 @@ const cinta = [...productos, ...productos];
 			.fromTo('.titulo__somos span', { clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% -5% -20% 0)', duration: 0.9, ease: 'power1.inOut' }, 0.2)
 			.fromTo('.titulo__loja span', { clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% -5% -20% 0)', duration: 0.7, ease: 'power1.inOut' }, 1)
 			.from('.titulo__lema', { autoAlpha: 0, y: 16, duration: 0.6 }, 1.5)
-			.from('.titulo__cta', { autoAlpha: 0, y: 16, duration: 0.6 }, 1.65);
+			.from('.hero-ticket', { autoAlpha: 0, y: 16, duration: 0.6, stagger: 0.12 }, 1.65);
 		gsap.to('.apertura__rama', { rotate: 3, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, transformOrigin: '0% 0%' });
 
 		// A living cathedral, only where it costs little.
@@ -177,19 +189,24 @@ const cinta = [...productos, ...productos];
 
 		// Scroll: the square gives way to one large bean.
 		gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.apertura', start: 'top top', end: 'bottom bottom', scrub: true } })
-			.to('.titulo', { y: -90, autoAlpha: 0, duration: 0.35 }, 0)
-			.to('.apertura__rama', { x: -120, y: -120, autoAlpha: 0, duration: 0.4 }, 0)
-			.to('.escenario', { scale: 1.18, y: 120, autoAlpha: 0, duration: 0.6, transformOrigin: '50% 45%' }, 0.05)
-			.fromTo('.apertura__grano', { yPercent: -230, rotate: -60, scale: 0.45 }, { yPercent: 0, rotate: 12, scale: 1, duration: 0.7 }, 0)
-			.fromTo('.apertura__frase', { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.6)
-			.to('.apertura__grano', { rotate: 28, duration: 0.3 }, 0.7);
+			.to('.titulo', { y: -90, autoAlpha: 0, duration: 0.18 }, 0.7)
+			.to('.apertura__seguir', { autoAlpha: 0, duration: 0.15 }, 0)
+			.to('.apertura__rama', { x: -120, y: -120, autoAlpha: 0, duration: 0.2 }, 0.7)
+			.to('.escenario', { scale: 1.08, y: 80, duration: 0.7, transformOrigin: '50% 45%' }, 0.05)
+			.to('.escenario', { autoAlpha: 0, duration: 0.2 }, 0.72)
+			.fromTo('.apertura__grano', { yPercent: -180, rotate: -50, scale: 0.55 }, { yPercent: 0, rotate: 18, scale: 1, duration: 0.65 }, 0)
+			.fromTo('.apertura__frase', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 0.55)
+			.to('.apertura__grano', { rotate: 40, duration: 0.3 }, 0.65);
 
-		// Process: a ribbon of coffee links the three moments.
+		// The coffee ribbon draws itself through three alternating chapters.
 		gsap.utils.toArray<SVGPathElement>('.cinta path').forEach((p) => {
 			const largo = p.getTotalLength();
-			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top 75%', end: 'center 45%', scrub: true } });
+			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top 60%', end: 'bottom 70%', scrub: true } });
 		});
-		gsap.from('.capitulo', { autoAlpha: 0, y: 40, duration: 0.8, stagger: 0.12, ease: 'power3.out', scrollTrigger: { trigger: '.proceso__fila', start: 'top 75%' } });
+		gsap.utils.toArray<HTMLElement>('.capitulo').forEach((c) => {
+			gsap.from(c.querySelector('.capitulo__img'), { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
+			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 68%' } });
+		});
 
 		// The 50: scroll drives real 3D beans.
 		const etapa = document.querySelector<HTMLElement>('.cincuenta')!;
@@ -202,7 +219,8 @@ const cinta = [...productos, ...productos];
 			const vigia = new IntersectionObserver(([e]) => {
 				if (!e.isIntersecting) return;
 				vigia.disconnect();
-				import('../scripts/granos-vintage.js')
+				const acuarela = new URLSearchParams(location.search).get('granos') === 'acuarela';
+				import(acuarela ? '../scripts/granos-acuarela.js' : '../scripts/granos-vintage.js')
 					.then((m) => m.iniciarGranos(canvas, document.querySelector('.cincuenta__fijo')!, progreso))
 					.then(() => document.documentElement.classList.add('con-granos'))
 					.catch(() => canvas.remove());
