@@ -1,0 +1,206 @@
+---
+// Accordion for the fair agenda. The three groups come from the meeting notes
+// ("pasados, en curso y próximos"); whatever the client has not confirmed is
+// rendered with <Pendiente> instead of invented copy.
+import { agenda } from '../data/somos-loja';
+import Pendiente from './Pendiente.astro';
+
+// Empty groups stay visible in development so the structure can be reviewed,
+// and are left out of the production build.
+const grupos = agenda.filter((grupo) => grupo.items.length > 0 || import.meta.env.DEV);
+const abierto = grupos.findIndex((grupo) => grupo.items.length > 0);
+---
+
+<section id="eventos" class="agenda" aria-labelledby="titulo-agenda">
+	<div class="agenda__cabeza">
+		<p class="versal versal--chica">Agenda</p>
+		<h2 id="titulo-agenda" class="titular titular--media">Qué está pasando</h2>
+		<p class="nota">Pasados, en curso y próximos. La agenda se confirma con cada productor.</p>
+	</div>
+
+	<div class="agenda__grupos">
+		{
+			grupos.map((grupo, indice) => (
+				<details class="agenda__grupo" open={indice === abierto}>
+					<summary class="agenda__resumen">
+						<span class="agenda__etiqueta">{grupo.etiqueta}</span>
+						<span class="agenda__cuenta" aria-hidden="true">{grupo.items.length}</span>
+					</summary>
+					<div class="agenda__cuerpo">
+						{grupo.items.length > 0 ? (
+							<ul class="agenda__items">
+								{grupo.items.map((evento) => (
+									<li class="agenda__item">
+										<h3 class="titular--chica">{evento.titulo}</h3>
+										{evento.detalle && <p class="agenda__detalle">{evento.detalle}</p>}
+										<p class="agenda__datos">
+											<span>{evento.fecha ?? <Pendiente dato="fecha" />}</span>
+											<span>{evento.lugar ?? <Pendiente dato="lugar" />}</span>
+										</p>
+									</li>
+								))}
+							</ul>
+						) : (
+							<p class="agenda__vacio">
+								Sin eventos confirmados todavía. <Pendiente dato="agenda" />
+							</p>
+						)}
+					</div>
+				</details>
+			))
+		}
+	</div>
+</section>
+
+<script>
+	// One group open at a time. Native <details> keeps it usable without JS.
+	const agendaGrupos = document.querySelectorAll('.agenda__grupo');
+	agendaGrupos.forEach((grupo) => {
+		grupo.addEventListener('toggle', () => {
+			if (!grupo.open) return;
+			agendaGrupos.forEach((otro) => {
+				if (otro !== grupo) otro.open = false;
+			});
+		});
+	});
+</script>
+
+<style>
+	.agenda {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 88px 48px 96px;
+		display: grid;
+		grid-template-columns: 4fr 8fr;
+		gap: 48px;
+		align-items: start;
+	}
+
+	.agenda__cabeza {
+		display: grid;
+		gap: 12px;
+	}
+
+	.agenda__grupos {
+		border-top: 1px solid rgb(27 47 107 / 0.18);
+	}
+
+	.agenda__grupo {
+		border-bottom: 1px solid rgb(27 47 107 / 0.18);
+	}
+
+	.agenda__resumen {
+		display: grid;
+		grid-template-columns: 1fr auto auto;
+		align-items: baseline;
+		gap: 16px;
+		padding: 22px 0;
+		cursor: pointer;
+		list-style: none;
+		transition: color 200ms var(--curva);
+	}
+
+	.agenda__resumen::-webkit-details-marker {
+		display: none;
+	}
+
+	.agenda__resumen::after {
+		content: '+';
+		font-family: 'Manrope', system-ui, sans-serif;
+		font-size: 0.875rem;
+		line-height: 1;
+		transform: translateY(-2px);
+	}
+
+	.agenda__grupo[open] .agenda__resumen::after {
+		content: '−';
+	}
+
+	.agenda__resumen:hover .agenda__etiqueta {
+		color: var(--cafe);
+	}
+
+	.agenda__etiqueta {
+		font-family: 'Cormorant', Georgia, serif;
+		font-size: clamp(1.5rem, 2.4vw, 2rem);
+		line-height: 1.1;
+		font-weight: 600;
+		transition: color 200ms var(--curva);
+	}
+
+	.agenda__cuenta {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--tinta-suave);
+	}
+
+	.agenda__cuerpo {
+		padding: 0 0 28px;
+	}
+
+	.agenda__grupo[open] .agenda__cuerpo {
+		animation: aparecer 360ms var(--curva) both;
+	}
+
+	.agenda__items {
+		display: grid;
+		gap: 20px;
+	}
+
+	.agenda__item {
+		display: grid;
+		gap: 4px;
+		padding: 18px 20px;
+		background: rgb(27 47 107 / 0.04);
+		border-left: 2px solid var(--ocre);
+	}
+
+	.agenda__detalle {
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--cafe);
+	}
+
+	.agenda__datos {
+		display: grid;
+		gap: 2px;
+		font-size: 0.9375rem;
+		line-height: 1.5rem;
+		color: var(--tinta-suave);
+	}
+
+	.agenda__vacio {
+		font-size: 0.9375rem;
+		line-height: 1.5rem;
+		color: var(--tinta-suave);
+		font-style: italic;
+	}
+
+	@keyframes aparecer {
+		from {
+			opacity: 0;
+			transform: translateY(-6px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.agenda {
+			grid-template-columns: 1fr;
+			gap: 28px;
+			padding: 64px 24px 72px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.agenda__grupo[open] .agenda__cuerpo {
+			animation: none;
+		}
+	}
+</style>

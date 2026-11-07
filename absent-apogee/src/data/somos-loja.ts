@@ -51,6 +51,40 @@ export const sabores = [
   { img: `${v}/belleza.webp`, titulo: 'Salud y belleza', texto: 'Cuidado natural de aquí.', alt: 'Ilustración de jabones naturales y bálsamos' },
 ];
 
+// Agenda shape agreed in the meeting: past, current and upcoming events.
+// No event name or date exists in the materials yet, so every unknown stays
+// null and is rendered with <Pendiente> instead of being invented.
+type Evento = {
+  titulo: string;
+  detalle?: string;
+  fecha: string | null;
+  lugar: string | null;
+};
+
+export const agenda: { id: string; etiqueta: string; items: Evento[] }[] = [
+  { id: 'en-curso', etiqueta: 'En curso', items: [] },
+  {
+    id: 'proximos',
+    etiqueta: 'Próximos',
+    items: [
+      {
+        titulo: 'Loja 100 % Café Especial',
+        detalle: 'Tercera edición',
+        fecha: pendiente.fecha,
+        lugar: 'Tienda Somos Loja, a pasos de la Catedral',
+      },
+    ],
+  },
+  { id: 'pasados', etiqueta: 'Pasados', items: [] },
+];
+
+export const invitacion = {
+  titulo: 'Te invitamos a Loja 100 % Café Especial',
+  texto: 'Café, barro negro, chocolates, textiles y licores de productores de Loja. Te esperamos en la tienda.',
+  // Placeholder until the client sends the vertical footage used in the posts.
+  video: { src: '/evento/recursos/plaza.mp4', poster: `${v}/plaza.webp` },
+};
+
 export const productos = [
   { src: `${g}/cafe-la-papaya.webp`, titulo: 'La Papaya', alt: 'Bolsa de café La Papaya' },
   { src: `${g}/olla-negra.webp`, titulo: 'Barro negro', alt: 'Olla de barro negro con dos figuras' },

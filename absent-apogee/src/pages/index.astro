@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
 import EventoFlotante from '../components/EventoFlotante.astro';
+import Eventos from '../components/Eventos.astro';
+import Invitacion from '../components/Invitacion.astro';
 import { capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sabores, sello } from '../data/somos-loja';
 const cinta = [...productos, ...productos];
 ---
@@ -81,6 +83,8 @@ const cinta = [...productos, ...productos];
 			</div>
 		</section>
 
+		<Eventos />
+
 		<section id="nosotros" class="sabores" aria-labelledby="titulo-sabores">
 			<div class="sabores__cabeza">
 				<p class="firma firma--media">Sabe a Loja</p>
@@ -98,6 +102,8 @@ const cinta = [...productos, ...productos];
 				))}
 			</ul>
 		</section>
+
+		<Invitacion />
 
 		<section id="tienda" class="tienda">
 			<div class="tienda__rejilla">
