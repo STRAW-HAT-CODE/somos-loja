@@ -2,11 +2,11 @@
 
 Isolated local variant of the existing automatic courier invitation. Uses the same raw WebGL renderer, timeline, envelope socket, sounds, skip/replay, reduced-motion mode and static fallback; no Three.js, new plugins, CDN or generated model dependency.
 
-Alforjita is a stylized geometric recreation of the supplied illustration, not an exact copy. The storefront uses the supplied video's entrance instead of a cabin. Brand sources are archived in `../../assets/brand/somos-loja/`.
+Alforjita is a stylized geometric recreation of the supplied illustration, not an exact copy. The storefront uses the supplied video's entrance instead of a cabin. Brand sources are archived in `../assets/brand/somos-loja/`.
 
 Performance: DPR capped at 1.5, shared static geometry, single timeline, hidden-tab pause and final renderer stop. Detailed character geometry renders once per frame; envelope socket and planar shadow use simpler poses. Audio fetches only after a gesture. No full video/PDF/reference PNG is loaded at runtime.
 
-Run from a local HTTP server at `/design/alforjita-invitacion/`. `?lento=4` slows the sequence for review; `?fallback=1` forces the static illustration. Node contracts: `node --test tests/alforjita-invitacion.test.mjs`.
+Run from a local HTTP server at `/invitacion/`. `?lento=4` slows the sequence for review; `?fallback=1` forces the static illustration. Node contracts: `node --test tests/alforjita-invitacion.test.mjs`.
 
 No real redemption, personal QR issuance, publishing or voice recording is implemented. Perks are pending agreement. Other website/tablet/scroll work remains untouched.
 
