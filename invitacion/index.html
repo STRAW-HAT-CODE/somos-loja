@@ -10,7 +10,7 @@
 <script>document.documentElement.classList.add('js', 'intro');</script>
 <style>
 :root {
-  --papel: #f6eedd; --tinta: #1b2f6b; --tinta-suave: #3c4c80; --ocre: #e0a93b; --cafe: #5a331c;
+  --papel: #f6eedd; --tinta: #185269; --tinta-suave: #306d7c; --ocre: #fc9e6e; --cafe: #5a331c;
   --pendiente: #ffe9a8; --pendiente-tinta: #5c4400;
   --curva: cubic-bezier(0.22, 1, 0.36, 1);
   --display: Georgia, serif; --texto: system-ui, sans-serif;
@@ -93,27 +93,26 @@ html.js.intro .postal { opacity: 0; }
   .postal__cuerpo { grid-template-columns: 1fr 1fr; gap: 48px; }
 }
 @media (prefers-reduced-motion: reduce) { .boton { transition: none; } }
+.orientation-note {margin-top:20px;font-size:.8rem;color:var(--tinta-suave)}
+@media(min-width:861px){.orientation-note{display:none}}
 </style>
 </head>
 <body>
 <div class="fondo" aria-hidden="true"></div>
 <canvas id="scene" aria-hidden="true"></canvas>
-<div class="respaldo" id="respaldo" aria-hidden="true" hidden><svg viewBox="0 0 800 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustración fija: el cartero entrega el sobre frente a la tienda en miniatura.">
-        <ellipse cx="400" cy="620" rx="350" ry="90" fill="#3c4c80"/>
-        <path d="M60 560v40c0 50 152 90 340 90s340-40 340-90v-40z" fill="#5a331c"/>
-        <ellipse cx="400" cy="560" rx="340" ry="96" fill="#f6eedd"/>
-        <path d="M90 590Q300 560 520 600" fill="none" stroke="#5a331c" stroke-opacity=".35" stroke-width="26" stroke-linecap="round"/>
-        <circle cx="130" cy="500" r="42" fill="#3c4c80"/><circle cx="182" cy="478" r="30" fill="#3c4c80"/><circle cx="150" cy="474" r="6" fill="#e0a93b"/>
-        <g>
-          <path d="M360 240h320v290H360z" fill="#f6eedd"/><path d="M360 240h320v290H360z" fill="#e0a93b" fill-opacity=".22"/>
-          <path d="M330 244 520 140l190 104z" fill="#5a331c"/>
-          <path d="M440 380h86v150h-86z" fill="#1b2f6b"/><circle cx="510" cy="458" r="6" fill="#e0a93b"/>
-          <path d="M560 360h90v80h-90z" fill="#e0a93b"/><path d="M604 360v80M560 400h90" stroke="#5a331c" stroke-width="5"/>
-          <path d="M420 330h250l24 44H396z" fill="#e0a93b"/><path d="M450 330l-14 44M510 330l-8 44M570 330l8 44M630 330l14 44" stroke="#f6eedd" stroke-width="16"/>
-        </g>
-        <g data-courier-art transform="translate(160 300) scale(1.25)"></g>
-      </svg></div>
-
+<div class="respaldo" id="respaldo" aria-hidden="true" hidden>
+<svg viewBox="0 0 800 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Alforjita entrega la postal frente a la entrada de Somos Loja, ilustración de respaldo.">
+<ellipse cx="400" cy="626" rx="340" ry="54" fill="#e0e0d5"/>
+<path d="M365 230h350v370H365z" fill="#e0e0d5"/><path d="M410 310h260v290H410z" fill="#185269"/><path d="M450 365h170v235H450z" fill="#5a331c"/>
+<path d="M385 235h20v365h-20zM680 235h20v365h-20z" fill="#fffaf2"/>
+<path d="M400 230v-22m140 22v-22m140 22v-22" stroke="#185269" stroke-width="5"/><text x="540" y="202" text-anchor="middle" fill="#fffaf2" stroke="#185269" stroke-width=".6" font-size="33" font-family="sans-serif" font-weight="bold">SOMOS LOJA</text>
+<g transform="translate(105 210)"><path d="M58 167Q15 244 40 352h177q17-89-50-188z" fill="#a7ce16"/><path d="M75 176l16 176h48l-10-178zM175 184l-1 168h43q18-94-42-168" fill="#c70080"/><ellipse cx="128" cy="126" rx="78" ry="87" fill="#f5ad9a"/>
+<path d="M50 65Q-30-112 90-120q177 0 107 187" fill="#a7ce16"/><path d="M55-113q38 53 43 163h40q-1-110-35-169zM149-102q34 62 23 158l25 11q48-111-48-169" fill="#c70080"/>
+<ellipse cx="125" cy="50" rx="95" ry="25" fill="#147bb8"/><path d="M40 64h171l-15 18H57z" fill="#26202c"/><path d="M138 37l16 5-4 18-12 5-12-10V42z" fill="#ffca36"/>
+<ellipse cx="100" cy="112" rx="21" ry="31" fill="white"/><ellipse cx="160" cy="112" rx="20" ry="29" fill="white"/><ellipse cx="105" cy="116" rx="11" ry="20"/><ellipse cx="164" cy="116" rx="10" ry="19"/>
+<path d="M80 156q45 70 95-2-47 32-95 2" fill="#26202c"/><path d="M90 163q34 15 70-1" stroke="white" stroke-width="10" fill="none"/>
+<path d="M45 220l148 68-24 69-147-58z" fill="#9e653c"/><path d="M47 227l160-29" stroke="#5a331c" stroke-width="14"/><path d="M204 207l85-28" stroke="#a7ce16" stroke-width="23"/><path d="M252 142h100v72H252z" fill="#fffaf2" stroke="#185269" stroke-width="3"/><path d="M252 142l50 39 50-39" fill="none" stroke="#185269" stroke-width="3"/>
+</g></svg></div>
 <div class="frase" id="frase">
   <p class="frase__marca">Somos Loja</p>
   <p class="frase__texto">Una invitación desde Loja.</p>
@@ -161,12 +160,12 @@ html.js.intro .postal { opacity: 0; }
         <div><dt>Mapa</dt><dd>Por confirmar</dd></div>
       </dl>
       <div class="beneficio">
-        <p class="beneficio__texto">Una degustación por persona.</p>
+        <p class="beneficio__texto">Beneficio por confirmar.</p>
         <p class="beneficio__demo">Prototipo de demostración: esta invitación no sirve para canjear nada.</p>
       </div>
     </div>
     <div class="postal__pie"><button class="boton boton--linea" id="repetir" type="button" hidden>Repetir experiencia</button></div>
-  </article>
+  <p class="orientation-note">Para verla como una postal, puedes girar el teléfono. También puedes leerla en vertical.</p></article>
 </main>
 
 <script type="x-shader/x-vertex" id="vertex-shader">
@@ -210,6 +209,43 @@ void main() {
 }
 </script>
 
+<script id="delivery-timing">
+// One narrative clock for feet, sound, camera, hand gesture and postcard reveal.
+const DELIVERY_TIMING=(()=>{
+  const walk=2.2,turn=.55,raise=.8,hand=walk+turn+raise;
+  const zoom=hand+.55,zoomEnd=zoom+1.35;
+  const open=zoomEnd-.18,openEnd=open+.65,cardOut=open+.48,cardOutEnd=cardOut+.65;
+  const grow=cardOutEnd+.45,growEnd=grow+1.05,finish=growEnd+.3;
+  const startX=-1.4,endX=.5,startZ=.35,endZ=1.65,stride=.88;
+  const distance=Math.hypot(endX-startX,endZ-startZ);
+  const walkProgress=time=>{
+    const v=Math.max(0,Math.min(1,time/walk));
+    return v*v*(3-2*v)*.35+v*.65;
+  };
+  const stepTime=number=>{
+    let low=0,high=walk;
+    for(let i=0;i<36;i++) {
+      const mid=(low+high)/2;
+      if(walkProgress(mid)*distance<number*stride/2) low=mid;else high=mid;
+    }
+    return (low+high)/2;
+  };
+  const letterRelease=index=>index===0?walk*.32:index===1?walk*.68:Infinity;
+  const paperMotion=(index,time,originY)=>{
+    const elapsed=time-letterRelease(index);
+    if(elapsed<0) return {phase:'in-bag'};
+    const floor=.075,gravity=4.8,lift=.85;
+    const duration=(lift+Math.sqrt(lift*lift+2*gravity*Math.max(0,originY-floor)))/gravity;
+    const t=Math.min(elapsed,duration);
+    return {phase:elapsed>=duration?'landed':'falling',elapsed:t,progress:t/duration,
+      y:Math.max(floor,originY+lift*t-.5*gravity*t*t)};
+  };
+  return Object.freeze({walk,turn,raise,hand,zoom,zoomEnd,open,openEnd,cardOut,cardOutEnd,grow,growEnd,finish,
+    fallback:grow+.05,startX,endX,startZ,endZ,stride,distance,walkProgress,stepTime,letterRelease,paperMotion,
+    images:[cardOut+.16,cardOut+.34,cardOut+.52,cardOut+.70,cardOut+.88]});
+})();
+</script>
+
 <script id="miniature">
 // Compact raw WebGL scene: one shared buffer of unit primitives, a small matrix stack,
 // flat-shaded faces and planar shadows. It draws on demand and stops when nothing moves.
@@ -239,7 +275,9 @@ function createMiniature(canvas, { onLost }) {
   const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
   const mixColor = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
   const PAPEL = rgb('#f6eedd'), TINTA = rgb('#1b2f6b'), SUAVE = rgb('#3c4c80'), OCRE = rgb('#e0a93b'), CAFE = rgb('#5a331c');
-  const SKIN = mixColor(mixColor(OCRE, PAPEL, 0.45), CAFE, 0.24);
+  const SKIN = rgb('#f5ad9a');
+  const AIRMAIL_RED = rgb('#c7354e'), METAL_PLATE = rgb('#b3acb6'), LEATHER = rgb('#ae7347');
+  const ROSE = rgb('#eb7294'), LIME = rgb('#a7ce16'), FUCHSIA = rgb('#922788'), FLOWER_PINK = rgb('#d30088'), GOLD = rgb('#ffca36'), BLUE = rgb('#147bb8'), INK = rgb('#26202c'), WHITE = rgb('#fffaf2'), TEAL = rgb('#185269');
   const TILE = mixColor(PAPEL, CAFE, 0.26);
   const HILL = mixColor(SUAVE, PAPEL, 0.16);
 
@@ -294,6 +332,112 @@ function createMiniature(canvas, { onLost }) {
     tri(a(0.5), b(0.5), c(0.5)); tri(a(-0.5), b(-0.5), c(-0.5));
     quad(a(-0.5), b(-0.5), b(0.5), a(0.5)); quad(b(-0.5), c(-0.5), c(0.5), b(0.5)); quad(c(-0.5), a(-0.5), a(0.5), c(0.5));
   });
+
+  // Smooth parametric surfaces: winding follows their derivatives, not an
+  // origin heuristic (which cannot handle the concave bend of the fabric cap).
+  function smoothSurface(point, columns, rows, include = () => true) {
+    return primitive(() => {
+      const sample=(u,v)=>{
+        const t=Math.max(.0001,Math.min(.9999,v)),e=.00005,p=point(u,v);
+        const a=point(u+e,t),b=point(u-e,t),c=point(u,t+e),d=point(u,t-e);
+        const du=a.map((x,i)=>x-b[i]),dv=c.map((x,i)=>x-d[i]);
+        const n=[dv[1]*du[2]-dv[2]*du[1],dv[2]*du[0]-dv[0]*du[2],dv[0]*du[1]-dv[1]*du[0]];
+        const length=Math.hypot(...n)||1;
+        return [...p,...n.map(x=>x/length)];
+      };
+      const emit=(a,b,c)=>{
+        const u=b.slice(0,3).map((x,i)=>x-a[i]),v=c.slice(0,3).map((x,i)=>x-a[i]);
+        const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+        const facing=n.reduce((sum,x,i)=>sum+x*(a[i+3]+b[i+3]+c[i+3]),0);
+        for(const vertex of facing>=0?[a,b,c]:[a,c,b]) data.push(...vertex);
+      };
+      for(let y=0;y<rows;y++) for(let x=0;x<columns;x++) {
+        if(!include((x+.5)/columns,(y+.5)/rows)) continue;
+        const a=sample(x/columns,y/rows),b=sample((x+1)/columns,y/rows);
+        const c=sample((x+1)/columns,(y+1)/rows),d=sample(x/columns,(y+1)/rows);
+        emit(a,b,c);emit(a,c,d);
+      }
+    });
+  }
+  const MODEL_SPHERE=smoothSurface((u,v)=>{
+    const a=u*Math.PI*2,b=v*Math.PI;
+    return [Math.cos(a)*Math.sin(b),-Math.cos(b),Math.sin(a)*Math.sin(b)];
+  },32,18);
+  const MODEL_CYLINDER=smoothSurface((u,v)=>[Math.cos(u*Math.PI*2),v-.5,Math.sin(u*Math.PI*2)],24,2);
+  const SATCHEL_BODY=smoothSurface((u,v)=>{
+    const a=u*Math.PI*2,r=.68+.3*Math.sin(Math.min(1,v*2.8)*Math.PI/2),c=Math.cos(a),t=Math.sin(a);
+    return [Math.sign(c)*Math.pow(Math.abs(c),.45)*r,v-.5,Math.sign(t)*Math.pow(Math.abs(t),.6)*r];
+  },40,18);
+  const robePoint=(u,v)=>{
+    const angle=u*Math.PI*2+.18*Math.sin(v*Math.PI*1.7);
+    const r=.58+.4*Math.sin(Math.PI*v)-.05*v;
+    return [Math.cos(angle)*r,v-.5,Math.sin(angle)*r];
+  };
+  const ROBE_LIME=smoothSurface(robePoint,48,24,u=>Math.floor(u*8)%2===0);
+  const ROBE_FUCHSIA=smoothSurface(robePoint,48,24,u=>Math.floor(u*8)%2===1);
+  const hatPoint=(u,v)=>{
+    const x=-.96*Math.pow(v,2),y=1.05*(1-Math.pow(1-v,2)),r=.36*Math.pow(1-Math.pow(v,3),.7)+.025;
+    const dx=-1.92*v,dy=2.1*(1-v),length=Math.hypot(dx,dy),a=u*Math.PI*2+.52*Math.sin(v*4);
+    return [x+dy/length*r*Math.cos(a),y-dx/length*r*Math.cos(a),-.04+r*.86*Math.sin(a)];
+  };
+  const hatRegion=u=>u>.22&&u<.25?2:u>.25&&u<.28?3:Math.floor(u*8)%2;
+  const HAT_LIME=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===0);
+  const HAT_PURPLE=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===1);
+  const HAT_GOLD=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===2);
+  const HAT_CORAL=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===3);
+  function facialRibbon(top,bottom) {
+    return primitive(()=>{
+      for(let i=0;i<28;i++) {
+        const x=-1+2*i/28,nx=-1+2*(i+1)/28;
+        for(const vertex of [[x,top(x),0],[x,bottom(x),0],[nx,bottom(nx),0],[x,top(x),0],[nx,bottom(nx),0],[nx,top(nx),0]]) data.push(...vertex,0,0,1);
+      }
+    });
+  }
+  const SMILE=facialRibbon(x=>.12*(1-x*x),x=>-.9*Math.sqrt(Math.max(0,1-x*x)));
+  const TEETH=facialRibbon(x=>.12*(1-x*x),x=>-.12+.24*x*x);
+  const EYEBROW=facialRibbon(x=>.3*(1-x*x)+.07,x=>.3*(1-x*x)-.07);
+  const strapPoint=(width)=>(u,v)=>{
+    const t=v,a=1-t;
+    const x=a*a*.3+2*a*t*.11+t*t*(-.1);
+    const y=a*a*.86+2*a*t*.47+t*t*.16;
+    const z=a*a*.24+2*a*t*.58+t*t*.34;
+    return [x+(u-.5)*width,y,z];
+  };
+  const STRAP_EDGE=smoothSurface(strapPoint(.065),2,24);
+  const STRAP_CENTER=smoothSurface(strapPoint(.038),2,24);
+  // Contiguous extruded block letters, assembled once in the shared buffer.
+  function extrudeSignCell(x,y,width,height,depth) {
+    const x1=x+width,y1=y+height,z=depth/2;
+    const faces=[
+      [[0,0,1],[[x,y,z],[x1,y,z],[x1,y1,z],[x,y1,z]]],
+      [[0,0,-1],[[x1,y,-z],[x,y,-z],[x,y1,-z],[x1,y1,-z]]],
+      [[1,0,0],[[x1,y,z],[x1,y,-z],[x1,y1,-z],[x1,y1,z]]],
+      [[-1,0,0],[[x,y,-z],[x,y,z],[x,y1,z],[x,y1,-z]]],
+      [[0,1,0],[[x,y1,z],[x1,y1,z],[x1,y1,-z],[x,y1,-z]]],
+      [[0,-1,0],[[x,y,-z],[x1,y,-z],[x1,y,z],[x,y,z]]]
+    ];
+    for(const [normal,corners] of faces) for(const i of [0,1,2,0,2,3]) data.push(...corners[i],...normal);
+  }
+  const glyphs={
+    S:['01111','11000','11000','01110','00011','00011','11110'],
+    O:['01110','11011','11011','11011','11011','11011','01110'],
+    M:['11011','11111','11111','11011','11011','11011','11011'],
+    L:['11000','11000','11000','11000','11000','11000','11111'],
+    J:['00111','00011','00011','00011','11011','11011','01110'],
+    A:['01110','11011','11011','11111','11011','11011','11011']
+  };
+  const SHOP_LETTERS=primitive(()=>{
+    const cell=.056;let cursor=-1.56;
+    for(const letter of 'SOMOS LOJA') {
+      const rows=glyphs[letter];
+      if(!rows){cursor+=.15;continue;}
+      rows.forEach((row,y)=>[...row].forEach((pixel,x)=>{
+        if(pixel==='1') extrudeSignCell(cursor+x*cell,(6-y)*.072,cell,.072,.09);
+      }));
+      cursor+=6*cell;
+    }
+  });
+
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
   const aPos = gl.getAttribLocation(program, 'aPos'), aNormal = gl.getAttribLocation(program, 'aNormal');
@@ -352,43 +496,41 @@ function createMiniature(canvas, { onLost }) {
     at(BALL, OCRE, x - r * 0.44, r * 1.02, z + r * 0.8, 0.05);
     at(BALL, OCRE, x + r * 0.06, r * 1.62, z + r * 0.42, 0.05);
   }
+  const ROOF_SIGN_BASE=2.98;
+  function drawRoofSign() {
+    // Teal faces with a warm extruded edge stay legible against the pale sky;
+    // no billboard panel and no lettering across the facade.
+    for(const x of [-1.3,0,1.3]) at(BOX,TEAL,x,2.76,.73,.035,.44,.035);
+    at(BOX,TEAL,0,ROOF_SIGN_BASE-.015,.73,3.15,.035,.06);
+    push();move(-.12,ROOF_SIGN_BASE-.02,.67);draw(SHOP_LETTERS,GOLD,.88,1.18,1);pop();
+    push();move(-.12,ROOF_SIGN_BASE,.76);draw(SHOP_LETTERS,TEAL,.8,1.05,1);pop();
+  }
   function drawShop() {
-    push();
-    move(1.1, 0, -1.05);
-    at(BOX, PAPEL, 0, 1.0, 0, 2.7, 2.0, 1.72);
-    at(BOX, CAFE, 0, 0.09, 0.02, 2.76, 0.18, 1.78);
-    // Roof ridge runs along x; the wedge apex points up after this turn.
-    push(); move(0, 2.3, 0); rotZ(Math.PI / 2); draw(WEDGE, CAFE, 0.6, 3.02, 1.16); pop();
-    at(BOX, TINTA, 0.86, 2.28, -0.3, 0.26, 0.86, 0.26);
-    // Door
-    at(BOX, CAFE, 0.08, 0.72, 0.87, 0.82, 1.44, 0.03);
-    at(BOX, TINTA, 0.08, 0.7, 0.89, 0.68, 1.34, 0.03);
-    at(BALL, OCRE, 0.32, 0.7, 0.93, 0.05);
-    // Window with warm light
-    at(BOX, CAFE, -0.78, 0.92, 0.87, 0.8, 0.8, 0.03);
-    at(BOX, OCRE, -0.78, 0.92, 0.89, 0.66, 0.66, 0.03);
-    at(BOX, CAFE, -0.78, 0.92, 0.91, 0.04, 0.66, 0.02);
-    at(BOX, CAFE, -0.78, 0.92, 0.91, 0.66, 0.04, 0.02);
-    // Striped awning over door and window
-    for (let i = 0; i < 8; i++) {
-      push(); move(-1.12 + i * 0.32, 1.56, 1.06); rotX(0.46); draw(BOX, i % 2 ? PAPEL : OCRE, 0.32, 0.04, 0.46); pop();
+    push(); move(1.1,0,-1.05);
+    // Flat-front entrance observed in the supplied video: columns, folding gates,
+    // an open warm interior and a broad Somos Loja sign, not a chalet roof.
+    at(BOX,PAPEL,0,1.2,0,3.1,2.4,1.6);
+    at(BOX,TEAL,0,1.18,.82,2.6,2.24,.06);
+    at(BOX,CAFE,0,.95,.87,1.94,1.9,.06);
+    at(BOX,INK,0,.86,.91,1.45,1.65,.02);
+    at(BOX,LIME,0,1.61,.93,1.43,.12,.02);
+    at(BOX,GOLD,0,1.5,.95,.08,.08,.04);
+    for(const side of [-1,1]) {
+      at(CYL,PAPEL,side*1.32,1.15,.92,.13,2.3,.13);
+      at(BOX,PAPEL,side*1.32,2.29,.92,.38,.15,.36);
+      at(BOX,PAPEL,side*1.32,.12,.92,.36,.24,.34);
+      for(let i=0;i<4;i++) at(BOX,TEAL,side*(.87+i*.065),.93,.98,.035,1.8,.055);
+      at(BOX,TEAL,side*1.05,.1,1.28,.48,.18,.4);
     }
-    // Hanging cup sign: the shop is a cafe at a glance
-    at(BOX, CAFE, -1.0, 2.52, 0.34, 0.05, 0.42, 0.05);
-    at(CYL, PAPEL, -1.0, 2.88, 0.34, 0.24, 0.3, 0.24);
-    at(CYL, CAFE, -1.0, 3.04, 0.34, 0.2, 0.02, 0.2);
+    at(BOX,TEAL,0,2.46,.2,3.2,.18,1.8);
+    drawRoofSign();
+    at(BOX,TILE,0,.045,1.15,2.7,.09,.55);
+    for(let x=-.5;x<=.5;x+=.5) {
+      at(BOX,PAPEL,x,.25,.95,.32,.45,.04);
+      at(BALL,FUCHSIA,x,.29,.985,.055,.055,.015);
+    }
     pop();
-    // Mailbox by the steps, the courier's destination
-    at(CYL, CAFE, 2.32, 0.42, 0.8, 0.05, 0.84, 0.05);
-    push(); move(2.32, 0.96, 0.8); rotZ(Math.PI / 2); draw(CYL, TINTA, 0.22, 0.56, 0.22); pop();
-    at(BOX, OCRE, 2.56, 1.2, 0.8, 0.03, 0.26, 0.1);
-    // Coffee sacks
-    at(TAPER, CAFE, 2.18, 0.24, 0.18, 0.26, 0.48, 0.26);
-    at(TAPER, TILE, 2.6, 0.2, 0.06, 0.22, 0.4, 0.22);
-    drawShrub(-1.5, -1.5, 0.5);
-    drawShrub(-2.26, -0.72, 0.36);
-    drawShrub(-0.7, -1.24, 0.34);
-    drawShrub(-2.5, 0.24, 0.24);
+    drawShrub(-1.5,-1.5,.4); drawShrub(-2.26,-.72,.3);
   }
   function drawHills() {
     at(CONE, HILL, -1.1, 1.1, -2.0, 0.72, 2.2, 0.72);
@@ -408,85 +550,157 @@ function createMiniature(canvas, { onLost }) {
     pop();
     at(BALL, CAFE, 0, 0.03 * scale, 0.04 * scale, 0.05 * scale);
   }
-  function drawLeg(side, swing, knee) {
-    push();
-    move(side * 0.15, 0.64, 0);
-    rotX(swing);
-    at(BOX, SUAVE, 0, -0.15, 0, 0.2, 0.34, 0.22);
-    move(0, -0.3, 0);
-    rotX(knee);
-    at(BOX, SUAVE, 0, -0.1, 0, 0.18, 0.26, 0.2);
-    at(BOX, CAFE, 0, -0.27, 0.05, 0.21, 0.1, 0.34);
+  function drawAlforjitaFlower(x,y,z,size) {
+    push(); move(x,y,z);
+    for(let i=0;i<8;i++) {
+      push(); rotZ(i*Math.PI/4); at(MODEL_SPHERE,FLOWER_PINK,0,size*.66,0,size*.28,size*.66,size*.2); pop();
+    }
+    at(MODEL_SPHERE,GOLD,0,0,.025,size*.35,size*.35,size*.23); pop();
+  }
+  function drawAlforjitaHat() {
+    push(); move(0,.3,-.06); rotZ(pose.fabric);
+    draw(HAT_LIME,LIME,1,1,1); draw(HAT_PURPLE,FUCHSIA,1,1,1);
+    draw(HAT_GOLD,GOLD,1,1,1); draw(HAT_CORAL,ROSE,1,1,1);
+    drawAlforjitaFlower(-1.0,1.06,-.035,.22);
+    push();move(.35,-.03,0);rotZ(-.7+pose.fabric*.7);
+    at(MODEL_SPHERE,FUCHSIA,.08,0,0,.16,.025,.025);
+    drawAlforjitaFlower(.21,0,.02,.12);pop();
     pop();
   }
-  function drawArm(side, forward, out, elbow, carry) {
-    push();
-    move(side * 0.34, 0.64, 0);
-    rotZ(side * out);
-    rotX(forward);
-    at(BALL, TINTA, 0, 0, 0, 0.11);
-    at(BOX, TINTA, 0, -0.14, 0, 0.14, 0.3, 0.15);
-    move(0, -0.27, 0);
-    rotX(elbow);
-    at(BOX, TINTA, 0, -0.11, 0, 0.13, 0.26, 0.14);
-    at(BALL, SKIN, 0, -0.27, 0, 0.09);
-    if (carry) carry(forward + elbow);
-    pop();
+  function drawLeg(side,swing,knee) {
+    push(); move(side*.2,.52,0); rotX(swing*.65);
+    at(MODEL_SPHERE,LIME,0,-.12,0,.115,.19,.11);
+    move(0,-.22,0);rotX(knee*.65);
+    at(MODEL_SPHERE,FUCHSIA,0,-.08,.01,.115,.13,.105);
+    at(MODEL_SPHERE,LIME,0,-.19,.085,.16,.11,.22);
+    at(MODEL_SPHERE,FUCHSIA,0,-.18,.235,.13,.08,.11);pop();
+  }
+  function drawArm(side,forward,out,elbow,carry) {
+    push(); move(side*.34,.64,0); rotZ(side*out); rotX(forward);
+    at(MODEL_SPHERE,LIME,0,0,0,.115);
+    at(MODEL_CYLINDER,FUCHSIA,0,-.11,0,.085,.18,.085);
+    at(MODEL_CYLINDER,LIME,0,-.22,0,.08,.1,.08);
+    move(0,-.27,0); rotX(elbow);
+    at(MODEL_CYLINDER,FUCHSIA,0,-.07,0,.075,.15,.075);
+    at(MODEL_CYLINDER,LIME,0,-.18,0,.073,.08,.073);
+    at(MODEL_SPHERE,SKIN,0,-.27,0,.105,.12,.075);
+    at(MODEL_SPHERE,SKIN,side*.08,-.22,.035,.045,.07,.04);
+    if(!carry) for(let i=0;i<4;i++) at(MODEL_SPHERE,SKIN,-.045+i*.03,-.34,.035,.014,.047,.018);
+    if(carry) carry(forward+elbow); pop();
   }
   function drawHead(look) {
-    push();
-    move(0, 0.8, 0);
-    at(CYL, SKIN, 0, 0, 0, 0.1, 0.12, 0.1);
-    move(0, 0.3, 0);
-    rotY(look);
-    rotX(pose.nod);
-    at(BALL, SKIN, 0, 0, 0, 0.34, 0.33, 0.33);
-    for (const side of [-1, 1]) {
-      at(BALL, TINTA, side * 0.125, 0.05, 0.3, 0.042);
-      at(BALL, SKIN, side * 0.34, 0, 0, 0.06);
-      at(BOX, CAFE, side * 0.095, -0.1, 0.305, 0.15, 0.05, 0.06);
+    push(); move(.025,1.0,.025); rotY(look);rotZ(-.08);rotX(pose.nod);
+    at(MODEL_SPHERE,SKIN,0,.015,0,.39,.48,.31);
+    const open=1-.98*pose.blink;
+    for(const side of [-1,1]) {
+      push();move(side*.158,.06,.328);rotZ(side*-.12);
+      at(MODEL_SPHERE,WHITE,0,0,0,.125,.185*open,.015);
+      at(MODEL_SPHERE,CAFE,-.007,-.006,.018,.067,.116*open,.012);
+      at(MODEL_SPHERE,INK,-.01,-.005,.029,.045,.094*open,.006);
+      at(MODEL_SPHERE,WHITE,-.024,.047*open,.037,.023,.03*open,.004);
+      at(MODEL_SPHERE,WHITE,.014,-.021*open,.037,.01,.013*open,.004);pop();
+      push();move(side*.158,.285,.325);rotZ(side*-.13);draw(EYEBROW,CAFE,.115,.075,.01);pop();
+      at(MODEL_SPHERE,ROSE,side*.27,-.105,.24,.062,.035,.012);
     }
-    at(BALL, SKIN, 0, -0.03, 0.34, 0.058);
-    // Kepi cap: band, wider crown, visor and badge
-    at(CYL, TINTA, 0, 0.21, 0, 0.35, 0.12, 0.35);
-    at(CYL, OCRE, 0, 0.255, 0, 0.358, 0.035, 0.358);
-    push(); move(0, 0.37, -0.01); rotX(Math.PI); draw(TAPER, SUAVE, 0.4, 0.17, 0.4); pop();
-    push(); move(0, 0.18, 0.34); rotX(0.24); draw(BOX, CAFE, 0.46, 0.035, 0.24); pop();
-    at(BOX, PAPEL, 0, 0.33, 0.33, 0.13, 0.09, 0.02);
-    at(BOX, OCRE, 0, 0.345, 0.342, 0.13, 0.025, 0.012);
+    push();move(0,-.14,.308);rotZ(-.12);
+    draw(SMILE,CAFE,.235,.16,.01);
+    push();move(0,0,.002);draw(TEETH,WHITE,.222,.16,.01);pop();
+    at(MODEL_SPHERE,ROSE,-.045,-.104,.008,.078,.025,.007);pop();
+    drawAlforjitaHat();
+    at(MODEL_SPHERE,BLUE,0,.335,.07,.405,.15,.31);
+    at(MODEL_CYLINDER,BLUE,0,.285,.09,.374,.085,.30);
+    at(MODEL_SPHERE,INK,0,.235,.31,.36,.026,.2);
+    at(MODEL_SPHERE,GOLD,.065,.34,.378,.062,.077,.012);
+    at(MODEL_SPHERE,GOLD,-.26,.27,.32,.023);
     pop();
   }
-  function drawCourier(pose) {
+  const SATCHEL_LETTERS=[[-.1,.28,-.05,.23,WHITE],[.07,.26,-.015,-.14,TILE],[-.01,.21,.08,.12,PAPEL]];
+  function applySatchelFrame(bagSway) {
+    move(-.1,.16,.34);rotZ(bagSway);move(-.24,-.14,-.18);rotZ(-.12);
+  }
+  function drawLetterArt(index) {
+    const color=SATCHEL_LETTERS[index][4];
+    at(BOX,color,0,0,0,.25,.27,.018);
+    at(BOX,AIRMAIL_RED,.065,.075,.014,.04,.045,.005);
+    at(BOX,INK,-.025,-.02,.014,.1,.005,.004);
+    at(BOX,INK,-.015,-.04,.014,.12,.005,.004);
+    if(index===0) for(let i=0;i<5;i++) at(BOX,i%2?BLUE:AIRMAIL_RED,-.1+i*.05,.128,.014,.024,.012,.005);
+  }
+  const courierBob=p=>Math.abs(Math.cos(p.phase))*.045*p.stride+Math.sin(p.gesture*Math.PI)*.05;
+  const courierPitch=p=>.07*p.stride-Math.sin(p.gesture*Math.PI)*.1;
+  const satchelSway=p=>.18*Math.sin(p.phase-.8)*p.stride;
+  function applyCourierRoot(p) {move(p.x,courierBob(p),p.z);rotY(p.heading);}
+  function applyCourierTorso(p) {move(0,.62,0);rotX(courierPitch(p));}
+  function drawFallingLetters() {
+    for(const index of [0,1]) {
+      const release=DELIVERY_TIMING.letterRelease(index);
+      if(pose.clock<release) continue;
+      const atRelease=poseAt(release,{}),[x,y,z,angle]=SATCHEL_LETTERS[index];
+      // Reuse the exact root/torso/bag hierarchy at release; never guess a
+      // screen position or depend on the previous frame to launch the letter.
+      push();applyCourierRoot(atRelease);applyCourierTorso(atRelease);applySatchelFrame(satchelSway(atRelease));
+      move(x,y,z);
+      const origin=[top[12],top[13],top[14]];
+      pop();
+      const motion=DELIVERY_TIMING.paperMotion(index,pose.clock,origin[1]);
+      const age=motion.elapsed,q=motion.progress,flutter=Math.sin(age*12)*.15*(1-q);
+      push();move(origin[0]+(-.32+index*.13)*age+flutter*.12,motion.y,origin[2]+(.32+index*.12)*age);
+      rotY(atRelease.heading+q*(index?-.25:.3));
+      rotX(courierPitch(atRelease)+(Math.PI/2-courierPitch(atRelease))*q);
+      rotZ(satchelSway(atRelease)-.12+angle+q*(index?.4:-.35)+flutter);
+      drawLetterArt(index);pop();
+    }
+  }
+  function drawSatchel(detailed, bagSway) {
+    // Pivot stays exactly at the strap attachment; leather and letters move together.
+    push();applySatchelFrame(bagSway);
+    at(BOX,INK,0,.19,0,.53,.025,.22);
+    push(); move(0,0,.005); draw(SATCHEL_BODY,LEATHER,.32,.43,.17); pop();
+    if(detailed) {
+      // Letters stay inside until their release beat; the third never leaves.
+      SATCHEL_LETTERS.forEach(([x,y,z,angle],index)=>{
+        if(pose.clock>=DELIVERY_TIMING.letterRelease(index)) return;
+        push();move(x,y,z);rotZ(angle);drawLetterArt(index);pop();
+      });
+      // Rounded horizontal metal plate, not a buckle, zip or external pocket.
+      at(MODEL_SPHERE,INK,0,-.015,.174,.078,.027,.012);
+      at(MODEL_SPHERE,METAL_PLATE,0,-.015,.185,.061,.018,.006);
+      at(MODEL_SPHERE,CAFE,.24,.14,.17,.043,.043,.015);
+      at(MODEL_SPHERE,LEATHER,.24,.14,.185,.025,.025,.008);
+      for(const side of [-1,1]) for(let i=0;i<5;i++) {
+        const x=side*(.2+i*.012),y=-.18+i*.055;
+        at(BOX,CAFE,x,y,.166,.006,.039,.005);
+        push();move(x,y,.172);rotZ(side*.6);draw(BOX,INK,.028,.005,.004);pop();
+      }
+    }
+    pop();
+  }
+  function drawCourier(pose, detailed = true) {
     const swing = Math.sin(pose.phase) * 0.62 * pose.stride;
     const lift = Math.max(0, Math.sin(pose.phase + Math.PI / 2));
     const opposite = Math.max(0, -Math.sin(pose.phase + Math.PI / 2));
     push();
-    move(pose.x, Math.abs(Math.cos(pose.phase)) * 0.045 * pose.stride + Math.sin(pose.gesture * Math.PI) * 0.05, pose.z);
-    rotY(pose.heading);
+    applyCourierRoot(pose);
     // The knee bends on the leg swinging forward; arms below oppose the same-side leg.
     drawLeg(-1, swing, opposite * 0.75 * pose.stride);
     drawLeg(1, -swing, lift * 0.75 * pose.stride);
     push();
-    move(0, 0.62, 0);
-    rotX(0.07 * pose.stride - Math.sin(pose.gesture * Math.PI) * 0.1);
-    // Coat, belt, buttons and lapel
-    at(TAPER, TINTA, 0, 0.37, 0, 0.32, 0.76, 0.27);
-    at(CYL, OCRE, 0, 0.14, 0, 0.312, 0.06, 0.268);
-    for (const y of [0.3, 0.44, 0.58]) at(BALL, OCRE, 0, y, 0.25 - y * 0.05, 0.028);
-    at(BOX, PAPEL, 0, 0.71, 0.16, 0.2, 0.08, 0.1);
-    // Satchel and diagonal strap
-    push(); move(0, 0.42, 0.24); rotZ(-0.66); draw(BOX, CAFE, 0.06, 1.0, 0.04); pop();
-    push(); move(0, 0.42, -0.24); rotZ(-0.66); draw(BOX, CAFE, 0.06, 1.0, 0.04); pop();
-    push();
-    move(-0.38, 0.04, 0.02);
-    rotZ(-0.06 + swing * 0.08);
-    at(BOX, CAFE, 0, 0, 0, 0.14, 0.32, 0.42);
-    at(BOX, OCRE, 0, 0.13, 0, 0.16, 0.08, 0.44);
-    at(BOX, PAPEL, 0.01, 0.2, 0.04, 0.03, 0.08, 0.26);
-    pop();
-    drawHead(pose.look);
+    applyCourierTorso(pose);
+    // Alforjita's bell-shaped fuchsia/lime cloth, not a generic uniform.
+    if(!detailed) at(TAPER,LIME,0,.37,0,.45,1.03,.32);
+    if(detailed) {
+      push(); move(0,.37,.005); draw(ROBE_LIME,LIME,.46,1.03,.33); draw(ROBE_FUCHSIA,FUCHSIA,.46,1.03,.33); pop();
+      at(MODEL_CYLINDER,FUCHSIA,0,.77,0,.23,.09,.2);
+      at(MODEL_CYLINDER,LIME,0,.81,0,.23,.035,.2);
+    }
+    // Continuous curved leather strap, clear of the torso; no detached ends.
+    draw(STRAP_EDGE,CAFE,1,1,1);
+    push();move(0,0,.008);draw(STRAP_CENTER,LEATHER,1,1,1);pop();
+    const bagSway=satchelSway(pose);
+    drawSatchel(detailed,bagSway);
+    if(detailed) drawHead(pose.look);
     // Near arm carries the envelope and offers it; the other one waves.
-    drawArm(-1, -pose.gesture * 1.72 - swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.98, -pose.gesture * 0.12 - 0.14, (armAngle) => {
+    drawArm(1, -pose.gesture * 1.72 - swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.98, -pose.gesture * 0.12 - 0.14, (armAngle) => {
       push();
       move(0, -0.36, 0.03);
       rotX(-armAngle);
@@ -497,30 +711,32 @@ function createMiniature(canvas, { onLost }) {
       enManoMatriz.set(top);
       pop();
     });
-    drawArm(1, swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.4 + 0.05, -pose.gesture * 0.3 - 0.14);
+    drawArm(-1, -.8 + swing*.2, .2, -.75);
     pop();
     pop();
   }
 
   // --- Courier timeline: walks, stops and looks at the visitor, raises the letter.
-  const WALK = 1.2, TURN = 0.3, RAISE = 0.5, END = WALK + TURN + RAISE;
+  const WALK=DELIVERY_TIMING.walk,TURN=DELIVERY_TIMING.turn,RAISE=DELIVERY_TIMING.raise,END=DELIVERY_TIMING.hand;
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
   const smooth = (v) => { const x = clamp01(v); return x * x * (3 - 2 * x); };
   const mix = (a, b, v) => a + (b - a) * v;
-  const START_X = -2.36, STOP_X = 0.5, PATH_Z = 1.14;
+  const START_X=DELIVERY_TIMING.startX,STOP_X=DELIVERY_TIMING.endX,PATH_Z=DELIVERY_TIMING.endZ;
+  const walkHeading=Math.atan2(STOP_X-START_X,PATH_Z-DELIVERY_TIMING.startZ);
   const pose = { x: 0, z: PATH_Z, heading: 0, phase: 0, stride: 0, gesture: 0, look: 0, nod: 0, handoff: 1 };
-  function poseAt(time) {
-    const walked = clamp01(time / WALK);
-    const eased = walked * walked * (3 - 2 * walked) * 0.35 + walked * 0.65;
-    pose.x = mix(START_X, STOP_X, eased);
-    pose.phase = ((pose.x - START_X) * Math.PI * 2) / 1.1;
-    pose.stride = Math.min(smooth(time / 0.2), smooth((WALK - time) / 0.2));
-    pose.heading = time < WALK ? mix(0.7, Math.PI / 2, smooth(time / 0.2)) : mix(Math.PI / 2, 0, smooth((time - WALK) / TURN));
-    pose.gesture = smooth((time - WALK - TURN * 0.6) / RAISE);
+  function poseAt(time,target=pose) {
+    const eased=DELIVERY_TIMING.walkProgress(time);
+    target.x = mix(START_X, STOP_X, eased);
+    target.z=mix(DELIVERY_TIMING.startZ,PATH_Z,eased);
+    target.phase=eased*DELIVERY_TIMING.distance*Math.PI*2/DELIVERY_TIMING.stride;
+    target.stride = Math.min(smooth(time / 0.2), smooth((WALK - time) / 0.2));
+    target.heading=time<WALK?walkHeading:mix(walkHeading,0,smooth((time-WALK)/TURN));
+    target.gesture=smooth((time-WALK-TURN)/RAISE);
     // Head first: turns to the visitor, glances at the letter while lifting it, then back.
     const mira = smooth((time - WALK * 0.85) / TURN);
-    pose.look = mix(-0.5 * smooth(time / 0.2), 0, mira) - Math.sin(pose.gesture * Math.PI) * 0.42;
-    pose.nod = -Math.sin(pose.gesture * Math.PI) * 0.16;
+    target.look = mix(-0.5 * smooth(time / 0.2), 0, mira) - Math.sin(target.gesture * Math.PI) * 0.42;
+    target.nod = -Math.sin(target.gesture * Math.PI) * 0.16;
+    return target;
   }
 
   const LIGHT = (() => { const l = Math.hypot(-0.55, 1, 0.62); return [-0.55 / l, 1 / l, 0.62 / l]; })();
@@ -570,6 +786,9 @@ function createMiniature(canvas, { onLost }) {
     if (cae < 0.98) {
       at(BOX, DORSO, 0, -cae * 1.6, -0.016 * E, SOBRE_A, SOBRE_H, 0.01);
       at(BOX, PAPEL, 0, -0.07 * E - cae * 1.6, 0.014 * E, SOBRE_A, 0.28 * E, 0.012);
+      for(let i=0;i<9;i++) for(const side of [-1,1]) {
+        at(BOX,i%2?BLUE:AIRMAIL_RED,(-.275+i*.069)*E,side*.19*E-cae*1.6,.035*E,.032*E,.016*E,.003);
+      }
       // Diagonal folds of the front
       for (const lado of [-1, 1]) {
         push(); move(lado * 0.155 * E, -0.075 * E - cae * 1.6, 0.022 * E); rotZ(lado * 0.56); draw(BOX, DORSO, 0.36 * E, 0.006, 0.004); pop();
@@ -578,8 +797,8 @@ function createMiniature(canvas, { onLost }) {
       // Once past the top, the flap stays behind the card that comes out.
       move(0, SOBRE_H / 2 - cae * 1.6, p.abre > 0.5 ? -0.03 * E : 0.024 * E);
       rotX(-p.abre * Math.PI * 0.94);
-      push(); move(0, -0.13 * E, 0); draw(TRIANGULO, mixColor(OCRE, CAFE, Math.sin(p.abre * Math.PI) * 0.3), SOBRE_A, 0.26 * E, 0.008); pop();
-      at(BALL, CAFE, 0, -0.17 * E, 0.012, 0.042 * E, 0.042 * E, 0.016);
+      push(); move(0, -0.13 * E, 0); draw(TRIANGULO, mixColor(WHITE, TILE, Math.sin(p.abre * Math.PI) * 0.2), SOBRE_A, 0.26 * E, 0.008); pop();
+
       pop();
     }
     // The card: same size and place as the HTML postcard at the end of its growth.
@@ -626,21 +845,24 @@ function createMiniature(canvas, { onLost }) {
   function render(p) {
     if (lost) return;
     poseAt(p.camino);
+    pose.clock=p.reloj;
+    pose.fabric=.035*Math.sin(pose.phase*1.5-.4)*pose.stride;
+    pose.blink=Math.exp(-Math.pow(((p.reloj%3.8)-1.7)/.11,2));
     const aspect = width / height;
     const vertical = aspect < 1.05;
     const close = smooth((p.camino - WALK * 0.7) / (END - WALK * 0.7));
     const base = Math.max(12.2, (vertical ? 9.4 : 13.8) / aspect);
     // The camera swings around the stage as the courier arrives.
-    const yaw = mix(-0.95, -0.34, smooth(p.camino / END));
+    const yaw=mix(.35,-.24,smooth(p.camino/END));
     const pitch = mix(0.46, 0.3, smooth(p.camino / END));
-    const distance = base * mix(1, vertical ? 0.6 : 0.68, close);
-    const t0 = [mix(0, 0.3, close), mix(vertical ? 1.5 : 1.3, 1.5, close), mix(0, 0.8, close)];
+    const distance = base * mix(1.08, vertical ? .69 : .73, close);
+    const t0 = [mix(.25, .55, close), mix(vertical ? 1.5 : 1.3, 1.65, close), mix(0, 0.8, close)];
     const e0 = [t0[0] + Math.sin(yaw) * Math.cos(pitch) * distance, t0[1] + Math.sin(pitch) * distance, t0[2] + Math.cos(yaw) * Math.cos(pitch) * distance];
 
     // First pass of the courier only to learn where the letter is this frame.
     gl.colorMask(false, false, false, false);
     gl.depthMask(false);
-    drawCourier(pose);
+    drawCourier(pose, false);
     gl.colorMask(true, true, true, true);
     gl.depthMask(true);
     const c = [enManoMatriz[12], enManoMatriz[13], enManoMatriz[14]];
@@ -670,8 +892,9 @@ function createMiniature(canvas, { onLost }) {
       drawPlinth();
       drawHills();
       drawShop();
-      dibujarHumo(p.reloj);
+      // No rooftop smoke: the source entrance has a flat parapet.
       drawCourier(pose);
+      drawFallingLetters();
       gl.uniform1f(uniform.uShadow, 1);
       gl.disable(gl.CULL_FACE);
       gl.enable(gl.BLEND);
@@ -682,7 +905,8 @@ function createMiniature(canvas, { onLost }) {
       gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
       drawHills();
       drawShop();
-      drawCourier(pose);
+      drawCourier(pose, false);
+      drawFallingLetters();
       gl.disable(gl.STENCIL_TEST);
       gl.disable(gl.BLEND);
       gl.enable(gl.CULL_FACE);
@@ -729,14 +953,13 @@ function createMiniature(canvas, { onLost }) {
   const forzarRespaldo = parametros.get('fallback') === '1';
   const lento = Math.max(1, Number(parametros.get('lento')) || 1); // Only for reviewing frames.
 
-  document.querySelectorAll('[data-courier-art]').forEach((g) => { g.innerHTML = '\n    <ellipse cx="96" cy="262" rx="82" ry="14" fill="#1b2f6b" fill-opacity=".22"/>\n    <path d="M62 180h28v70H62zM102 180h28v70h-28z" fill="#3c4c80"/>\n    <path d="M56 244h36v16H56zM100 244h36v16h-36z" fill="#5a331c"/>\n    <path d="M58 96h76l10 92H48z" fill="#1b2f6b"/>\n    <path d="M50 158h92v9H50z" fill="#e0a93b"/>\n    <path d="m124 96 7 7-74 90-7-7z" fill="#5a331c"/>\n    <path d="M18 154h44v44H18z" fill="#5a331c"/><path d="M16 152h48v14H16z" fill="#e0a93b"/>\n    <path d="M134 100l12-6 38-34 11 12-41 42z" fill="#1b2f6b"/><circle cx="192" cy="60" r="11" fill="#e0a93b"/>\n    <path d="M58 100 46 94 14 128l12 12 34-26z" fill="#1b2f6b"/>\n    <g transform="rotate(-6 -6 118)"><path d="M-44 96h52v36h-52z" fill="#f6eedd" stroke="#5a331c" stroke-width="2"/><path d="M-44 96l26 20 26-20z" fill="#e0a93b"/></g>\n    <circle cx="96" cy="58" r="40" fill="#e0a93b"/><circle cx="96" cy="58" r="40" fill="#5a331c" fill-opacity=".18"/>\n    <circle cx="82" cy="58" r="4.5" fill="#1b2f6b"/><circle cx="110" cy="58" r="4.5" fill="#1b2f6b"/>\n    <path d="M76 74c8-6 14-6 20-1 6-5 12-5 20 1-10 5-16 4-20 1-4 3-10 4-20-1z" fill="#5a331c"/>\n    <path d="M58 24c0-20 76-20 76 0v14H58z" fill="#1b2f6b"/><path d="M58 30h76v8H58z" fill="#e0a93b"/>\n    <path d="M52 38h88l10 10H42z" fill="#5a331c"/><circle cx="96" cy="16" r="6" fill="#e0a93b"/>'; });
-
   fragmentos.forEach((f) => f.querySelector('img').addEventListener('error', () => f.remove()));
 
   // --- Timeline, in seconds. This is the one clock: every visual is a function of T.
-  const WALK = 1.2, MANO = 2.0, ZOOM = 2.2, ZOOM_FIN = 3.2, ABRE = 3.05, ABRE_FIN = 3.45, SALTO = 3.2, SALE = 3.4, SALE_FIN = 3.9;
-  const CRECE = 4.55, CRECE_FIN = 5.3, FIN = 5.6, SIN_RESPALDO = 4.6;
-  const INICIOS = [3.65, 3.8, 3.95, 4.1, 4.25];
+  const WALK=DELIVERY_TIMING.walk,MANO=DELIVERY_TIMING.hand,ZOOM=DELIVERY_TIMING.zoom,ZOOM_FIN=DELIVERY_TIMING.zoomEnd;
+  const ABRE=DELIVERY_TIMING.open,ABRE_FIN=DELIVERY_TIMING.openEnd,SALTO=ABRE+.2,SALE=DELIVERY_TIMING.cardOut,SALE_FIN=DELIVERY_TIMING.cardOutEnd;
+  const CRECE=DELIVERY_TIMING.grow,CRECE_FIN=DELIVERY_TIMING.growEnd,FIN=DELIVERY_TIMING.finish,SIN_RESPALDO=DELIVERY_TIMING.fallback;
+  const INICIOS=DELIVERY_TIMING.images;
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const suave = (v) => { const x = clamp(v); return x * x * (3 - 2 * x); };
   const fuerte = (v) => { const x = clamp(v); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
@@ -746,21 +969,11 @@ function createMiniature(canvas, { onLost }) {
   let rect = null, centros = [], estado = '';
 
   // Invert the courier's eased position so step cues cross the same phase boundaries as the feet.
-  function tiempoPaso(numero) {
-    let inferior = 0, superior = WALK;
-    for (let i = 0; i < 36; i++) {
-      const medio = (inferior + superior) / 2;
-      const recorrido = medio / WALK;
-      const eased = recorrido * recorrido * (3 - 2 * recorrido) * 0.35 + recorrido * 0.65;
-      if (eased * (0.5 - (-2.36)) < numero * 0.55) inferior = medio;
-      else superior = medio;
-    }
-    return (inferior + superior) / 2;
-  }
+  function tiempoPaso(numero) { return DELIVERY_TIMING.stepTime(numero); }
 
   const pistas = ['paso-1', 'paso-2', 'paso-3', 'paso-4', 'sobre-entrega', 'cafe-servido'];
   const cues = [
-    ...[1, 2, 3, 4].map((numero) => ({ t: tiempoPaso(numero), pista: `paso-${numero}`, grupo: 'paso' })),
+    ...[1,2,3,4,5].map(numero=>({t:tiempoPaso(numero),pista:`paso-${(numero-1)%4+1}`,grupo:'paso'})),
     { t: MANO, pista: 'sobre-entrega', grupo: 'entrega' },
     { t: INICIOS[3], pista: 'cafe-servido', grupo: 'cafe' },
   ];
@@ -868,7 +1081,7 @@ function createMiniature(canvas, { onLost }) {
   }
 
   function ponerEstado(e) { if (e !== estado) { estado = e; raiz.dataset.estado = e; mostrarControlesAudio(); } }
-  function etapa(t) { return t < 1.2 ? 'llegada' : t < ZOOM ? 'entrega' : t < SALE ? 'apertura' : t < FIN ? 'montaje' : 'invitacion'; }
+  function etapa(t) { return t < WALK ? 'llegada' : t < ZOOM ? 'entrega' : t < SALE ? 'apertura' : t < FIN ? 'montaje' : 'invitacion'; }
 
   function medir() {
     postal.style.transform = 'none';
@@ -885,7 +1098,7 @@ function createMiniature(canvas, { onLost }) {
         reloj: t,
         camino: Math.min(t, MANO),
         zoom: fuerte((t - ZOOM) / (ZOOM_FIN - ZOOM)),
-        funde: suave((t - (ZOOM + 0.3)) / 0.5),
+        funde: suave((t-(ZOOM+.5))/.7),
         abre: fuerte((t - ABRE) / (ABRE_FIN - ABRE)),
         sale: salida((t - SALE) / (SALE_FIN - SALE)),
         crece: fuerte((t - CRECE) / (CRECE_FIN - CRECE)),
@@ -895,9 +1108,9 @@ function createMiniature(canvas, { onLost }) {
       raiz.dataset.frames = escena.frames();
     }
     if (!escena) {
-      respaldo.style.opacity = 1 - suave((t - 4.9) / 0.5);
+      respaldo.style.opacity=1-suave((t-(CRECE+.2))/.5);
     }
-    frase.style.opacity = 1 - suave((t - 1.4) / 0.4);
+    frase.style.opacity=1-suave((t-(WALK+.2))/.6);
 
     // The card in the scene is already in place: the real text simply appears on it.
     const aparece = suave((t - (CRECE_FIN - 0.1)) / 0.25);
@@ -974,7 +1187,7 @@ function createMiniature(canvas, { onLost }) {
     ultimo = performance.now();
     raf = requestAnimationFrame(bucle);
     // Whatever happens, nobody waits for the invitation.
-    guardia = setTimeout(() => { if (!document.hidden) irA('invitacion'); }, 12000 * lento);
+    guardia = setTimeout(() => { if (!document.hidden) irA('invitacion'); }, (FIN+4)*1000*lento);
   }
 
   function usarRespaldo(motivo) {
@@ -1022,7 +1235,7 @@ function createMiniature(canvas, { onLost }) {
       }).catch(() => { raiz.dataset.audio = 'fallo'; mostrarControlesAudio(); });
       ultimo = performance.now();
       raf = requestAnimationFrame(bucle);
-      guardia = setTimeout(() => irA('invitacion'), 12000 * lento);
+      guardia = setTimeout(() => irA('invitacion'), (FIN+4)*1000*lento);
     }
   });
 

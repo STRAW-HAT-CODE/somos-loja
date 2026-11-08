@@ -1,23 +1,43 @@
-# Invitación del cartero
+# Alforjita postcard invitation
 
-Prototipo de la entrada por QR de Loja 100 % Café Especial. Sin build ni dependencias.
+Isolated local variant of the existing automatic courier invitation. Uses the same raw WebGL renderer, timeline, envelope socket, sounds, skip/replay, reduced-motion mode and static fallback; no Three.js, new plugins, CDN or generated model dependency.
 
-- Abrir: `python3 -m http.server 4325 --directory invitacion` y visitar `http://localhost:4325/`.
-- Forzar el respaldo sin WebGL: `?fallback=1`.
-- Estados expuestos en `<html>`: `data-estado`, `data-corrida`, `data-renderer`, `data-frames`, `data-audio`, `data-audio-disparos`, `data-audio-fuentes`.
+Alforjita is a stylized geometric recreation of the supplied illustration, not an exact copy. The storefront uses the supplied video's entrance instead of a cabin. Brand sources are archived in `../../assets/brand/somos-loja/`.
 
-La entrada por QR se reproduce automáticamente sin audio. El botón «Vivir la invitación con sonido» inicia de nuevo la secuencia y habilita efectos locales; «Silenciar» los detiene. No hay música. Los archivos se cargan únicamente después de pulsar el botón y su ausencia no impide ver la invitación. Con movimiento reducido o sin WebGL, el control de sonido no se muestra.
+Performance: DPR capped at 1.5, shared static geometry, single timeline, hidden-tab pause and final renderer stop. Detailed character geometry renders once per frame; envelope socket and planar shadow use simpler poses. Audio fetches only after a gesture. No full video/PDF/reference PNG is loaded at runtime.
 
-## Créditos de sonido
+Run from a local HTTP server at `/design/alforjita-invitacion/`. `?lento=4` slows the sequence for review; `?fallback=1` forces the static illustration. Node contracts: `node --test tests/alforjita-invitacion.test.mjs`.
 
-Los efectos son recortes normalizados con fundidos de vistas previas MP3 de Freesound, bajo [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Se agradece voluntariamente a sus creadores:
+No real redemption, personal QR issuance, publishing or voice recording is implemented. Perks are pending agreement. Other website/tablet/scroll work remains untouched.
 
-| Archivo local | Creador | Fuente |
-| --- | --- | --- |
-| `recursos/sonido/paso-1.mp3` a `paso-4.mp3` | Nox_Sound | https://freesound.org/people/Nox_Sound/sounds/543685/ |
-| `recursos/sonido/sobre-entrega.mp3` | MTJohnson | https://freesound.org/people/MTJohnson/sounds/444431/ |
-| `recursos/sonido/cafe-servido.mp3` | Maajora | https://freesound.org/people/Maajora/sounds/432775/ |
+## Organic 3D revision
 
-El efecto del sobre corresponde a su deslizamiento durante la entrega, no a su apertura. Los recortes todavía requieren una escucha humana en contexto antes de publicarse.
+The character now uses derivative-normal parametric surfaces rather than faceted primitive assemblies: continuous curved striped cap, rounded striped body and satchel, smooth face/limbs, curved eyebrows and smile. A single prebuilt vertex buffer is retained; tests enforce finite unit normals, fewer than 100,000 uploaded vertices, and no geometry uploads while rendering. The original low-poly environment remains unchanged.
 
-Las imágenes `finca` y `taza` son ilustraciones de IA, rotuladas en pantalla. `cereza-roja`, `grano-cayendo` y `olla-negra` son fotos reales del material del proyecto. Fecha, horario, lugar, dirección y mapa siguen "Por confirmar". No hay canje real.
+Hat and flower movement is tied to the walking clock; blink timing is deterministic. Satchel sway lags the body and pivots at the stationary strap attachment; the contained letters share the satchel transform. The curved strap stays attached to the torso. Separate smile/tooth depth avoids coplanar flicker.
+
+Five Node tests pass. Observed final flow: six sound cues after activation, no remaining audio sources, stopped renderer, working replay/skip and no mobile overflow. Physical-phone FPS is not measured. It remains an approximate 3D interpretation of a single-view 2D reference, not exact all-angle likeness. No extra runtime library or network model was added.
+
+## Deliberate delivery pacing
+
+The shared `delivery-timing` script controls both model and page choreography. The walk now lasts 2.6 seconds (previously 1.2); Alforjita follows a diagonal path toward the visitor, turns and raises the envelope over 1.35 seconds, then holds it visibly for 0.55 seconds before the camera approaches. Full reveal lasts 8.6 seconds (previously 5.6). Five footfall cues are computed from the same eased path and foot phase; the existing four footstep files are reused. Two later cues accompany offering and coffee. The skip button and reduced-motion shortcut remain immediate.
+
+The safety timeout and fallback reveal derive from the same shared timings, rather than stale numeric offsets. Six Node tests cover beat ordering, the approach path, footstep synchronization and existing geometry/resource safeguards.
+
+## Latest scene direction
+
+Walking is exactly 2.2 seconds; the full reveal is 8.2 seconds. The satchel swings more visibly around its attached strap pivot. Two of its original letters release at 32% and 68% of the walk, flutter along deterministic gravity arcs and settle flat on the ground; one stays in the bag. Letter geometry and size are reused, not replaced during flight. This explicitly supersedes the earlier all-letters-stay-contained direction.
+
+SOMOS LOJA now uses independent extruded white block letters on narrow roof supports, with no facade sign or billboard backing.
+
+## Main integration and local preview
+
+The served animation is `absent-apogee/public/evento/cartero/index.html`; it shares the model/timing/controller scripts with the standalone source while preserving its existing demonstration postcard, map and illustrative inactive QR.
+
+From `absent-apogee`, run `npm run dev -- --host 127.0.0.1 --port 4331 --background`. Use `npm run dev -- status` and `npm run dev -- stop` to manage it.
+
+- Homepage: http://localhost:4331/
+- Alforjita: http://localhost:4331/evento/cartero/index.html
+- Tablet: http://localhost:4331/evento/index.html
+
+Use explicit index.html links for public static pages in Astro dev; slash-only directory URLs return404. No remote deployment or publishing is part of this work.
