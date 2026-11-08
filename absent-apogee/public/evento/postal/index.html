@@ -183,7 +183,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
       </div>
     </div>
     <div class="postal__pie">
-      <a class="boton boton--tinta" href="/">Ver la página del evento →</a>
+      <a class="boton boton--tinta" href="../../" target="_top">Ver la página del evento →</a>
       <button class="boton boton--linea" id="repetir" type="button">Ver de nuevo</button>
     </div>
   </article>
@@ -202,6 +202,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
   const TEXTO_DESDE = 0.4, TEXTO_HASTA = 2.3;
   // The rotate hint always stays this long, even when the phone is already horizontal.
   const GIRAR_MINIMO = 2500;
+  const VIDEO_ESPERA_MAX = 8000;
   let fase = null, rafId = 0, guardia = 0, animaciones = [], girarListo = false;
 
   function irA(destino, conFoco) {
@@ -233,7 +234,12 @@ html[data-fase="postal"] .postal { opacity: 1; }
     video.currentTime = 0;
     const intento = video.play();
     if (intento && intento.catch) intento.catch(() => falloVideo());
-    guardia = setTimeout(() => { if (video.paused || video.currentTime === 0) falloVideo(); }, 2500);
+    // Blocked autoplay leaves the video paused: fail fast. A video that is still buffering
+    // keeps trying up to VIDEO_ESPERA_MAX before falling back to the still image.
+    guardia = setTimeout(() => {
+      if (video.paused) return falloVideo();
+      if (video.currentTime === 0) guardia = setTimeout(() => { if (video.currentTime === 0) falloVideo(); }, VIDEO_ESPERA_MAX - 2500);
+    }, 2500);
     const paso = () => {
       const t = video.currentTime;
       titular.classList.toggle('visible', t >= TEXTO_DESDE && t < TEXTO_HASTA);

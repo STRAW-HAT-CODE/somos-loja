@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
 
 const pagePath = new URL('../absent-apogee/public/evento/postal/index.html', import.meta.url);
-const pageDir = dirname(pagePath.pathname);
+const pageDir = dirname(fileURLToPath(pagePath));
 const read = () => readFileSync(pagePath, 'utf8');
 
 test('postal page exists with the four phases driven by one function', () => {
@@ -74,4 +75,17 @@ test('rotate hint stays on screen 2-3 seconds before the postcard opens', () => 
   const ms = Number(html.match(/GIRAR_MINIMO\s*=\s*(\d+)/)?.[1]);
   assert.ok(ms >= 2000 && ms <= 3000, 'GIRAR_MINIMO must be between 2000 and 3000 ms');
   assert.doesNotMatch(html, /if \(horizontal\.matches\) return irA\('apertura'\)/, 'landscape must not skip the hint instantly');
+});
+
+test('event link leaves the iframe and respects the site base path', () => {
+  const html = read();
+  const link = html.match(/<a[^>]*>Ver la página del evento/)?.[0] ?? '';
+  assert.match(link, /href="\.\.\/\.\.\/"/, 'link must be relative so it works under any base path');
+  assert.match(link, /target="_top"/, 'link must open in the top window, not inside the floating iframe');
+});
+
+test('slow video loading is not treated as a failure', () => {
+  const html = read();
+  assert.match(html, /VIDEO_ESPERA_MAX\s*=\s*\d{4,}/, 'a longer wait must exist for buffering videos');
+  assert.doesNotMatch(html, /video\.paused \|\| video\.currentTime === 0\) falloVideo/, 'buffering at time 0 must not fail at 2.5 s');
 });
