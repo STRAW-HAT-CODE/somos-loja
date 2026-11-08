@@ -2,6 +2,8 @@
 
 Sitio web, postal interactiva y página de tablet para Somos Loja, tienda cooperativa de Loja, Ecuador, con la campaña **Loja 100 % Café Especial**.
 
+Cambio de concepto y estado de avance: [`docs/cambio-concepto-postal.md`](docs/cambio-concepto-postal.md).
+
 ## Orden de lectura
 
 Para entender el proyecto de punta a punta, leer en este orden:
