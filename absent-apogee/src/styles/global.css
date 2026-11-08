@@ -166,7 +166,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 .mapa__marca i { width: 8px; height: 8px; border-radius: 9999px; background: var(--durazno); }
 .mapa__marca--catedral { left: 16%; top: 22%; }
 .animado .mapa__marca i { animation: latido 2.2s var(--curva) infinite; }
-@keyframes latido { 0% { box-shadow: 0 0 0 0 rgb(224 169 59 / 0.7); } 70%, 100% { box-shadow: 0 0 0 10px rgb(224 169 59 / 0); } }
+@keyframes latido { 0% { box-shadow: 0 0 0 0 rgb(252 158 110 / 0.7); } 70%, 100% { box-shadow: 0 0 0 10px rgb(252 158 110 / 0); } }
 .foto { grid-column: 2; display: none; }
 .foto img { width: 100%; object-fit: cover; border-radius: 16px; }
 .tienda__rejilla .foto--letrero { display: block; }
