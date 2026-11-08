@@ -1,0 +1,180 @@
+---
+// Invitation block: the message, the social links and a vertical video frame,
+// as agreed in the meeting ("mensaje de invitación + redes sociales + vídeo
+// vertical"). Only confirmed links become anchors; the rest stay pending.
+import { enlaces, invitacion, pendiente } from '../data/somos-loja';
+import Pendiente from './Pendiente.astro';
+
+const redes = [
+	{ nombre: 'Instagram', href: enlaces.instagram },
+	{ nombre: 'Facebook', href: pendiente.facebook },
+	{ nombre: 'TikTok', href: pendiente.tiktok },
+];
+const redesVisibles = redes.filter((red) => red.href || import.meta.env.DEV);
+---
+
+<section id="invitacion" class="invitacion" aria-labelledby="titulo-invitacion">
+	<div class="invitacion__texto">
+		<p class="versal versal--chica">Invitación</p>
+		<h2 id="titulo-invitacion" class="titular titular--media">{invitacion.titulo}</h2>
+		<p class="cuerpo invitacion__cuerpo">{invitacion.texto}</p>
+
+		<ul class="invitacion__redes" aria-label="Redes sociales">
+			{
+				redesVisibles.map((red) =>
+					red.href ? (
+						<li>
+							<a class="invitacion__red" href={red.href} rel="noopener" target="_blank">
+								{red.nombre}
+							</a>
+						</li>
+					) : (
+						<li>
+							<span class="invitacion__red invitacion__red--pendiente">
+								{red.nombre} <Pendiente dato={red.nombre.toLowerCase()} />
+							</span>
+						</li>
+					)
+				)
+			}
+		</ul>
+
+		<a class="boton boton--tinta" href={enlaces.mapa} rel="noopener" target="_blank">
+			Cómo llegar
+			<span class="flecha" aria-hidden="true">→</span>
+		</a>
+	</div>
+
+	<figure class="invitacion__marco">
+		<!-- Placeholder: still needs the client's vertical footage. -->
+		<video
+			class="invitacion__clip"
+			src={invitacion.video.src}
+			poster={invitacion.video.poster}
+			muted
+			loop
+			playsinline
+			preload="none"
+			width="720"
+			height="1280"
+		></video>
+	</figure>
+</section>
+
+<script>
+	const clip = document.querySelector('.invitacion__clip');
+	if (clip) {
+		const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (quieto) {
+			clip.controls = true;
+		} else {
+			const observador = new IntersectionObserver(
+				([entrada]) => {
+					if (entrada.isIntersecting) clip.play().catch(() => {});
+					else clip.pause();
+				},
+				{ threshold: 0.25 }
+			);
+			observador.observe(clip);
+		}
+	}
+</script>
+
+<style>
+	.invitacion {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 96px 48px;
+		display: grid;
+		grid-template-columns: 7fr 5fr;
+		gap: 64px;
+		align-items: center;
+	}
+
+	.invitacion__texto {
+		display: grid;
+		gap: 20px;
+		justify-items: start;
+	}
+
+	.invitacion__cuerpo {
+		max-width: 44ch;
+		color: var(--tinta-suave);
+	}
+
+	.invitacion__redes {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.invitacion__red {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 18px;
+		border-radius: 9999px;
+		border: 1px solid rgb(27 47 107 / 0.28);
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+		font-weight: 600;
+		color: var(--tinta);
+		text-decoration: none;
+		transition: background-color 200ms var(--curva), border-color 200ms var(--curva);
+	}
+
+	.invitacion__red:hover {
+		background: rgb(27 47 107 / 0.06);
+		border-color: var(--tinta);
+	}
+
+	.invitacion__red--pendiente {
+		color: var(--tinta-suave);
+		border-style: dashed;
+		cursor: default;
+	}
+
+	.invitacion__marco {
+		justify-self: end;
+		width: min(360px, 100%);
+		aspect-ratio: 9 / 16;
+		padding: 10px;
+		background: var(--papel);
+		border: 1px solid rgb(27 47 107 / 0.2);
+		box-shadow: 0 18px 40px -28px rgb(27 47 107 / 0.55);
+		transform: rotate(-1.5deg);
+		transition: transform 400ms var(--curva);
+	}
+
+	.invitacion__marco:hover {
+		transform: rotate(0deg);
+	}
+
+	.invitacion__clip {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		background: var(--cafe);
+	}
+
+	@media (max-width: 860px) {
+		.invitacion {
+			grid-template-columns: 1fr;
+			gap: 40px;
+			padding: 64px 24px;
+		}
+
+		.invitacion__marco {
+			justify-self: center;
+			width: min(300px, 82%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.invitacion__marco,
+		.invitacion__marco:hover {
+			transform: none;
+		}
+	}
+</style>

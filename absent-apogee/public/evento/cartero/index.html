@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="es" data-audio="off" data-audio-disparos="0" data-audio-fuentes="0">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6eedd">
+<link rel="icon" href="data:,">
+<title>Estás invitado a Loja 100 % Café Especial | Somos Loja</title>
+<meta name="description" content="Una invitación desde Loja para descubrir su café, conocer a quienes lo hacen y compartir su historia.">
+<script>document.documentElement.classList.add('js', 'intro');</script>
+<style>
+@font-face { font-family: 'Cormorant'; src: url('/fonts/cormorant-latin-var.woff2') format('woff2'); font-weight: 500 700; font-display: swap; }
+@font-face { font-family: 'Yellowtail'; src: url('/fonts/yellowtail-latin.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Manrope'; src: url('/fonts/manrope-latin-var.woff2') format('woff2'); font-weight: 400 800; font-display: swap; }
+:root {
+  --papel: #f6eedd; --tinta: #1b2f6b; --tinta-suave: #3c4c80; --ocre: #e0a93b; --cafe: #5a331c;
+  --pendiente: #ffe9a8; --pendiente-tinta: #5c4400;
+  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+  --display: 'Cormorant', Georgia, serif; --texto: 'Manrope', system-ui, sans-serif; --firma: 'Yellowtail', cursive;
+}
+* { box-sizing: border-box; }
+html { background: var(--papel); -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 1rem/1.5 var(--texto); overflow-x: clip; }
+h1, h2, p, dl, dd { margin: 0; }
+h1, h2 { font-family: var(--display); font-weight: 600; text-wrap: balance; }
+p { text-wrap: pretty; }
+:focus-visible { outline: 2px solid var(--cafe); outline-offset: 3px; }
+::selection { background: var(--ocre); color: var(--tinta); }
+html.intro, html.intro body { height: 100%; overflow: hidden; }
+
+.fondo { position: fixed; inset: 0; background: radial-gradient(ellipse 80% 62% at 50% 64%, var(--papel), #f0e3cc 100%); }
+#scene, .respaldo { position: fixed; inset: 0; width: 100%; height: 100%; }
+#scene { z-index: 12; }
+.respaldo { display: grid; place-items: center; padding: 16px; background: var(--papel); }
+.respaldo[hidden], #scene[hidden] { display: none; }
+.respaldo svg { width: min(100%, 720px); height: 100%; }
+
+.frase { position: fixed; top: max(32px, env(safe-area-inset-top)); left: 16px; right: 16px; z-index: 15; text-align: center; color: var(--tinta); pointer-events: none; }
+.frase__marca { font: 600 clamp(1rem, 1.7vw, 1.5rem)/1.3 var(--display); letter-spacing: 0.2em; text-transform: uppercase; }
+.frase__texto { margin-top: 4px; font: 600 clamp(1.75rem, 5vw, 3rem)/1.1 var(--display); color: var(--tinta); }
+
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; padding: 12px 24px; border: 0; border-radius: 9999px; font: 600 1rem/1.5rem var(--texto); cursor: pointer; touch-action: manipulation; transition: transform 160ms var(--curva), background-color 200ms var(--curva); }
+.boton:active { transform: scale(0.97); }
+.boton--tinta, .controles .boton--saltar, .controles .boton--silenciar { background: var(--tinta); color: var(--papel); }
+.boton--ocre, .controles .boton--sonido { background: var(--ocre); color: #1d1a12; }
+.boton--linea { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 1px var(--tinta); }
+.controles { position: fixed; left: 16px; right: 16px; bottom: max(24px, env(safe-area-inset-bottom)); z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; pointer-events: none; }
+.controles .boton { pointer-events: auto; box-shadow: 0 8px 24px rgb(27 47 107 / 0.16); }
+.controles .boton--audio { position: fixed; top: max(16px, env(safe-area-inset-top)); right: 16px; width: 44px; height: 44px; min-height: 44px; padding: 0; border-radius: 50%; }
+.boton--sonido__texto { display: none; }
+.icono-sonido { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.boton--silenciar[aria-pressed="false"] .icono-sonido__corte { display: none; }
+.controles .boton[hidden] { display: none; }
+.postal__pie { display: flex; flex-wrap: wrap; gap: 12px; }
+.boton--saltar:focus-visible { outline-color: var(--ocre); }
+@media (hover: hover) and (pointer: fine) {
+  .boton--linea:hover { background: rgb(27 47 107 / 0.08); }
+  .boton--tinta:hover, .controles .boton--saltar:hover, .controles .boton--silenciar:hover { background: #24407f; }
+  .boton--ocre:hover, .controles .boton--sonido:hover { background: #ecba55; }
+}
+.boton[hidden] { display: none; }
+@media (max-width: 600px) {
+  .controles .boton--sonido { top: auto; right: auto; bottom: max(20px, env(safe-area-inset-bottom)); left: 50%; width: min(calc(100vw - 32px), 340px); height: 56px; padding: 12px 20px; border-radius: 9999px; animation: audio-rebote 2.2s ease-in-out infinite; }
+  .boton--sonido__texto { display: inline; }
+}
+@keyframes audio-rebote {
+  0%, 70%, 100% { transform: translate(-50%, 0); }
+  80% { transform: translate(-50%, -8px); }
+  90% { transform: translate(-50%, 0); }
+  95% { transform: translate(-50%, -4px); }
+}
+
+/* Flashes of the coffee world, behind the card. */
+.montaje { position: fixed; inset: 0; z-index: 10; pointer-events: none; perspective: 900px; }
+.fragmento { position: absolute; margin: 0; width: var(--t); aspect-ratio: 4 / 5; overflow: hidden; opacity: 0; visibility: hidden; background: var(--papel); will-change: transform, opacity; }
+.fragmento img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.fragmento figcaption { position: absolute; left: 8px; bottom: 8px; padding: 0 8px; border-radius: 4px; background: rgb(27 47 107 / 0.86); color: var(--papel); font-size: 0.75rem; line-height: 1.25rem; }
+.fragmento--papel { background: var(--papel); }
+.fragmento--papel img { object-position: 78% 50%; }
+.f1 { --t: 40vw; left: 4vw; top: 8svh; border-radius: 9999px 9999px 8px 8px; }
+.f2 { --t: 38vw; right: 5vw; top: 13svh; border-radius: 8px; }
+.f3 { --t: 38vw; left: 6vw; bottom: 12svh; border-radius: 8px; }
+.f4 { --t: 42vw; right: 4vw; bottom: 8svh; border-radius: 9999px 9999px 8px 8px; }
+.f5 { --t: 34vw; left: 33vw; top: 3svh; border-radius: 8px; }
+@media (min-width: 861px) {
+  .f1 { --t: 15vw; left: 8vw; top: 10svh; }
+  .f2 { --t: 17vw; right: 7vw; top: 8svh; }
+  .f3 { --t: 16vw; left: 15vw; bottom: 7svh; }
+  .f4 { --t: 15vw; right: 15vw; bottom: 6svh; }
+  .f5 { --t: 12vw; left: 3vw; top: 42svh; }
+}
+
+/* The postcard: real HTML from the first moment, not a picture of it. */
+.lienzo { position: relative; min-height: 100svh; display: grid; place-items: center; padding: 72px 16px 40px; }
+@media (max-width: 600px) { .lienzo { padding-bottom: 112px; } }
+.postal { position: relative; z-index: 30; width: min(100%, 860px); padding: 32px 24px 24px; background: var(--papel); border: 1px solid rgb(27 47 107 / 0.12); box-shadow: 0 24px 60px rgb(27 47 107 / 0.16); transform-origin: 0 0; }
+html.js.intro .postal { opacity: 0; }
+.postal__cabeza { display: grid; grid-template-columns: 1fr 72px; gap: 16px; align-items: start; }
+.postal__marca { font: 600 0.875rem/1.3 var(--display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--tinta-suave); }
+.estampilla { width: 72px; height: auto; display: block; }
+.postal h1 { margin-top: 8px; font: 600 clamp(2rem, 5.2vw, 3rem)/1.08 var(--display); color: var(--tinta); }
+.postal__apoyo { margin-top: 16px; font-size: 1.125rem; line-height: 1.625rem; color: var(--tinta-suave); }
+.postal__cuerpo { margin-top: 24px; display: grid; gap: 24px; }
+.postal__detalles { display: grid; gap: 16px; min-width: 0; }
+.datos { display: grid; gap: 8px; }
+.datos div { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgb(27 47 107 / 0.18); }
+.datos dt { font: 600 0.875rem/1.3 var(--display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--tinta-suave); }
+.datos dd { justify-self: start; min-width: 0; padding: 2px 8px; border-radius: 4px; background: rgb(224 169 59 / 0.17); color: var(--tinta); font: 600 0.875rem/1.25rem var(--texto); }
+.datos a { color: inherit; text-decoration-color: var(--ocre); text-underline-offset: 3px; }
+.mapa-embed { overflow: hidden; width: 100%; aspect-ratio: 16 / 10; border: 1px solid rgb(27 47 107 / 0.12); border-radius: 12px; background: #eee3cf; }
+.mapa-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+.postal__aviso { margin-top: 12px; font-size: 0.75rem; line-height: 1.25rem; font-weight: 700; letter-spacing: 0.05em; color: var(--cafe); }
+.beneficio { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; padding: 20px; background: var(--papel); border: 1px solid rgb(224 169 59 / 0.5); }
+.beneficio::before { content: ''; position: absolute; inset: 0; z-index: 0; background: linear-gradient(110deg, transparent 30%, rgb(224 169 59 / 0.3) 50%, transparent 70%); transform: translateX(-150%); pointer-events: none; }
+.beneficio > p { position: relative; z-index: 1; }
+.beneficio__sello { position: absolute; top: 14px; right: 16px; z-index: 1; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ocre); color: var(--tinta); font-size: 1.5rem; line-height: 1; }
+.beneficio__marca { max-width: calc(100% - 44px); margin-bottom: 8px; color: var(--cafe); font: 600 0.875rem/1.3 var(--display); letter-spacing: 0.16em; text-transform: uppercase; }
+.beneficio__texto { font: 600 1.5rem/1.2 var(--display); color: var(--tinta); }
+.beneficio__demo { margin-top: 8px; font-size: 0.875rem; line-height: 1.25rem; color: var(--tinta-suave); }
+.beneficio__qr { position: relative; z-index: 1; display: grid; justify-items: center; gap: 8px; width: min(100%, 340px); margin: auto auto 0; padding-top: 18px; }
+.beneficio__qr-marco { width: 100%; padding: 8px; background: #fff; border: 1px solid rgb(27 47 107 / 0.12); box-shadow: 0 12px 30px rgb(27 47 107 / 0.12); }
+.beneficio__qr img { display: block; width: 100%; height: auto; }
+.beneficio__qr figcaption { color: var(--cafe); font: 700 0.7rem/1.4 var(--texto); letter-spacing: 0.04em; text-align: center; }
+html:not(.intro) .beneficio::before { animation: beneficio-brillo 1.1s var(--curva) 0.25s both; }
+html:not(.intro) .beneficio__sello { animation: beneficio-sello 0.65s var(--curva) 0.15s both; }
+@keyframes beneficio-brillo { to { transform: translateX(150%); } }
+@keyframes beneficio-sello { from { opacity: 0; transform: rotate(-25deg) scale(0.55); } to { opacity: 1; transform: rotate(0) scale(1); } }
+.postal__pie { margin-top: 24px; display: flex; justify-content: flex-start; }
+@media (min-width: 861px) {
+  .postal { padding: 48px; }
+  .postal__cabeza { grid-template-columns: 1fr 96px; }
+  .estampilla { width: 96px; }
+  .postal__cuerpo { grid-template-columns: 1fr 1fr; gap: 48px; }
+}
+@media (prefers-reduced-motion: reduce) { .boton { transition: none; } .beneficio::before, .beneficio__sello, .boton--sonido { animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="fondo" aria-hidden="true"></div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="respaldo" id="respaldo" aria-hidden="true" hidden><svg viewBox="0 0 800 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustración fija: el cartero entrega el sobre frente a la tienda en miniatura.">
+        <ellipse cx="400" cy="620" rx="350" ry="90" fill="#3c4c80"/>
+        <path d="M60 560v40c0 50 152 90 340 90s340-40 340-90v-40z" fill="#5a331c"/>
+        <ellipse cx="400" cy="560" rx="340" ry="96" fill="#f6eedd"/>
+        <path d="M90 590Q300 560 520 600" fill="none" stroke="#5a331c" stroke-opacity=".35" stroke-width="26" stroke-linecap="round"/>
+        <circle cx="130" cy="500" r="42" fill="#3c4c80"/><circle cx="182" cy="478" r="30" fill="#3c4c80"/><circle cx="150" cy="474" r="6" fill="#e0a93b"/>
+        <g>
+          <path d="M360 240h320v290H360z" fill="#f6eedd"/><path d="M360 240h320v290H360z" fill="#e0a93b" fill-opacity=".22"/>
+          <path d="M330 244 520 140l190 104z" fill="#5a331c"/>
+          <path d="M440 380h86v150h-86z" fill="#1b2f6b"/><circle cx="510" cy="458" r="6" fill="#e0a93b"/>
+          <path d="M560 360h90v80h-90z" fill="#e0a93b"/><path d="M604 360v80M560 400h90" stroke="#5a331c" stroke-width="5"/>
+          <path d="M420 330h250l24 44H396z" fill="#e0a93b"/><path d="M450 330l-14 44M510 330l-8 44M570 330l8 44M630 330l14 44" stroke="#f6eedd" stroke-width="16"/>
+        </g>
+        <g data-courier-art transform="translate(160 300) scale(1.25)"></g>
+      </svg></div>
+
+<div class="frase" id="frase">
+  <p class="frase__marca">Somos Loja</p>
+  <p class="frase__texto">Una invitación desde Loja.</p>
+</div>
+
+<div class="montaje" id="montaje" aria-hidden="true">
+  <figure class="fragmento fragmento--papel f1"><img src="recursos/finca.webp" alt="" width="1100" height="825"><figcaption>Ilustración</figcaption></figure>
+  <figure class="fragmento f2"><img src="recursos/cereza-roja.webp" alt="" width="720" height="960"></figure>
+  <figure class="fragmento f3"><img src="recursos/grano-cayendo.webp" alt="" width="720" height="480"></figure>
+  <figure class="fragmento fragmento--papel f4"><img src="recursos/taza.webp" alt="" width="1400" height="788"><figcaption>Ilustración</figcaption></figure>
+  <figure class="fragmento f5"><img src="recursos/olla-negra.webp" alt="" width="800" height="1067"></figure>
+</div>
+
+
+<div class="controles">
+  <button class="boton boton--sonido boton--audio" id="sonido" type="button" aria-label="Activar sonido" title="Activar sonido" hidden><svg class="icono-sonido" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l4 6M21 9l-4 6"/></svg><span class="boton--sonido__texto" aria-hidden="true">Activar sonido</span></button>
+  <button class="boton boton--silenciar boton--audio" id="silenciar" type="button" aria-label="Desactivar sonido" title="Desactivar sonido" aria-pressed="false" hidden><svg class="icono-sonido" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM16 9c1.5 1.5 1.5 4.5 0 6M19 6c3 3 3 9 0 12"/><path class="icono-sonido__corte" d="M3 21 21 3"/></svg></button>
+  <button class="boton boton--saltar" id="saltar" type="button" hidden>Ver invitación</button>
+</div>
+
+<main class="lienzo">
+  <article class="postal" id="postal" aria-labelledby="titulo">
+    <div class="postal__cabeza">
+      <div>
+        <p class="postal__marca">Somos Loja</p>
+        <h1 id="titulo" tabindex="-1">Estás invitado a Loja 100&nbsp;% Café Especial.</h1>
+        <p class="postal__aviso">Prototipo: datos de ejemplo; fecha y sede reales por confirmar.</p>
+      </div>
+      <svg class="estampilla" viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estampilla de una taza de café">
+            <path fill="#f6eedd" d="M0 0h120v150H0z"/>
+            <path fill="none" stroke="#1b2f6b" stroke-width="6" stroke-dasharray="2 8" stroke-linecap="round" d="M3 3h114v144H3z"/>
+            <path fill="#1b2f6b" d="M12 12h96v126H12z"/>
+            <path fill="#e0a93b" d="M34 66h44v26a18 18 0 0 1-18 18h-8a18 18 0 0 1-18-18z"/>
+            <path fill="none" stroke="#e0a93b" stroke-width="6" d="M78 72h6a9 9 0 0 1 0 18h-8"/>
+            <path fill="none" stroke="#f6eedd" stroke-width="4" stroke-linecap="round" d="M48 56c-6-8 6-12 0-22M62 56c-6-8 6-12 0-22"/>
+            <text x="60" y="130" fill="#f6eedd" font-family="Cormorant, Georgia, serif" font-size="13" text-anchor="middle">Loja</text>
+          </svg>
+    </div>
+    <p class="postal__apoyo">Un encuentro para descubrir el café de Loja, conocer a quienes lo hacen y compartir su historia.</p>
+    <div class="postal__cuerpo">
+      <div class="postal__detalles">
+        <dl class="datos">
+          <div><dt>Fecha</dt><dd>Sáb. 21 nov 2026</dd></div>
+          <div><dt>Horario</dt><dd>10:00 a 18:00</dd></div>
+          <div><dt>Lugar</dt><dd>Parque Central de Loja</dd></div>
+          <div><dt>Dirección</dt><dd>Centro histórico, Loja</dd></div>
+          <div><dt>Mapa</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Parque+Central+de+Loja%2C+Ecuador" target="_blank" rel="noopener noreferrer" aria-label="Ver mapa de referencia del Parque Central de Loja en Google Maps (abre en otra pestaña)">Abrir mapa ↗</a></dd></div>
+        </dl>
+        <div class="mapa-embed">
+          <iframe title="Mapa de referencia del Parque Central de Loja" src="https://maps.google.com/maps?q=Parque%20Central%20de%20Loja%2C%20Ecuador&amp;output=embed" loading="lazy" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="beneficio">
+        <span class="beneficio__sello" aria-hidden="true">✦</span>
+        <p class="beneficio__marca">Beneficio de muestra</p>
+        <p class="beneficio__texto">Una degustación por persona.</p>
+        <p class="beneficio__demo">Prototipo de demostración: esta invitación no sirve para canjear nada.</p>
+        <figure class="beneficio__qr">
+          <div class="beneficio__qr-marco"><img src="recursos/qr-puerta-loja-mvp.png" alt="Imagen referencial de un código QR ilustrado con la Puerta de la Ciudad de Loja" width="1254" height="1254" loading="eager" fetchpriority="high"></div>
+          <figcaption>Diseño de muestra · QR aún no activo</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="postal__pie"><button class="boton boton--linea" id="repetir" type="button" hidden>Repetir experiencia</button></div>
+  </article>
+</main>
+
+<script type="x-shader/x-vertex" id="vertex-shader">
+attribute vec3 aPos;
+attribute vec3 aNormal;
+uniform mat4 uViewProj, uRigid;
+uniform vec3 uScale;
+// Shared with the fragment shader, so the precision has to match for the program to link.
+uniform mediump vec3 uLight;
+uniform mediump float uShadow;
+varying vec3 vNormal;
+void main() {
+  vec4 world = uRigid * vec4(aPos * uScale, 1.0);
+  // The hierarchy is rigid and scale applies last, so this is the exact normal transform.
+  vNormal = (uRigid * vec4(aNormal / uScale, 0.0)).xyz;
+  if (uShadow > 0.5) {
+    world.xz -= uLight.xz / uLight.y * world.y;
+    world.y = 0.03;
+  }
+  gl_Position = uViewProj * world;
+}
+</script>
+<script type="x-shader/x-fragment" id="fragment-shader">
+precision mediump float;
+uniform vec3 uColor, uLight;
+uniform float uShadow, uFunde, uPlano;
+varying vec3 vNormal;
+void main() {
+  if (uShadow > 0.5) { gl_FragColor = vec4(0.35, 0.20, 0.11, 0.22 * (1.0 - uFunde)); return; }
+  // Printed paper is shown flat, so it matches the HTML postcard it turns into.
+  if (uPlano > 0.5) { gl_FragColor = vec4(uColor, 1.0); return; }
+  vec3 n = normalize(vNormal);
+  float sun = max(dot(n, uLight), 0.0);
+  float sky = 0.5 + 0.5 * n.y;
+  vec3 ambient = mix(vec3(0.50, 0.43, 0.36), vec3(0.98, 0.94, 0.84), sky) * 0.72;
+  vec3 color = uColor * (ambient + vec3(1.0, 0.92, 0.76) * sun * 0.56);
+  // Faint print grain, so flat faces read as paper rather than plastic.
+  float grain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+  // The stage melts into paper when the camera is close to the letter.
+  gl_FragColor = vec4(mix(color + (grain - 0.5) * 0.016, vec3(0.965, 0.933, 0.867), uFunde), 1.0);
+}
+</script>
+
+<script id="miniature">
+// Compact raw WebGL scene: one shared buffer of unit primitives, a small matrix stack,
+// flat-shaded faces and planar shadows. It draws on demand and stops when nothing moves.
+function createMiniature(canvas, { onLost }) {
+  const gl = canvas.getContext('webgl', { alpha: true, antialias: true, stencil: true, powerPreference: 'low-power' });
+  if (!gl) return null;
+
+  function shader(type, id) {
+    const handle = gl.createShader(type);
+    gl.shaderSource(handle, document.getElementById(id).textContent);
+    gl.compileShader(handle);
+    return gl.getShaderParameter(handle, gl.COMPILE_STATUS) ? handle : null;
+  }
+  const vertex = shader(gl.VERTEX_SHADER, 'vertex-shader');
+  const fragment = shader(gl.FRAGMENT_SHADER, 'fragment-shader');
+  if (!vertex || !fragment) return null;
+  const program = gl.createProgram();
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+  gl.useProgram(program);
+  const uniform = {};
+  for (const name of ['uViewProj', 'uRigid', 'uScale', 'uLight', 'uShadow', 'uColor', 'uFunde', 'uPlano']) uniform[name] = gl.getUniformLocation(program, name);
+
+  // Colors are the design tokens, or mixes of them for skin tone.
+  const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const mixColor = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+  const PAPEL = rgb('#f6eedd'), TINTA = rgb('#1b2f6b'), SUAVE = rgb('#3c4c80'), OCRE = rgb('#e0a93b'), CAFE = rgb('#5a331c');
+  const SKIN = mixColor(mixColor(OCRE, PAPEL, 0.45), CAFE, 0.24);
+  const TILE = mixColor(PAPEL, CAFE, 0.26);
+  const HILL = mixColor(SUAVE, PAPEL, 0.16);
+
+  // --- Geometry: every primitive is convex around the origin, which orients faces automatically.
+  const data = [];
+  function tri(a, b, c) {
+    const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+    let n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const len = Math.hypot(n[0], n[1], n[2]) || 1;
+    n = n.map((x) => x / len);
+    const center = [a[0] + b[0] + c[0], a[1] + b[1] + c[1], a[2] + b[2] + c[2]];
+    const outward = n[0] * center[0] + n[1] * center[1] + n[2] * center[2] >= 0;
+    if (!outward) n = n.map((x) => -x);
+    for (const p of outward ? [a, b, c] : [a, c, b]) data.push(p[0], p[1], p[2], n[0], n[1], n[2]);
+  }
+  const quad = (a, b, c, d) => { tri(a, b, c); tri(a, c, d); };
+  function primitive(build) {
+    const first = data.length / 6;
+    build();
+    return { first, count: data.length / 6 - first };
+  }
+  const BOX = primitive(() => {
+    const p = (x, y, z) => [x / 2, y / 2, z / 2];
+    quad(p(-1, -1, 1), p(1, -1, 1), p(1, 1, 1), p(-1, 1, 1));
+    quad(p(-1, -1, -1), p(1, -1, -1), p(1, 1, -1), p(-1, 1, -1));
+    quad(p(-1, 1, -1), p(1, 1, -1), p(1, 1, 1), p(-1, 1, 1));
+    quad(p(-1, -1, -1), p(1, -1, -1), p(1, -1, 1), p(-1, -1, 1));
+    quad(p(1, -1, -1), p(1, 1, -1), p(1, 1, 1), p(1, -1, 1));
+    quad(p(-1, -1, -1), p(-1, 1, -1), p(-1, 1, 1), p(-1, -1, 1));
+  });
+  const prism = (sides, top) => primitive(() => {
+    const at = (i, r, y) => { const a = (i / sides) * Math.PI * 2; return [Math.cos(a) * r, y, Math.sin(a) * r]; };
+    for (let i = 0; i < sides; i++) {
+      if (top > 0) { quad(at(i, 1, -0.5), at(i + 1, 1, -0.5), at(i + 1, top, 0.5), at(i, top, 0.5)); tri([0, 0.5, 0], at(i, top, 0.5), at(i + 1, top, 0.5)); }
+      else tri(at(i, 1, -0.5), at(i + 1, 1, -0.5), [0, 0.5, 0]);
+      tri([0, -0.5, 0], at(i, 1, -0.5), at(i + 1, 1, -0.5));
+    }
+  });
+  const CYL = prism(10, 1), DISC = prism(28, 1), TAPER = prism(9, 0.74), CONE = prism(6, 0), WEDGE = prism(3, 1);
+  const BALL = primitive(() => {
+    const t = (1 + Math.sqrt(5)) / 2, unit = (p) => { const l = Math.hypot(p[0], p[1], p[2]); return p.map((x) => x / l); };
+    const v = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]].map(unit);
+    const faces = [[0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]];
+    for (const [a, b, c] of faces) {
+      const mid = (p, q) => unit([p[0] + q[0], p[1] + q[1], p[2] + q[2]]);
+      const ab = mid(v[a], v[b]), bc = mid(v[b], v[c]), ca = mid(v[c], v[a]);
+      tri(v[a], ab, ca); tri(v[b], bc, ab); tri(v[c], ca, bc); tri(ab, bc, ca);
+    }
+  });
+  const TRIANGULO = primitive(() => {
+    const a = (z) => [-0.5, 0.5, z], b = (z) => [0.5, 0.5, z], c = (z) => [0, -0.5, z];
+    tri(a(0.5), b(0.5), c(0.5)); tri(a(-0.5), b(-0.5), c(-0.5));
+    quad(a(-0.5), b(-0.5), b(0.5), a(0.5)); quad(b(-0.5), c(-0.5), c(0.5), b(0.5)); quad(c(-0.5), a(-0.5), a(0.5), c(0.5));
+  });
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(program, 'aPos'), aNormal = gl.getAttribLocation(program, 'aNormal');
+  gl.enableVertexAttribArray(aPos);
+  gl.enableVertexAttribArray(aNormal);
+  gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 24, 0);
+  gl.vertexAttribPointer(aNormal, 3, gl.FLOAT, false, 24, 12);
+
+  // --- Matrix stack: rigid transforms only, scale is applied per primitive in the shader.
+  const stack = Array.from({ length: 12 }, () => new Float32Array(16));
+  stack[0].set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+  let depth = 0, top = stack[0];
+  const push = () => { stack[depth + 1].set(top); top = stack[++depth]; };
+  const pop = () => { top = stack[--depth]; };
+  function move(x, y, z) {
+    for (let i = 0; i < 4; i++) top[12 + i] += top[i] * x + top[4 + i] * y + top[8 + i] * z;
+  }
+  function turn(columnA, columnB, angle) {
+    const c = Math.cos(angle), s = Math.sin(angle), a = columnA * 4, b = columnB * 4;
+    for (let i = 0; i < 4; i++) {
+      const p = top[a + i], q = top[b + i];
+      top[a + i] = c * p + s * q;
+      top[b + i] = c * q - s * p;
+    }
+  }
+  const rotX = (angle) => turn(1, 2, angle), rotY = (angle) => turn(2, 0, angle), rotZ = (angle) => turn(0, 1, angle);
+  function draw(shape, color, sx, sy, sz) {
+    gl.uniformMatrix4fv(uniform.uRigid, false, top);
+    gl.uniform3f(uniform.uScale, sx, sy, sz);
+    gl.uniform3fv(uniform.uColor, color);
+    gl.drawArrays(gl.TRIANGLES, shape.first, shape.count);
+  }
+  function at(shape, color, x, y, z, sx, sy = sx, sz = sx) {
+    push(); move(x, y, z); draw(shape, color, sx, sy, sz); pop();
+  }
+
+  // --- Static stage
+  const PATH = [-2.5, -1.86, -1.22, -0.58, 0.06, 0.7, 1.34];
+  function drawPlinth() {
+    at(DISC, SUAVE, 0, -0.86, 0, 3.46, 0.24, 3.46);
+    at(DISC, OCRE, 0, -0.68, 0, 3.3, 0.1, 3.3);
+    at(DISC, CAFE, 0, -0.34, 0, 3.2, 0.58, 3.2);
+    gl.enable(gl.STENCIL_TEST);
+    gl.stencilFunc(gl.ALWAYS, 1, 255);
+    gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+    at(DISC, PAPEL, 0, -0.03, 0, 3.12, 0.06, 3.12);
+    gl.disable(gl.STENCIL_TEST);
+    for (let i = 0; i < PATH.length; i++) {
+      push(); move(PATH[i], 0.012, 1.1 + (i % 2) * 0.05); rotY(i % 2 ? 0.1 : -0.08); draw(BOX, TILE, 0.54, 0.024, 0.74); pop();
+    }
+    for (let i = 0; i < 2; i++) at(BOX, TILE, 1.18, 0.012, 0.38 - i * 0.44, 0.62, 0.024, 0.34);
+  }
+  function drawShrub(x, z, r) {
+    at(BALL, SUAVE, x, r * 0.8, z, r);
+    at(BALL, OCRE, x + r * 0.5, r * 1.2, z + r * 0.62, 0.05);
+    at(BALL, OCRE, x - r * 0.44, r * 1.02, z + r * 0.8, 0.05);
+    at(BALL, OCRE, x + r * 0.06, r * 1.62, z + r * 0.42, 0.05);
+  }
+  function drawShop() {
+    push();
+    move(1.1, 0, -1.05);
+    at(BOX, PAPEL, 0, 1.0, 0, 2.7, 2.0, 1.72);
+    at(BOX, CAFE, 0, 0.09, 0.02, 2.76, 0.18, 1.78);
+    // Roof ridge runs along x; the wedge apex points up after this turn.
+    push(); move(0, 2.3, 0); rotZ(Math.PI / 2); draw(WEDGE, CAFE, 0.6, 3.02, 1.16); pop();
+    at(BOX, TINTA, 0.86, 2.28, -0.3, 0.26, 0.86, 0.26);
+    // Door
+    at(BOX, CAFE, 0.08, 0.72, 0.87, 0.82, 1.44, 0.03);
+    at(BOX, TINTA, 0.08, 0.7, 0.89, 0.68, 1.34, 0.03);
+    at(BALL, OCRE, 0.32, 0.7, 0.93, 0.05);
+    // Window with warm light
+    at(BOX, CAFE, -0.78, 0.92, 0.87, 0.8, 0.8, 0.03);
+    at(BOX, OCRE, -0.78, 0.92, 0.89, 0.66, 0.66, 0.03);
+    at(BOX, CAFE, -0.78, 0.92, 0.91, 0.04, 0.66, 0.02);
+    at(BOX, CAFE, -0.78, 0.92, 0.91, 0.66, 0.04, 0.02);
+    // Striped awning over door and window
+    for (let i = 0; i < 8; i++) {
+      push(); move(-1.12 + i * 0.32, 1.56, 1.06); rotX(0.46); draw(BOX, i % 2 ? PAPEL : OCRE, 0.32, 0.04, 0.46); pop();
+    }
+    // Hanging cup sign: the shop is a cafe at a glance
+    at(BOX, CAFE, -1.0, 2.52, 0.34, 0.05, 0.42, 0.05);
+    at(CYL, PAPEL, -1.0, 2.88, 0.34, 0.24, 0.3, 0.24);
+    at(CYL, CAFE, -1.0, 3.04, 0.34, 0.2, 0.02, 0.2);
+    pop();
+    // Mailbox by the steps, the courier's destination
+    at(CYL, CAFE, 2.32, 0.42, 0.8, 0.05, 0.84, 0.05);
+    push(); move(2.32, 0.96, 0.8); rotZ(Math.PI / 2); draw(CYL, TINTA, 0.22, 0.56, 0.22); pop();
+    at(BOX, OCRE, 2.56, 1.2, 0.8, 0.03, 0.26, 0.1);
+    // Coffee sacks
+    at(TAPER, CAFE, 2.18, 0.24, 0.18, 0.26, 0.48, 0.26);
+    at(TAPER, TILE, 2.6, 0.2, 0.06, 0.22, 0.4, 0.22);
+    drawShrub(-1.5, -1.5, 0.5);
+    drawShrub(-2.26, -0.72, 0.36);
+    drawShrub(-0.7, -1.24, 0.34);
+    drawShrub(-2.5, 0.24, 0.24);
+  }
+  function drawHills() {
+    at(CONE, HILL, -1.1, 1.1, -2.0, 0.72, 2.2, 0.72);
+    at(CONE, SUAVE, -1.85, 0.76, -1.5, 0.64, 1.52, 0.64);
+  }
+
+  const enManoMatriz = new Float32Array(16);
+
+  // --- The courier: an original geometric figure, built from named joints.
+  function drawEnvelope(scale) {
+    at(BOX, PAPEL, 0, 0, 0, 0.62 * scale, 0.42 * scale, 0.04 * scale);
+    push();
+    move(0, 0.13 * scale, 0.026 * scale);
+    rotZ(-Math.PI / 2);
+    rotX(Math.PI / 2);
+    draw(WEDGE, OCRE, 0.16 * scale, 0.012 * scale, 0.358 * scale);
+    pop();
+    at(BALL, CAFE, 0, 0.03 * scale, 0.04 * scale, 0.05 * scale);
+  }
+  function drawLeg(side, swing, knee) {
+    push();
+    move(side * 0.15, 0.64, 0);
+    rotX(swing);
+    at(BOX, SUAVE, 0, -0.15, 0, 0.2, 0.34, 0.22);
+    move(0, -0.3, 0);
+    rotX(knee);
+    at(BOX, SUAVE, 0, -0.1, 0, 0.18, 0.26, 0.2);
+    at(BOX, CAFE, 0, -0.27, 0.05, 0.21, 0.1, 0.34);
+    pop();
+  }
+  function drawArm(side, forward, out, elbow, carry) {
+    push();
+    move(side * 0.34, 0.64, 0);
+    rotZ(side * out);
+    rotX(forward);
+    at(BALL, TINTA, 0, 0, 0, 0.11);
+    at(BOX, TINTA, 0, -0.14, 0, 0.14, 0.3, 0.15);
+    move(0, -0.27, 0);
+    rotX(elbow);
+    at(BOX, TINTA, 0, -0.11, 0, 0.13, 0.26, 0.14);
+    at(BALL, SKIN, 0, -0.27, 0, 0.09);
+    if (carry) carry(forward + elbow);
+    pop();
+  }
+  function drawHead(look) {
+    push();
+    move(0, 0.8, 0);
+    at(CYL, SKIN, 0, 0, 0, 0.1, 0.12, 0.1);
+    move(0, 0.3, 0);
+    rotY(look);
+    rotX(pose.nod);
+    at(BALL, SKIN, 0, 0, 0, 0.34, 0.33, 0.33);
+    for (const side of [-1, 1]) {
+      at(BALL, TINTA, side * 0.125, 0.05, 0.3, 0.042);
+      at(BALL, SKIN, side * 0.34, 0, 0, 0.06);
+      at(BOX, CAFE, side * 0.095, -0.1, 0.305, 0.15, 0.05, 0.06);
+    }
+    at(BALL, SKIN, 0, -0.03, 0.34, 0.058);
+    // Kepi cap: band, wider crown, visor and badge
+    at(CYL, TINTA, 0, 0.21, 0, 0.35, 0.12, 0.35);
+    at(CYL, OCRE, 0, 0.255, 0, 0.358, 0.035, 0.358);
+    push(); move(0, 0.37, -0.01); rotX(Math.PI); draw(TAPER, SUAVE, 0.4, 0.17, 0.4); pop();
+    push(); move(0, 0.18, 0.34); rotX(0.24); draw(BOX, CAFE, 0.46, 0.035, 0.24); pop();
+    at(BOX, PAPEL, 0, 0.33, 0.33, 0.13, 0.09, 0.02);
+    at(BOX, OCRE, 0, 0.345, 0.342, 0.13, 0.025, 0.012);
+    pop();
+  }
+  function drawCourier(pose) {
+    const swing = Math.sin(pose.phase) * 0.62 * pose.stride;
+    const lift = Math.max(0, Math.sin(pose.phase + Math.PI / 2));
+    const opposite = Math.max(0, -Math.sin(pose.phase + Math.PI / 2));
+    push();
+    move(pose.x, Math.abs(Math.cos(pose.phase)) * 0.045 * pose.stride + Math.sin(pose.gesture * Math.PI) * 0.05, pose.z);
+    rotY(pose.heading);
+    // The knee bends on the leg swinging forward; arms below oppose the same-side leg.
+    drawLeg(-1, swing, opposite * 0.75 * pose.stride);
+    drawLeg(1, -swing, lift * 0.75 * pose.stride);
+    push();
+    move(0, 0.62, 0);
+    rotX(0.07 * pose.stride - Math.sin(pose.gesture * Math.PI) * 0.1);
+    // Coat, belt, buttons and lapel
+    at(TAPER, TINTA, 0, 0.37, 0, 0.32, 0.76, 0.27);
+    at(CYL, OCRE, 0, 0.14, 0, 0.312, 0.06, 0.268);
+    for (const y of [0.3, 0.44, 0.58]) at(BALL, OCRE, 0, y, 0.25 - y * 0.05, 0.028);
+    at(BOX, PAPEL, 0, 0.71, 0.16, 0.2, 0.08, 0.1);
+    // Satchel and diagonal strap
+    push(); move(0, 0.42, 0.24); rotZ(-0.66); draw(BOX, CAFE, 0.06, 1.0, 0.04); pop();
+    push(); move(0, 0.42, -0.24); rotZ(-0.66); draw(BOX, CAFE, 0.06, 1.0, 0.04); pop();
+    push();
+    move(-0.38, 0.04, 0.02);
+    rotZ(-0.06 + swing * 0.08);
+    at(BOX, CAFE, 0, 0, 0, 0.14, 0.32, 0.42);
+    at(BOX, OCRE, 0, 0.13, 0, 0.16, 0.08, 0.44);
+    at(BOX, PAPEL, 0.01, 0.2, 0.04, 0.03, 0.08, 0.26);
+    pop();
+    drawHead(pose.look);
+    // Near arm carries the envelope and offers it; the other one waves.
+    drawArm(-1, -pose.gesture * 1.72 - swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.98, -pose.gesture * 0.12 - 0.14, (armAngle) => {
+      push();
+      move(0, -0.36, 0.03);
+      rotX(-armAngle);
+      // Faces the viewer on the walk, clear of the satchel, instead of showing its edge.
+      move(-0.14 * (1 - pose.gesture), 0, 0);
+      rotY(-pose.heading);
+      rotZ(0.08);
+      enManoMatriz.set(top);
+      pop();
+    });
+    drawArm(1, swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.4 + 0.05, -pose.gesture * 0.3 - 0.14);
+    pop();
+    pop();
+  }
+
+  // --- Courier timeline: walks, stops and looks at the visitor, raises the letter.
+  const WALK = 1.2, TURN = 0.3, RAISE = 0.5, END = WALK + TURN + RAISE;
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  const smooth = (v) => { const x = clamp01(v); return x * x * (3 - 2 * x); };
+  const mix = (a, b, v) => a + (b - a) * v;
+  const START_X = -2.36, STOP_X = 0.5, PATH_Z = 1.14;
+  const pose = { x: 0, z: PATH_Z, heading: 0, phase: 0, stride: 0, gesture: 0, look: 0, nod: 0, handoff: 1 };
+  function poseAt(time) {
+    const walked = clamp01(time / WALK);
+    const eased = walked * walked * (3 - 2 * walked) * 0.35 + walked * 0.65;
+    pose.x = mix(START_X, STOP_X, eased);
+    pose.phase = ((pose.x - START_X) * Math.PI * 2) / 1.1;
+    pose.stride = Math.min(smooth(time / 0.2), smooth((WALK - time) / 0.2));
+    pose.heading = time < WALK ? mix(0.7, Math.PI / 2, smooth(time / 0.2)) : mix(Math.PI / 2, 0, smooth((time - WALK) / TURN));
+    pose.gesture = smooth((time - WALK - TURN * 0.6) / RAISE);
+    // Head first: turns to the visitor, glances at the letter while lifting it, then back.
+    const mira = smooth((time - WALK * 0.85) / TURN);
+    pose.look = mix(-0.5 * smooth(time / 0.2), 0, mira) - Math.sin(pose.gesture * Math.PI) * 0.42;
+    pose.nod = -Math.sin(pose.gesture * Math.PI) * 0.16;
+  }
+
+  const LIGHT = (() => { const l = Math.hypot(-0.55, 1, 0.62); return [-0.55 / l, 1 / l, 0.62 / l]; })();
+  let width = 1, height = 1, frames = 0, lost = false, vista = null;
+
+  function perspective(fovY, aspect, near, far) {
+    const f = 1 / Math.tan(fovY / 2);
+    return [f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) / (near - far), -1, 0, 0, (2 * far * near) / (near - far), 0];
+  }
+  function lookAt(eye, target) {
+    const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    const unit = (a) => { const l = Math.hypot(a[0], a[1], a[2]); return a.map((x) => x / l); };
+    const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    const z = unit(sub(eye, target)), x = unit(cross([0, 1, 0], z)), y = cross(z, x);
+    return [x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, -dot(x, eye), -dot(y, eye), -dot(z, eye), 1];
+  }
+  function multiply(a, b) {
+    const out = new Float32Array(16);
+    for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) {
+      out[c * 4 + r] = a[r] * b[c * 4] + a[r + 4] * b[c * 4 + 1] + a[r + 8] * b[c * 4 + 2] + a[r + 12] * b[c * 4 + 3];
+    }
+    return out;
+  }
+
+  // Beans that jump out of the letter when it opens, toward the camera.
+  const GRANOS = Array.from({ length: 34 }, (_, i) => {
+    const r = (n) => { const v = Math.sin((i + 1) * n) * 43758.5453; return v - Math.floor(v); };
+    return { vx: (r(12.9) - 0.5) * 3.4, vy: 0.5 + r(78.2) * 2.2, vz: 0.4 + r(37.7) * 2.2, giro: 4 + r(5.3) * 9, tam: 0.8 + r(9.1) * 0.7, fruto: i % 6 === 0 };
+  });
+  const DORSO = mixColor(PAPEL, CAFE, 0.18);
+  const E = 1.25, SOBRE_A = 0.62 * E, SOBRE_H = 0.42 * E;
+  const manoMezclada = new Float32Array(16);
+
+  function plano(activo) { gl.uniform1f(uniform.uPlano, activo ? 1 : 0); }
+
+  // The letter: a real 3D object with its own flap, front and card.
+  function dibujarCarta(p, ajuste, tarjeta) {
+    for (let i = 0; i < 16; i++) manoMezclada[i] = enManoMatriz[i] + ([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1][i] - enManoMatriz[i]) * (i < 12 ? ajuste : 0);
+    manoMezclada[12] += 0.08 * (1 - ajuste);
+    manoMezclada[14] += 0.1 + ajuste * 0.5;
+    push();
+    top.set(manoMezclada);
+    plano(true);
+    const cae = p.crece;
+    // Back and front drop away once the card has come out.
+    if (cae < 0.98) {
+      at(BOX, DORSO, 0, -cae * 1.6, -0.016 * E, SOBRE_A, SOBRE_H, 0.01);
+      at(BOX, PAPEL, 0, -0.07 * E - cae * 1.6, 0.014 * E, SOBRE_A, 0.28 * E, 0.012);
+      // Diagonal folds of the front
+      for (const lado of [-1, 1]) {
+        push(); move(lado * 0.155 * E, -0.075 * E - cae * 1.6, 0.022 * E); rotZ(lado * 0.56); draw(BOX, DORSO, 0.36 * E, 0.006, 0.004); pop();
+      }
+      push();
+      // Once past the top, the flap stays behind the card that comes out.
+      move(0, SOBRE_H / 2 - cae * 1.6, p.abre > 0.5 ? -0.03 * E : 0.024 * E);
+      rotX(-p.abre * Math.PI * 0.94);
+      push(); move(0, -0.13 * E, 0); draw(TRIANGULO, mixColor(OCRE, CAFE, Math.sin(p.abre * Math.PI) * 0.3), SOBRE_A, 0.26 * E, 0.008); pop();
+      at(BALL, CAFE, 0, -0.17 * E, 0.012, 0.042 * E, 0.042 * E, 0.016);
+      pop();
+    }
+    // The card: same size and place as the HTML postcard at the end of its growth.
+    if (p.abre > 0.3) {
+      const w = mix(0.56 * E, tarjeta.w, p.crece), h = mix(0.25 * E, tarjeta.h, p.crece);
+      const x = mix(0, tarjeta.x, p.crece), y = mix(-0.07 * E + p.sale * 0.32 * E, tarjeta.y, p.crece);
+      const z = mix(0.002, 0.05, p.crece);
+      at(BOX, PAPEL, x, y, z, w, h, 0.006);
+      // Printed details that give way to the real text.
+      const u = w / (0.56 * E);
+      if (p.crece < 1) {
+        at(BOX, TINTA, x - w * 0.14, y + h * 0.26, z + 0.005, w * 0.5, Math.max(0.018, h * 0.08), 0.002);
+        at(BOX, TINTA, x - w * 0.2, y + h * 0.12, z + 0.005, w * 0.38, Math.max(0.018, h * 0.08), 0.002);
+        at(BOX, SUAVE, x - w * 0.12, y - h * 0.08, z + 0.005, w * 0.54, Math.max(0.008, h * 0.025), 0.002);
+        at(BOX, SUAVE, x - w * 0.16, y - h * 0.16, z + 0.005, w * 0.46, Math.max(0.008, h * 0.025), 0.002);
+        at(BOX, TINTA, x + w * 0.37, y + h * 0.26, z + 0.005, 0.1 * u, 0.13 * u, 0.002);
+        at(BOX, OCRE, x + w * 0.37, y + h * 0.25, z + 0.008, 0.05 * u, 0.05 * u, 0.002);
+      }
+    }
+    plano(false);
+    pop();
+  }
+
+  function dibujarGranos(p, c) {
+    if (p.salto <= 0 || p.salto > 1.4) return;
+    const t = p.salto;
+    for (const g of GRANOS) {
+      push();
+      move(c[0] + g.vx * t, c[1] + 0.1 + g.vy * t - 2.2 * t * t, c[2] + 0.05 + g.vz * t);
+      rotX(t * g.giro); rotZ(t * g.giro * 0.7);
+      draw(BALL, g.fruto ? OCRE : CAFE, 0.05 * g.tam, 0.034 * g.tam, 0.034 * g.tam);
+      pop();
+    }
+  }
+
+  function dibujarHumo(tiempo) {
+    for (let i = 0; i < 5; i++) {
+      const f = (tiempo * 0.45 + i / 5) % 1;
+      at(BALL, mixColor(PAPEL, HILL, f * 0.3), 1.96 + Math.sin(f * 5 + i) * 0.1 * f, 2.95 + f * 0.9, -1.35, 0.05 + f * 0.1);
+    }
+  }
+
+  // Everything comes from the controller's values: this function has no clock of its own.
+  function render(p) {
+    if (lost) return;
+    poseAt(p.camino);
+    const aspect = width / height;
+    const vertical = aspect < 1.05;
+    const close = smooth((p.camino - WALK * 0.7) / (END - WALK * 0.7));
+    const base = Math.max(12.2, (vertical ? 9.4 : 13.8) / aspect);
+    // The camera swings around the stage as the courier arrives.
+    const yaw = mix(-0.95, -0.34, smooth(p.camino / END));
+    const pitch = mix(0.46, 0.3, smooth(p.camino / END));
+    const distance = base * mix(1, vertical ? 0.6 : 0.68, close);
+    const t0 = [mix(0, 0.3, close), mix(vertical ? 1.5 : 1.3, 1.5, close), mix(0, 0.8, close)];
+    const e0 = [t0[0] + Math.sin(yaw) * Math.cos(pitch) * distance, t0[1] + Math.sin(pitch) * distance, t0[2] + Math.cos(yaw) * Math.cos(pitch) * distance];
+
+    // First pass of the courier only to learn where the letter is this frame.
+    gl.colorMask(false, false, false, false);
+    gl.depthMask(false);
+    drawCourier(pose);
+    gl.colorMask(true, true, true, true);
+    gl.depthMask(true);
+    const c = [enManoMatriz[12], enManoMatriz[13], enManoMatriz[14]];
+
+    // Close-up: straight in front of the letter, near enough to fill the phone or the screen.
+    const cerca = Math.max(1.79, 1.82 / aspect);
+    const z = p.zoom;
+    const eye = [mix(e0[0], c[0], z), mix(e0[1], c[1], z), mix(e0[2], c[2] + cerca, z)];
+    const target = [mix(t0[0], c[0], z), mix(t0[1], c[1], z), mix(t0[2], c[2], z)];
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clearStencil(0);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+    gl.disable(gl.BLEND);
+    gl.depthMask(true);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+    vista = multiply(perspective(0.52, aspect, 0.1, 60), lookAt(eye, target));
+    gl.uniformMatrix4fv(uniform.uViewProj, false, vista);
+    gl.uniform3fv(uniform.uLight, LIGHT);
+    gl.uniform1f(uniform.uShadow, 0);
+    plano(false);
+
+    if (p.funde < 1) {
+      gl.uniform1f(uniform.uFunde, p.funde);
+      drawPlinth();
+      drawHills();
+      drawShop();
+      dibujarHumo(p.reloj);
+      drawCourier(pose);
+      gl.uniform1f(uniform.uShadow, 1);
+      gl.disable(gl.CULL_FACE);
+      gl.enable(gl.BLEND);
+      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.depthMask(false);
+      gl.enable(gl.STENCIL_TEST);
+      gl.stencilFunc(gl.EQUAL, 1, 255);
+      gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+      drawHills();
+      drawShop();
+      drawCourier(pose);
+      gl.disable(gl.STENCIL_TEST);
+      gl.disable(gl.BLEND);
+      gl.enable(gl.CULL_FACE);
+      gl.depthMask(true);
+      gl.uniform1f(uniform.uShadow, 0);
+    }
+    gl.uniform1f(uniform.uFunde, 0);
+    // Card size in world units, so that on screen it lands exactly on the HTML rectangle.
+    const porPixel = (2 * cerca * Math.tan(0.26)) / height;
+    const tarjeta = { w: p.rect.w * porPixel, h: p.rect.h * porPixel, x: (p.rect.cx - width / 2) * porPixel, y: (height / 2 - p.rect.cy) * porPixel };
+    dibujarCarta(p, z, tarjeta);
+    dibujarGranos(p, c);
+    frames++;
+  }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    width = Math.max(1, canvas.clientWidth);
+    height = Math.max(1, canvas.clientHeight);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+  }
+  resize();
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); lost = true; onLost(); });
+
+  return {
+    DURACION: END,
+    render,
+    resize,
+    frames: () => frames,
+    stop() { lost = true; },
+  };
+}
+</script>
+<script id="app">
+(function () {
+  const raiz = document.documentElement;
+  const $ = (id) => document.getElementById(id);
+  const canvas = $('scene'), respaldo = $('respaldo'), postal = $('postal'), saltar = $('saltar'), repetir = $('repetir'), frase = $('frase');
+  const sonido = $('sonido'), silenciar = $('silenciar');
+  const fragmentos = [...document.querySelectorAll('.fragmento')];
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)');
+  const parametros = new URLSearchParams(location.search);
+  const forzarRespaldo = parametros.get('fallback') === '1';
+  const lento = Math.max(1, Number(parametros.get('lento')) || 1); // Only for reviewing frames.
+
+  document.querySelectorAll('[data-courier-art]').forEach((g) => { g.innerHTML = '\n    <ellipse cx="96" cy="262" rx="82" ry="14" fill="#1b2f6b" fill-opacity=".22"/>\n    <path d="M62 180h28v70H62zM102 180h28v70h-28z" fill="#3c4c80"/>\n    <path d="M56 244h36v16H56zM100 244h36v16h-36z" fill="#5a331c"/>\n    <path d="M58 96h76l10 92H48z" fill="#1b2f6b"/>\n    <path d="M50 158h92v9H50z" fill="#e0a93b"/>\n    <path d="m124 96 7 7-74 90-7-7z" fill="#5a331c"/>\n    <path d="M18 154h44v44H18z" fill="#5a331c"/><path d="M16 152h48v14H16z" fill="#e0a93b"/>\n    <path d="M134 100l12-6 38-34 11 12-41 42z" fill="#1b2f6b"/><circle cx="192" cy="60" r="11" fill="#e0a93b"/>\n    <path d="M58 100 46 94 14 128l12 12 34-26z" fill="#1b2f6b"/>\n    <g transform="rotate(-6 -6 118)"><path d="M-44 96h52v36h-52z" fill="#f6eedd" stroke="#5a331c" stroke-width="2"/><path d="M-44 96l26 20 26-20z" fill="#e0a93b"/></g>\n    <circle cx="96" cy="58" r="40" fill="#e0a93b"/><circle cx="96" cy="58" r="40" fill="#5a331c" fill-opacity=".18"/>\n    <circle cx="82" cy="58" r="4.5" fill="#1b2f6b"/><circle cx="110" cy="58" r="4.5" fill="#1b2f6b"/>\n    <path d="M76 74c8-6 14-6 20-1 6-5 12-5 20 1-10 5-16 4-20 1-4 3-10 4-20-1z" fill="#5a331c"/>\n    <path d="M58 24c0-20 76-20 76 0v14H58z" fill="#1b2f6b"/><path d="M58 30h76v8H58z" fill="#e0a93b"/>\n    <path d="M52 38h88l10 10H42z" fill="#5a331c"/><circle cx="96" cy="16" r="6" fill="#e0a93b"/>'; });
+
+  fragmentos.forEach((f) => f.querySelector('img').addEventListener('error', () => f.remove()));
+
+  // --- Timeline, in seconds. This is the one clock: every visual is a function of T.
+  const WALK = 1.2, MANO = 2.0, ZOOM = 2.2, ZOOM_FIN = 3.2, ABRE = 3.05, ABRE_FIN = 3.45, SALTO = 3.2, SALE = 3.4, SALE_FIN = 3.9;
+  const CRECE = 4.55, CRECE_FIN = 5.3, FIN = 5.6, SIN_RESPALDO = 4.6;
+  const INICIOS = [3.65, 3.8, 3.95, 4.1, 4.25];
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const suave = (v) => { const x = clamp(v); return x * x * (3 - 2 * x); };
+  const fuerte = (v) => { const x = clamp(v); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+  const salida = (v) => 1 - Math.pow(1 - clamp(v), 3);
+
+  let escena = null, T = 0, corrida = 0, raf = 0, ultimo = 0, activa = false, guardia = 0;
+  let rect = null, centros = [], estado = '';
+
+  // Invert the courier's eased position so step cues cross the same phase boundaries as the feet.
+  function tiempoPaso(numero) {
+    let inferior = 0, superior = WALK;
+    for (let i = 0; i < 36; i++) {
+      const medio = (inferior + superior) / 2;
+      const recorrido = medio / WALK;
+      const eased = recorrido * recorrido * (3 - 2 * recorrido) * 0.35 + recorrido * 0.65;
+      if (eased * (0.5 - (-2.36)) < numero * 0.55) inferior = medio;
+      else superior = medio;
+    }
+    return (inferior + superior) / 2;
+  }
+
+  const pistas = ['paso-1', 'paso-2', 'paso-3', 'paso-4', 'sobre-entrega', 'cafe-servido'];
+  const cues = [
+    ...[1, 2, 3, 4].map((numero) => ({ t: tiempoPaso(numero), pista: `paso-${numero}`, grupo: 'paso' })),
+    { t: MANO, pista: 'sobre-entrega', grupo: 'entrega' },
+    { t: INICIOS[3], pista: 'cafe-servido', grupo: 'cafe' },
+  ];
+  const ESPERA_AUDIO = 1200;
+  let pedidoSonido = 0;
+  let contexto = null, carga = null, habilitado = false, mudo = false, siguienteCue = 0;
+  const buffers = new Map(), fuentes = new Set();
+  raiz.dataset.audio = 'off';
+  raiz.dataset.audioDisparos = '0';
+  raiz.dataset.audioFuentes = '0';
+
+  function mostrarControlesAudio() {
+    const disponible = !!(window.AudioContext || window.webkitAudioContext);
+    const activo = habilitado && raiz.dataset.audio !== 'fallo';
+    sonido.hidden = !disponible || activo;
+    silenciar.hidden = !disponible || !activo;
+  }
+
+  function pararFuentes() {
+    for (const fuente of fuentes) {
+      fuente.onended = null;
+      try { fuente.stop(); } catch (_) { /* Already stopped. */ }
+      fuente.disconnect();
+      fuente.volumen.disconnect();
+    }
+    fuentes.clear();
+    raiz.dataset.audioFuentes = '0';
+  }
+
+  function dispararCue(cue) {
+    if (!habilitado || mudo || !contexto || contexto.state !== 'running' || document.hidden) return;
+    const buffer = buffers.get(cue.pista);
+    if (!buffer) return;
+    if (cue.grupo === 'paso') {
+      for (const fuente of [...fuentes]) if (fuente.grupo === 'paso') {
+        fuente.onended = null;
+        try { fuente.stop(); } catch (_) { /* Already stopped. */ }
+        fuente.disconnect();
+        fuente.volumen.disconnect();
+        fuentes.delete(fuente);
+      }
+    }
+    try {
+      const fuente = contexto.createBufferSource();
+      const volumen = contexto.createGain();
+      fuente.buffer = buffer;
+      fuente.grupo = cue.grupo;
+      fuente.volumen = volumen;
+      volumen.gain.value = 0.32;
+      fuente.connect(volumen).connect(contexto.destination);
+      fuente.onended = () => {
+        fuente.disconnect();
+        volumen.disconnect();
+        fuentes.delete(fuente);
+        raiz.dataset.audioFuentes = String(fuentes.size);
+      };
+      fuentes.add(fuente);
+      fuente.start();
+      raiz.dataset.audioDisparos = String(Number(raiz.dataset.audioDisparos) + 1);
+      raiz.dataset.audioFuentes = String(fuentes.size);
+    } catch (_) {
+      raiz.dataset.audio = 'fallo'; mostrarControlesAudio();
+    }
+  }
+
+  function avanzarCues(desde, hasta) {
+    while (siguienteCue < cues.length && cues[siguienteCue].t <= hasta) {
+      const cue = cues[siguienteCue++];
+      if (cue.t > desde) dispararCue(cue);
+    }
+  }
+
+  async function habilitarAudio() {
+    if (!window.AudioContext && !window.webkitAudioContext) { raiz.dataset.audio = 'fallo'; mostrarControlesAudio(); return; }
+    try {
+      if (!contexto) contexto = new (window.AudioContext || window.webkitAudioContext)();
+      await contexto.resume();
+      if (document.hidden) await contexto.suspend();
+      else if (contexto.state !== 'running') throw new Error('Audio blocked');
+      habilitado = true;
+      raiz.dataset.audio = mudo ? 'silenciado' : buffers.size ? 'on' : 'cargando';
+      mostrarControlesAudio();
+      if (!carga) {
+        carga = Promise.all(pistas.map(async (pista) => {
+          try {
+            const respuesta = await fetch(`recursos/sonido/${pista}.mp3`);
+            if (!respuesta.ok) throw new Error('Audio resource unavailable');
+            buffers.set(pista, await contexto.decodeAudioData(await respuesta.arrayBuffer()));
+          } catch (_) { /* Missing effects never block visuals. */ }
+        })).then(() => {
+          raiz.dataset.audio = mudo ? 'silenciado' : buffers.size ? 'on' : 'fallo';
+          mostrarControlesAudio();
+        });
+      }
+      await carga;
+    } catch (_) {
+      habilitado = false;
+      raiz.dataset.audio = 'fallo';
+      mostrarControlesAudio();
+    }
+  }
+
+  function ponerEstado(e) { if (e !== estado) { estado = e; raiz.dataset.estado = e; mostrarControlesAudio(); } }
+  function etapa(t) { return t < 1.2 ? 'llegada' : t < ZOOM ? 'entrega' : t < SALE ? 'apertura' : t < FIN ? 'montaje' : 'invitacion'; }
+
+  function medir() {
+    postal.style.transform = 'none';
+    const r = postal.getBoundingClientRect();
+    rect = { w: r.width, h: r.height, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+    centros = fragmentos.map((f) => { f.style.transform = 'none'; const q = f.getBoundingClientRect(); return [innerWidth / 2 - (q.left + q.width / 2), innerHeight / 2 - (q.top + q.height / 2)]; });
+  }
+
+  // Draws the moment T. A pure function of the clock, so skipping can never leave a half state.
+  function pintar(t) {
+    ponerEstado(etapa(t));
+    if (escena && t < FIN) {
+      escena.render({
+        reloj: t,
+        camino: Math.min(t, MANO),
+        zoom: fuerte((t - ZOOM) / (ZOOM_FIN - ZOOM)),
+        funde: suave((t - (ZOOM + 0.3)) / 0.5),
+        abre: fuerte((t - ABRE) / (ABRE_FIN - ABRE)),
+        sale: salida((t - SALE) / (SALE_FIN - SALE)),
+        crece: fuerte((t - CRECE) / (CRECE_FIN - CRECE)),
+        salto: Math.max(0, (t - SALTO) * 0.8),
+        rect,
+      });
+      raiz.dataset.frames = escena.frames();
+    }
+    if (!escena) {
+      respaldo.style.opacity = 1 - suave((t - 4.9) / 0.5);
+    }
+    frase.style.opacity = 1 - suave((t - 1.4) / 0.4);
+
+    // The card in the scene is already in place: the real text simply appears on it.
+    const aparece = suave((t - (CRECE_FIN - 0.1)) / 0.25);
+    postal.style.opacity = aparece;
+    if (!escena) postal.style.transform = `translateY(${(1 - aparece) * 16}px)`;
+
+    fragmentos.forEach((f, i) => {
+      const img = f.querySelector('img');
+      const entra = salida((t - INICIOS[i]) / 0.55);
+      const sale = suave((t - (CRECE + 0.25)) / 0.45);
+      if (!img.complete || !img.naturalWidth || entra <= 0 || sale >= 1) { f.style.visibility = 'hidden'; return; }
+      f.style.visibility = 'visible';
+      f.style.opacity = entra * (1 - sale);
+      const lado = i % 2 ? 1 : -1;
+      f.style.transform = `translate3d(${centros[i][0] * (1 - entra)}px, ${centros[i][1] * (1 - entra)}px, ${(1 - entra) * -420}px) rotateY(${(1 - entra) * lado * 48}deg) rotateZ(${lado * 2 + (1 - entra) * lado * 10}deg)`;
+    });
+  }
+
+  function bucle(ahora) {
+    raf = 0;
+    if (!activa) return;
+    const anterior = T;
+    T += Math.min(ahora - ultimo, 100) / 1000 / lento;
+    ultimo = ahora;
+    if (T >= FIN) { irA('invitacion'); return; }
+    avanzarCues(anterior, T);
+    pintar(T);
+    raf = requestAnimationFrame(bucle);
+  }
+
+  function detener() {
+    activa = false;
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+    clearTimeout(guardia);
+  }
+
+  // The only way to change stage. Each run has a number, so nothing from an old run can act.
+  function irA(destino, conFoco) {
+    detener();
+    pararFuentes();
+    if (destino === 'invitacion') {
+      T = FIN;
+      ponerEstado('invitacion');
+      raiz.classList.remove('intro');
+      for (const f of fragmentos) f.style.visibility = 'hidden';
+      postal.style.opacity = 1;
+      postal.style.transform = 'none';
+      frase.style.opacity = 0;
+      canvas.style.visibility = 'hidden';
+      respaldo.style.opacity = 0;
+      const moverFoco = conFoco || document.activeElement === saltar;
+      saltar.hidden = true;
+      repetir.hidden = reducido.matches;
+      mostrarControlesAudio();
+      if (moverFoco) $('titulo').focus({ preventScroll: true });
+      return;
+    }
+    corrida++;
+    raiz.dataset.corrida = corrida;
+    raiz.dataset.audioDisparos = '0';
+    siguienteCue = 0;
+    scrollTo(0, 0);
+    raiz.classList.add('intro');
+    saltar.hidden = true;
+    repetir.hidden = true;
+    canvas.style.visibility = 'visible';
+    respaldo.style.opacity = 1;
+    medir();
+    T = escena ? 0 : SIN_RESPALDO;
+    mostrarControlesAudio();
+    pintar(T);
+    activa = true;
+    ultimo = performance.now();
+    raf = requestAnimationFrame(bucle);
+    // Whatever happens, nobody waits for the invitation.
+    guardia = setTimeout(() => { if (!document.hidden) irA('invitacion'); }, 12000 * lento);
+  }
+
+  function usarRespaldo(motivo) {
+    if (escena) escena.stop();
+    pararFuentes();
+    escena = null;
+    canvas.hidden = true;
+    respaldo.hidden = false;
+    if (estado === 'invitacion') respaldo.style.opacity = 0;
+    raiz.dataset.renderer = 'respaldo';
+    raiz.dataset.motivo = motivo;
+    if (activa) T = Math.max(T, SIN_RESPALDO);
+    mostrarControlesAudio();
+  }
+
+  saltar.addEventListener('click', async () => {
+    const pedido = ++pedidoSonido;
+    await Promise.race([habilitarAudio(), new Promise((listo) => setTimeout(listo, ESPERA_AUDIO))]);
+    if (pedido === pedidoSonido) irA('llegada');
+  });
+  repetir.addEventListener('click', () => {
+    pedidoSonido++;
+    irA('llegada');
+    const controlAudio = silenciar.hidden ? sonido : silenciar;
+    if (!controlAudio.hidden) controlAudio.focus({ preventScroll: true });
+  });
+  // A manual audio unlock replays the scene so its first cues are not missed.
+  sonido.addEventListener('click', async () => {
+    const pedido = ++pedidoSonido;
+    await Promise.race([habilitarAudio(), new Promise((listo) => setTimeout(listo, ESPERA_AUDIO))]);
+    if (pedido === pedidoSonido && habilitado) {
+      if (reducido.matches) dispararCue({ pista: 'cafe-servido', grupo: 'cafe' });
+      else {
+        irA('llegada');
+        if (!escena) dispararCue({ pista: 'cafe-servido', grupo: 'cafe' });
+      }
+    }
+  });
+  silenciar.addEventListener('click', () => {
+    mudo = !mudo;
+    silenciar.setAttribute('aria-pressed', String(mudo));
+    silenciar.setAttribute('aria-label', mudo ? 'Activar sonido' : 'Desactivar sonido');
+    silenciar.title = mudo ? 'Activar sonido' : 'Desactivar sonido';
+    if (mudo) pararFuentes();
+    raiz.dataset.audio = mudo ? 'silenciado' : buffers.size ? 'on' : 'cargando';
+  });
+
+  // The clock stops with the tab and carries on from the same moment.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      clearTimeout(guardia);
+      pararFuentes();
+      if (contexto) contexto.suspend().catch(() => { raiz.dataset.audio = 'fallo'; mostrarControlesAudio(); });
+    } else if (activa && !raf) {
+      if (habilitado && contexto) contexto.resume().then(() => {
+        if (document.hidden) return contexto.suspend();
+        if (contexto.state !== 'running') raiz.dataset.audio = 'fallo'; mostrarControlesAudio();
+      }).catch(() => { raiz.dataset.audio = 'fallo'; mostrarControlesAudio(); });
+      ultimo = performance.now();
+      raf = requestAnimationFrame(bucle);
+      guardia = setTimeout(() => irA('invitacion'), 12000 * lento);
+    }
+  });
+
+  new ResizeObserver(() => {
+    if (escena) escena.resize();
+    if (activa) { medir(); pintar(T); }
+  }).observe(document.documentElement);
+
+  reducido.addEventListener('change', () => {
+    if (reducido.matches) irA('invitacion');
+    mostrarControlesAudio();
+  });
+
+  // --- Start
+  raiz.dataset.renderer = 'webgl';
+  if (forzarRespaldo) usarRespaldo('forzado');
+  else {
+    try { escena = createMiniature(canvas, { onLost: () => usarRespaldo('contexto-perdido') }); } catch (e) { escena = null; }
+    if (!escena) usarRespaldo('sin-webgl');
+  }
+  if (reducido.matches) irA('invitacion');
+  else {
+    irA('llegada');
+    // Audio is attempted automatically; the small control remains available if the browser blocks it.
+    void habilitarAudio();
+  }
+})();
+</script>
+</body>
+</html>

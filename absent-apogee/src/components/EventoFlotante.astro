@@ -1,0 +1,213 @@
+---
+const eventBase = import.meta.env.BASE_URL;
+---
+
+<div class="evento-flotante" data-event-base={eventBase}>
+	<span class="evento-sentinel" aria-hidden="true"></span>
+	<button type="button" class="evento-card" aria-label="Evento: 50 marcas de café. Abrir">
+		<span class="evento-etiqueta">Evento</span>
+		<span class="evento-titulo">50 marcas de café</span>
+		<span class="evento-flecha" aria-hidden="true">↗</span>
+	</button>
+	<dialog class="evento-dialogo" aria-label="Evento 50 marcas de café">
+		<button type="button" class="evento-cerrar" aria-label="Cerrar">
+			<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+				<path d="m6 6 12 12M18 6 6 18" />
+			</svg>
+		</button>
+		<iframe title="Evento 50 marcas de café" allow="autoplay"></iframe>
+	</dialog>
+</div>
+
+<style>
+	.evento-flotante {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 0;
+		z-index: 81;
+		pointer-events: none;
+	}
+
+	.evento-sentinel {
+		position: absolute;
+		top: 60vh;
+		left: 0;
+		width: 1px;
+		height: 0;
+		pointer-events: none;
+	}
+
+	.evento-card {
+		position: fixed;
+		right: 24px;
+		bottom: max(24px, env(safe-area-inset-bottom));
+		z-index: 81;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		column-gap: 18px;
+		min-width: 44px;
+		min-height: 64px;
+		padding: 12px 16px 12px 20px;
+		border: 0;
+		border-radius: 16px;
+		background: linear-gradient(135deg, color-mix(in srgb, var(--ocre, #e0a93b) 76%, white), var(--ocre, #e0a93b) 52%, color-mix(in srgb, var(--ocre, #e0a93b) 82%, #8c5b12));
+		box-shadow: 0 10px 28px rgb(27 47 107 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.62);
+		color: var(--tinta, #1b2f6b);
+		font: inherit;
+		text-align: left;
+		cursor: pointer;
+		touch-action: manipulation;
+		pointer-events: auto;
+		opacity: 0;
+		transform: translateY(16px);
+		visibility: hidden;
+		transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 400ms;
+	}
+
+	.evento-flotante[data-visible] .evento-card {
+		opacity: 1;
+		transform: translateY(0);
+		visibility: visible;
+		transition-delay: 0s;
+	}
+
+	.evento-etiqueta {
+		grid-column: 1 / 2;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
+	.evento-titulo {
+		grid-column: 1 / 2;
+		font-family: 'Cormorant', Georgia, serif;
+		font-size: 1.35rem;
+		font-weight: 700;
+		line-height: 1.05;
+		white-space: nowrap;
+	}
+
+	.evento-flecha {
+		grid-column: 2 / 3;
+		grid-row: 1 / 3;
+		font-size: 1.25rem;
+		line-height: 1;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.evento-card:hover { transform: translateY(-2px); }
+	}
+
+	.evento-card:active { transform: scale(0.97); transition-duration: 160ms; }
+	.evento-card:focus-visible { outline: 2px solid var(--tinta, #1b2f6b); outline-offset: 4px; }
+
+	.evento-dialogo {
+		pointer-events: auto; /* dialog: host disables pointer events until revealed */
+		visibility: visible;
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: var(--tinta, #1b2f6b);
+		color: var(--papel, #f6eedd);
+		overflow: hidden;
+	}
+
+	.evento-dialogo::backdrop { background: var(--tinta, #1b2f6b); }
+	.evento-dialogo iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+	.evento-cerrar {
+		position: fixed;
+		top: max(16px, env(safe-area-inset-top));
+		right: max(16px, env(safe-area-inset-right));
+		z-index: 1;
+		display: grid;
+		width: 44px;
+		height: 44px;
+		place-items: center;
+		padding: 0;
+		border: 1px solid rgb(27 47 107 / 0.16);
+		border-radius: 50%;
+		background: var(--papel, #f6eedd);
+		color: var(--tinta, #1b2f6b);
+		cursor: pointer;
+	}
+
+	.evento-cerrar svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.8; }
+	.evento-cerrar:focus-visible { outline: 2px solid var(--papel, #f6eedd); outline-offset: 3px; }
+
+	@media (max-width: 600px) {
+		.evento-card {
+			display: flex;
+			min-height: 48px;
+			padding: 12px 16px;
+			gap: 8px;
+		}
+
+		.evento-etiqueta {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			clip-path: inset(50%);
+		}
+
+		.evento-titulo { font-size: 1.1rem; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.evento-card { transition: none; }
+	}
+</style>
+
+<script>
+	const host = document.querySelector<HTMLElement>('.evento-flotante');
+	const card = host?.querySelector<HTMLButtonElement>('.evento-card');
+	const dialog = host?.querySelector<HTMLDialogElement>('.evento-dialogo');
+	const closeButton = host?.querySelector<HTMLButtonElement>('.evento-cerrar');
+	const frame = host?.querySelector<HTMLIFrameElement>('iframe');
+
+	if (host && card && dialog && closeButton && frame) {
+		const reveal = () => host.setAttribute('data-visible', '');
+		if ('IntersectionObserver' in window) {
+			if (window.scrollY > 0.6 * window.innerHeight) reveal();
+			else {
+				const observer = new IntersectionObserver(([entry]) => {
+					if (!entry.isIntersecting && window.scrollY > 0.6 * window.innerHeight) {
+						reveal();
+						observer.disconnect();
+					}
+				});
+				observer.observe(host.querySelector('.evento-sentinel')!);
+			}
+		} else reveal();
+
+		card.addEventListener('click', () => {
+			const base = host.dataset.eventBase ?? '/';
+			frame.src = `${base.replace(/\/$/, '')}/evento/cartero/index.html`;
+			dialog.showModal();
+			window.dispatchEvent(new Event('evento:abrir'));
+		});
+
+		closeButton.addEventListener('click', () => dialog.close());
+		dialog.addEventListener('close', () => {
+			frame.removeAttribute('src');
+			card.focus();
+			window.dispatchEvent(new Event('evento:cerrar'));
+		});
+	}
+</script>
