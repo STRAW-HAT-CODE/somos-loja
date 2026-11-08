@@ -6,7 +6,8 @@ const g = `${base}/galeria`;
 
 export const pendiente = {
   fecha: null as string | null,
-  direccion: null as string | null,
+  // Google Maps pin (2Q3X+GC Loja), on Eguiguren facing Parque Central; manual mockup: "José A. Eguiguren y Bernardo Valdivieso".
+  direccion: 'José Antonio Eguiguren y Bernardo Valdivieso, frente al Parque Central' as string | null,
   horario: null as string | null,
   facebook: null as string | null,
   tiktok: null as string | null,
@@ -15,7 +16,9 @@ export const pendiente = {
 export const enlaces = {
   // Taken from the previous prototype: confirm with the client before publishing.
   instagram: 'https://www.instagram.com/tiendasomosloja/',
-  mapa: 'https://maps.google.com/?q=Tienda+Somos+Loja+Loja+Ecuador',
+  mapa: 'https://www.google.com/maps/search/?api=1&query=TIENDA+SOMOS+LOJA+2Q3X%2BGC+Loja',
+  telefono: '+593962947777',
+  telefonoVisible: '096 294 7777',
 };
 
 export const logo = `${base}/logo-somos-loja-tienda.webp`;

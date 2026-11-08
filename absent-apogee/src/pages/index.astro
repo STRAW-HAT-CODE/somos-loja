@@ -111,7 +111,7 @@ const cinta = [...productos, ...productos];
 					<p class="firma firma--clara">Aquí estamos</p>
 					<h2 class="titular">A pasos de la Catedral de Loja</h2>
 					<p class="cuerpo">Somos Loja es la cooperativa que reúne el trabajo de emprendedores y productores lojanos, en el centro de la ciudad.</p>
-					<p class="cuerpo">{pendiente.direccion ?? <Pendiente dato="direccion" />} {pendiente.horario ?? <Pendiente dato="horario" />}</p>
+					<p class="cuerpo">{pendiente.direccion ?? <Pendiente dato="direccion" />}. <a class="tienda__tel" href={`tel:${enlaces.telefono}`}>{enlaces.telefonoVisible}</a> {pendiente.horario ?? <Pendiente dato="horario" />}</p>
 					<ul class="cifras">
 						{cifras.map(([n, d]) => <li><strong>{n}</strong><span>{d}</span></li>)}
 					</ul>
@@ -125,7 +125,7 @@ const cinta = [...productos, ...productos];
 				<figure class="mapa">
 					<img src={ilustraciones.plaza} alt="Ilustración del Parque Central de Loja con la Catedral, palmeras y tejados" width="1400" height="788" loading="lazy" decoding="async" />
 					<span class="mapa__marca mapa__marca--catedral"><i></i>Catedral</span>
-					<figcaption class="nota">Vista ilustrada del Parque Central. No indica la ubicación exacta.</figcaption>
+					<figcaption class="nota">Vista ilustrada del Parque Central. La tienda está en la calle José Antonio Eguiguren, frente al parque.</figcaption>
 				</figure>
 				<figure class="foto foto--interior"><img src={interior} alt="Interior de la tienda Somos Loja con una vitrina llena de productos" width="1200" height="1600" loading="lazy" decoding="async" /></figure>
 				<figure class="foto foto--letrero"><img src={letrero} alt="Letrero de Somos Loja sobre los estantes de la tienda" width="1024" height="576" loading="lazy" decoding="async" /></figure>

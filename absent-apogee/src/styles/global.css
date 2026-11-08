@@ -253,3 +253,4 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .cinta { display: none; }
   .carrusel { overflow-x: auto; }
 }
+.tienda__tel { color: inherit; text-decoration: underline; text-decoration-color: var(--durazno); text-underline-offset: 4px; white-space: nowrap; }
