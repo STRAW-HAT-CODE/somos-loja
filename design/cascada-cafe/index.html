@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cascada de café · Prototipo</title>
+<style>
+  :root {
+    --petroleo: #185269;
+    --petroleo-oscuro: #0e3543;
+    --coral: #fc9e6e;
+    --hueso: #e0e0d5;
+    --papel: #f3efe6;
+    --display: "Avenir Next", "Futura", "Trebuchet MS", ui-rounded, system-ui, sans-serif;
+    --texto: "Avenir Next", system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--hueso); -webkit-font-smoothing: antialiased; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  body {
+    margin: 0;
+    color: var(--petroleo-oscuro);
+    font-family: var(--texto);
+    font-variant-numeric: tabular-nums;
+    overflow-x: clip;
+  }
+  img { display: block; max-width: 100%; height: auto; }
+  h1, h2, h3, p { margin: 0; }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--coral);
+  }
+  .display {
+    font-family: var(--display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 0.94;
+    color: var(--petroleo);
+  }
+
+  /* ---------- barra ---------- */
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px clamp(18px, 4vw, 48px);
+    background: linear-gradient(var(--hueso), rgb(224 224 213 / 0));
+    pointer-events: none;
+  }
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.16em;
+    color: var(--petroleo);
+  }
+  .marca i {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border: 4px solid var(--coral);
+    border-radius: 4px;
+  }
+  .topbar small {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--petroleo);
+    opacity: 0.55;
+  }
+
+  /* ---------- intro ---------- */
+  .intro {
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: 22px;
+    padding: 120px clamp(22px, 7vw, 120px) 80px;
+  }
+  .intro h1 { font-size: clamp(3.2rem, 11vw, 9rem); }
+  .intro h1 em { font-style: normal; color: var(--coral); }
+  .intro code {
+    font-family: inherit;
+    font-size: 0.92em;
+    letter-spacing: 0.02em;
+    color: var(--coral);
+  }
+  .intro p {
+    max-width: 34ch;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--petroleo);
+    opacity: 0.8;
+  }
+  .intro .baja {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    font-family: var(--display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--petroleo);
+  }
+  .intro .baja span {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--coral);
+    border-radius: 50%;
+    font-size: 1.2rem;
+  }
+
+  /* ---------- cascada ---------- */
+  #cascada { height: 320vh; }
+  .escena {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 80% at 50% 18%, rgb(255 255 255 / 0.55), transparent 60%),
+      var(--hueso);
+  }
+  .escena::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 32%;
+    background: linear-gradient(rgb(224 224 213 / 0), var(--hueso));
+    pointer-events: none;
+    z-index: 9;
+  }
+
+  /* grano grande */
+  .grano-grande {
+    position: absolute;
+    left: 50%;
+    top: 27%;
+    z-index: 6;
+    width: min(38vh, 54vw);
+    margin: calc(min(38vh, 54vw) / -2) 0 0 calc(min(38vh, 54vw) / -2);
+    will-change: transform, opacity;
+  }
+
+  /* lluvia de granitos: van POR DEBAJO de la taza */
+  .granitos { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+  .granito {
+    position: absolute;
+    left: 50%;
+    top: 27%;
+    width: calc(clamp(28px, 6vh, 70px) * var(--k, 1));
+    aspect-ratio: 1;
+    margin-left: calc(clamp(28px, 6vh, 70px) * var(--k, 1) / -2);
+    margin-top: calc(clamp(28px, 6vh, 70px) * var(--k, 1) / -2);
+    will-change: transform, opacity;
+  }
+  .granito img { width: 100%; height: 100%; object-fit: contain; }
+
+  .polvo {
+    position: absolute;
+    left: 50%;
+    top: 27%;
+    z-index: 7;
+    width: min(46vh, 62vw);
+    margin: calc(min(46vh, 62vw) / -2) 0 0 calc(min(46vh, 62vw) / -2);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .onda {
+    position: absolute;
+    left: 50%;
+    top: 27%;
+    z-index: 7;
+    width: 132px;
+    height: 132px;
+    margin: -66px 0 0 -66px;
+    border: 2px solid var(--coral);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* taza */
+  .taza-wrap {
+    position: absolute;
+    left: 50%;
+    bottom: 3vh;
+    z-index: 3;
+    width: min(44vh, 66vw);
+    margin-left: calc(min(44vh, 66vw) / -2);
+  }
+  .taza { position: relative; width: 100%; }
+  .taza__img { width: 100%; filter: drop-shadow(0 22px 26px rgb(24 82 105 / 0.18)); }
+  .taza__interior {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    clip-path: ellipse(29% 15.5% at 46.5% 22.5%);
+  }
+  .pila {
+    position: absolute;
+    left: 50%;
+    bottom: 57%;
+    width: 80%;
+    translate: -50% 0;
+    transform-origin: 50% 100%;
+    transform: scale(0.04);
+    opacity: 0;
+  }
+  .vapor {
+    position: absolute;
+    left: 50%;
+    bottom: 70%;
+    z-index: 4;
+    width: 58%;
+    translate: -50% 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* texto de actividades */
+  .texto {
+    position: absolute;
+    left: 50%;
+    top: 11vh;
+    z-index: 8;
+    width: min(92vw, 620px);
+    translate: -50% 0;
+    text-align: center;
+    opacity: 0;
+  }
+  .texto h2 {
+    margin-top: 10px;
+    font-size: clamp(2rem, 4.6vw, 3.8rem);
+    color: var(--petroleo);
+    text-wrap: balance;
+  }
+  .texto p {
+    max-width: 44ch;
+    margin: 14px auto 0;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.6;
+    color: var(--petroleo);
+    opacity: 0.78;
+  }
+
+  /* ---------- cierre ---------- */
+  .actividades {
+    padding: clamp(70px, 12vh, 140px) clamp(22px, 7vw, 120px);
+    background: var(--petroleo);
+    color: var(--hueso);
+  }
+  .actividades h2 {
+    margin-top: 12px;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    color: var(--hueso);
+  }
+  .actividades .grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-top: 46px;
+  }
+  .tarjeta {
+    padding: 26px;
+    border: 1px solid rgb(224 224 213 / 0.28);
+    border-radius: 18px;
+    background: rgb(224 224 213 / 0.06);
+  }
+  .tarjeta b {
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--display);
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+    color: var(--coral);
+  }
+  .tarjeta span { font-size: 0.95rem; line-height: 1.55; opacity: 0.82; }
+
+  /* ---------- estático / reduced motion ---------- */
+  html.estatico #cascada { height: auto; }
+  html.estatico .escena { position: relative; height: 100svh; }
+  html.estatico .grano-grande,
+  html.estatico .granitos,
+  html.estatico .polvo { display: none; }
+  html.estatico .pila { transform: scale(1); opacity: 1; }
+  html.estatico .vapor { opacity: 0.85; }
+  html.estatico .texto { opacity: 1; }
+
+  @media (max-width: 760px) {
+    #cascada { height: 300vh; }
+    .topbar small { display: none; }
+    .texto { top: 9vh; }
+    .texto p { font-size: 0.95rem; }
+    .taza-wrap { width: min(46vh, 82vw); }
+    .grano-grande { width: min(34vh, 62vw); }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="marca"><i></i>SOMOS LOJA</span>
+  <small>Prototipo · cascada</small>
+</header>
+
+<section class="intro">
+  <p class="eyebrow">El camino del café</p>
+  <h1 class="display">Un grano.<br /><em>Una taza.</em></h1>
+  <p>El scroll hace caer un grano, lo rompe en granitos y los junta en una taza andina. Sin video, sin canvas: solo imágenes, <code>transform</code> y una timeline atada al scroll.</p>
+  <span class="baja"><span>↓</span> Bajá para verlo</span>
+</section>
+
+<section id="cascada" aria-label="Un grano de café cae y se junta en una taza">
+  <div class="escena">
+    <div class="granitos" aria-hidden="true"></div>
+    <div class="polvo" aria-hidden="true"><img src="assets/polvo.webp" alt="" /></div>
+    <span class="onda" aria-hidden="true"></span>
+
+    <div class="taza-wrap">
+      <div class="taza">
+        <div class="taza__interior" aria-hidden="true">
+          <img class="pila" src="assets/pila.webp" alt="" />
+        </div>
+        <img class="taza__img" src="assets/taza.webp" alt="Taza andina de café" />
+      </div>
+      <img class="vapor" src="assets/vapor.webp" alt="" aria-hidden="true" />
+    </div>
+
+    <div class="grano-grande" aria-hidden="true"><img src="assets/grano.webp" alt="" /></div>
+
+    <div class="texto">
+      <p class="eyebrow">Actividades</p>
+      <h2 class="display">El grano llega a la taza</h2>
+      <p>Catas, filtrados y encuentros con las marcas de Loja. El scroll sigue, la taza ya está servida.</p>
+    </div>
+  </div>
+</section>
+
+<section class="actividades">
+  <p class="eyebrow">50 especialidades</p>
+  <h2 class="display">Lo que pasa en la tienda</h2>
+  <div class="grilla">
+    <div class="tarjeta"><b>Catas guiadas</b><span>Diez días de filtrados, V60 y concurso de chuspas.</span></div>
+    <div class="tarjeta"><b>Marcas de Loja</b><span>Las fincas y marcas que hacen el café de la ciudad.</span></div>
+    <div class="tarjeta"><b>Tu postal</b><span>La postal del evento, con su QR-sello, se desbloquea al final.</span></div>
+  </div>
+</section>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(function () {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const root = document.documentElement;
+
+  if (reduce || !window.gsap || !window.ScrollTrigger) {
+    root.classList.add('estatico');
+    return;
+  }
+
+  root.classList.add('animado');
+  gsap.registerPlugin(ScrollTrigger);
+
+  const q = new URLSearchParams(location.search);
+  const DEBUG = q.has('p');
+
+  /* Lenis: un solo ticker, igual que en la web */
+  let lenis = null;
+  if (!DEBUG) {
+    lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 0.9 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  const stage = document.querySelector('.escena');
+  const cup = document.querySelector('.taza');
+  const holder = document.querySelector('.granitos');
+  const N = innerWidth <= 760 ? 10 : 22;
+
+  for (let i = 0; i < N; i++) {
+    const bean = document.createElement('span');
+    bean.className = 'granito';
+    bean.style.setProperty('--k', (0.62 + Math.random() * 0.85).toFixed(2));
+    const img = document.createElement('img');
+    img.src = 'assets/grano.webp';
+    img.alt = '';
+    img.decoding = 'async';
+    bean.appendChild(img);
+    holder.appendChild(bean);
+  }
+
+  const beans = gsap.utils.toArray('.granito');
+  let geo = {};
+
+  function measure() {
+    const sr = stage.getBoundingClientRect();
+    const cr = cup.getBoundingClientRect();
+    geo = {
+      cx: sr.left + sr.width / 2,
+      cy: sr.top + sr.height / 2,
+      cupCx: cr.left + cr.width / 2,
+      crackY: sr.top + sr.height * 0.27,
+      rimY: cr.top + cr.height * 0.15,
+      cupW: cr.width,
+      cupH: cr.height
+    };
+  }
+  measure();
+
+  const seeds = beans.map(() => ({
+    x0: (Math.random() - 0.5) * 74,
+    y0: (Math.random() - 0.5) * 52,
+    rot0: (Math.random() - 0.5) * 140,
+    rot1: (Math.random() - 0.5) * 760,
+    lane: (Math.random() - 0.5) * 0.95,
+    ty: (Math.random() - 0.5) * 0.06,
+    sc: 0.72 + Math.random() * 0.55
+  }));
+
+  const tl = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: {
+      trigger: '#cascada',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: DEBUG ? true : 0.55,
+      invalidateOnRefresh: true
+    }
+  });
+
+  /* 1. el grano grande baja */
+  tl.fromTo('.grano-grande',
+    { yPercent: -170, rotate: -42, scale: 0.5 },
+    { yPercent: 0, rotate: 12, scale: 1, duration: 0.16 }, 0);
+
+  /* 2. se rompe: fade + polvo */
+  tl.to('.grano-grande', { scale: 1.2, autoAlpha: 0, duration: 0.05 }, 0.16);
+  tl.fromTo('.polvo',
+    { autoAlpha: 0, scale: 0.45 },
+    { autoAlpha: 0.95, scale: 1.05, duration: 0.06 }, 0.16);
+  tl.to('.polvo', { autoAlpha: 0, scale: 1.55, duration: 0.15 }, 0.23);
+  tl.fromTo('.onda',
+    { scale: 0.2, autoAlpha: 0.9 },
+    { scale: 2.6, autoAlpha: 0, duration: 0.12, ease: 'power2.out' }, 0.17);
+
+  /* 3. lluvia de granitos hacia la taza */
+  beans.forEach((bean, i) => {
+    const start = 0.18 + i * 0.012;
+    const dur = 0.38;
+    const half = dur * 0.46;
+    const sd = seeds[i];
+
+    /* la cascada se abre y vuelve a cerrar sobre la taza */
+    tl.fromTo(bean,
+      { x: () => sd.x0, y: () => sd.y0, rotate: () => sd.rot0, scale: 0.35, autoAlpha: 1 },
+      {
+        x: () => sd.lane * geo.cupW * 1.18,
+        y: () => (geo.rimY - geo.crackY) * 0.28,
+        rotate: () => sd.rot0 + (sd.rot1 - sd.rot0) * 0.5,
+        scale: () => sd.sc,
+        duration: half,
+        ease: 'sine.out'
+      }, start);
+
+    tl.to(bean,
+      {
+        x: () => sd.lane * geo.cupW * 0.62,
+        y: () => geo.rimY - geo.crackY + geo.cupH * sd.ty,
+        rotate: () => sd.rot1,
+        duration: dur - half,
+        ease: 'power1.in'
+      }, start + half);
+
+    tl.to(bean, { scale: 0, autoAlpha: 0, duration: 0.05 }, start + dur);
+  });
+
+  /* 4. la taza se llena */
+  tl.fromTo('.pila',
+    { scale: 0.04, autoAlpha: 0 },
+    { scale: 1, autoAlpha: 1, duration: 0.17, ease: 'power2.out' }, 0.6);
+
+  /* 5. vapor */
+  tl.fromTo('.vapor',
+    { autoAlpha: 0, y: 26 },
+    { autoAlpha: 0.9, y: 0, duration: 0.13 }, 0.76);
+
+  /* 6. texto de actividades */
+  tl.fromTo('.texto',
+    { autoAlpha: 0, y: 38 },
+    { autoAlpha: 1, y: 0, duration: 0.14 }, 0.83);
+
+  /* la taza entra apenas arranca */
+  tl.fromTo('.taza-wrap',
+    { autoAlpha: 0, y: 40 },
+    { autoAlpha: 1, y: 0, duration: 0.1 }, 0.02);
+
+  addEventListener('resize', () => {
+    measure();
+    ScrollTrigger.refresh();
+  });
+
+  addEventListener('load', () => { measure(); ScrollTrigger.refresh(); });
+
+  /* hook de depuración: ?p=0.45 salta a ese punto del scroll */
+  if (DEBUG) {
+    const sec = document.querySelector('#cascada');
+    const y = sec.offsetTop + (sec.offsetHeight - innerHeight) * parseFloat(q.get('p'));
+    requestAnimationFrame(() => {
+      window.scrollTo(0, y);
+      ScrollTrigger.refresh();
+      ScrollTrigger.update();
+    });
+  }
+})();
+</script>
+</body>
+</html>

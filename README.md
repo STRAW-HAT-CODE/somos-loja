@@ -22,6 +22,7 @@ Para entender el proyecto de punta a punta, leer en este orden:
 5. **Piezas independientes**
    - `invitacion/`: postal animada de Alforjita (HTML + WebGL, sin dependencias externas).
    - `tablet/`: landing de QR con video de fondo.
+   - `design/cascada-cafe/`: prototipo de granos que caen y llenan una taza (HTML + GSAP/Lenis, assets locales).
 6. **Verificación** — `tests/`
    Contratos de comportamiento de la invitación.
 
@@ -31,6 +32,7 @@ Para entender el proyecto de punta a punta, leer en este orden:
 .
 ├── absent-apogee/          Sitio Astro (src, public, package.json)
 ├── assets/brand/somos-loja/ Manual de marca y referencias del cliente
+├── design/cascada-cafe/    Prototipo de granos cayendo en una taza
 ├── invitacion/             Postal animada de Alforjita
 ├── tablet/                 Landing de QR para tablet
 └── tests/                  Verificaciones en Node
@@ -62,6 +64,8 @@ python3 -m http.server 4326
 ```
 
 Invitación como pieza aislada: servir `invitacion/` con cualquier servidor HTTP local y abrir `/invitacion/`.
+
+Prototipo de cascada: servir `design/cascada-cafe/` con un servidor HTTP local y abrir su `index.html`.
 
 Verificación:
 
