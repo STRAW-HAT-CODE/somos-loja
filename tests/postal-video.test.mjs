@@ -18,10 +18,11 @@ test('postal page exists with the four phases driven by one function', () => {
   assert.match(html, /dataset\.fase\s*=/);
 });
 
-test('video plays inline, muted and autoplaying with a poster and a skip control', () => {
+test('video plays inline with a poster and a skip control, and waits for the opening tap', () => {
   const html = read();
   const video = html.match(/<video[^>]*>/)?.[0] ?? '';
-  for (const attr of ['muted', 'playsinline', 'autoplay', 'poster=']) assert.ok(video.includes(attr), `video needs ${attr}`);
+  for (const attr of ['muted', 'playsinline', 'poster=']) assert.ok(video.includes(attr), `video needs ${attr}`);
+  assert.ok(!video.includes('autoplay'), 'the video must wait for the opening tap so it can play with sound');
   assert.match(html, /id="saltar"/);
   assert.match(html, /Te llegó una postal/);
 });
@@ -101,7 +102,7 @@ test('envelope opens after the hint in any orientation and the postcard adapts t
 
 // Behaviour harness: runs the page script against a minimal fake DOM with a manual clock,
 // so the phase machine is exercised instead of only matched as text.
-function montar({ autoplay = true, reducido = false } = {}) {
+function montar({ autoplay = true, reducido = false, abrir = true } = {}) {
   const html = read();
   const code = html.match(/<script>([\s\S]*?)<\/script>/)[1];
   let ahora = 0, sig = 1;
@@ -115,13 +116,14 @@ function montar({ autoplay = true, reducido = false } = {}) {
       addEventListener: (t, f) => ((l[t] ||= []).push(f)),
       emit(t) { (l[t] || []).forEach((f) => f()); },
       focus() { this.focused++; },
+      setAttribute(k, v) { this[k] = v; },
       animate: () => ({ cancel() {}, finished: Promise.resolve() }),
       getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
     };
   };
   const ids = {};
-  for (const id of ['video', 'titular', 'postal', 'titulo', 'solapa', 'carta', 'sobre', 'lacre', 'saltar', 'abrir-aqui', 'repetir', 'mesa']) ids[id] = el();
-  const sel = { '.escena': el(), '.girar': el() };
+  for (const id of ['video', 'titular', 'postal', 'titulo', 'solapa', 'carta', 'sobre', 'lacre', 'saltar', 'abrir-aqui', 'repetir', 'mesa', 'abrir-postal', 'sonido']) ids[id] = el();
+  const sel = { '.escena': el(), '.girar': el(), '.inicio': el() };
   const video = Object.assign(ids.video, {
     paused: true, currentTime: 0,
     play() { if (!autoplay) return Promise.reject(new Error('blocked')); this.paused = false; return Promise.resolve(); },
@@ -142,6 +144,8 @@ function montar({ autoplay = true, reducido = false } = {}) {
     requestAnimationFrame: () => 0, cancelAnimationFrame() {},
   };
   vm.runInNewContext(code, ctx);
+  // The page waits for the opening tap; most tests start right after it.
+  if (abrir) ids['abrir-postal'].emit('click');
   const flush = () => new Promise((r) => setImmediate(r));
   return {
     raiz, ids, sel, video, document,
@@ -234,4 +238,55 @@ test('postcard address and map match the site data', () => {
   const mapa = datos.match(/mapa: '([^']+)'/)[1];
   assert.ok(html.includes(`<dd>${direccion}</dd>`), 'postcard must show the store address');
   assert.ok(html.includes(`href="${mapa.replace(/&/g, '&amp;')}"`), 'postcard must use the same map link as the home page');
+});
+
+test('an opening tap unlocks sound, which can be muted and remembered', () => {
+  const html = read();
+  assert.match(html, /irA\('inicio'/, 'there must be an opening phase');
+  assert.match(html, /id="abrir-postal"/);
+  assert.match(html, /Toca para abrirla/);
+  assert.match(html, /video\.muted = !sonidoActivo/, 'the sound preference decides whether the video is muted');
+  assert.match(html, /id="sonido"[^>]*aria-pressed/, 'a mute toggle must expose its state');
+  assert.match(html, /localStorage/, 'the mute choice must be remembered');
+});
+
+test('opening sounds exist and the rotate hint shows over the frozen last frame', () => {
+  const html = read();
+  const sonidos = [...html.matchAll(/'(recursos\/sonido\/[a-z-]+\.mp3)'/g)].map((m) => m[1]);
+  assert.ok(sonidos.length >= 3, 'expected tap, flap and postcard sounds');
+  for (const ref of sonidos) assert.ok(existsSync(join(pageDir, ref)), `missing ${ref}`);
+  assert.match(html, /FIN_ANIMACION\s*=\s*9\.\d/, 'the hint starts when the animation ends, while the voice keeps playing');
+});
+
+test('the page waits on the opening screen and the tap starts the video with sound', async () => {
+  const p = montar({ abrir: false });
+  await p.flush();
+  assert.equal(p.fase(), 'inicio');
+  assert.equal(p.video.paused, true, 'nothing plays before the tap');
+  assert.equal(p.sel['.inicio'].inert, false, 'the tap button can take focus');
+  assert.equal(p.ids.sonido.hidden, undefined, 'the mute toggle stays as authored until the tap');
+  p.ids['abrir-postal'].emit('click');
+  await p.flush();
+  assert.equal(p.fase(), 'video');
+  assert.equal(p.video.paused, false);
+  assert.equal(p.video.muted, false, 'the tap unlocks the soundtrack');
+  assert.equal(p.ids.sonido.hidden, false);
+  assert.equal(p.sel['.inicio'].inert, true);
+});
+
+test('the mute toggle silences the video and exposes its state', async () => {
+  const p = montar();
+  await p.flush();
+  p.ids.sonido.emit('click');
+  assert.equal(p.video.muted, true);
+  assert.equal(p.ids.sonido['aria-pressed'], 'false');
+  p.ids.sonido.emit('click');
+  assert.equal(p.video.muted, false);
+  assert.equal(p.ids.sonido['aria-pressed'], 'true');
+});
+
+test('reduced motion skips the opening screen too', async () => {
+  const p = montar({ reducido: true, abrir: false });
+  await p.flush();
+  assert.equal(p.fase(), 'postal');
 });

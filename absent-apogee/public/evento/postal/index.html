@@ -46,6 +46,20 @@ html[data-video="fallo"] .escena__final { opacity: 1; }
 .titular__evento { margin-top: 10px; font: 600 0.95rem/1.3 var(--texto); letter-spacing: 0.04em; }
 .saltar { position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px; z-index: 5; }
 
+/* Phase 0: opening tap (unlocks sound) */
+.inicio { position: absolute; inset: 0; z-index: 7; display: grid; place-content: end center; justify-items: center; gap: 14px; padding: 24px 24px max(48px, calc(env(safe-area-inset-bottom) + 32px)); text-align: center; color: #fff; background: linear-gradient(to top, rgb(10 26 32 / 0.88) 0%, rgb(10 26 32 / 0.35) 45%, transparent 70%); opacity: 0; pointer-events: none; transition: opacity 400ms ease; }
+html[data-fase="inicio"] .inicio { opacity: 1; pointer-events: auto; }
+html[data-fase="inicio"] .saltar, html[data-fase="inicio"] .titular { display: none; }
+.inicio__marca { font: 700 0.75rem/1 var(--texto); letter-spacing: 0.32em; text-transform: uppercase; }
+.inicio h2 { font: 600 italic clamp(2.4rem, 11vw, 4rem)/1 var(--display); text-shadow: 0 2px 18px rgb(0 0 0 / 0.45); }
+.inicio p { max-width: 30ch; font-size: 0.95rem; opacity: 0.92; }
+.inicio .boton { min-height: 56px; padding: 14px 30px; font-size: 1.05rem; animation: latido 2.2s ease-in-out infinite; }
+@keyframes latido { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.sonido { position: fixed; top: max(16px, env(safe-area-inset-top)); left: 16px; z-index: 20; width: 44px; height: 44px; padding: 0; }
+.sonido svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sonido[aria-pressed="true"] .sonido__corte, .sonido[aria-pressed="false"] .sonido__ondas { display: none; }
+html[data-fase="apertura"] .sonido, html[data-fase="postal"] .sonido { background: rgb(24 82 105 / 0.12); color: var(--tinta); border-color: rgb(24 82 105 / 0.3); }
+
 /* Phase 2: rotate */
 .girar { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: center; gap: 20px; padding: 24px; text-align: center; color: #fff; background: rgb(10 26 32 / 0.62); opacity: 0; pointer-events: none; transition: opacity 400ms ease; }
 html[data-fase="girar"] .girar { opacity: 1; pointer-events: auto; }
@@ -148,14 +162,15 @@ html[data-fase="postal"] .postal { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .girar__telefono { animation: none; transform: rotate(-90deg); }
-  .titular, .mesa, .girar { transition: none; }
+  .inicio .boton { animation: none; }
+  .titular, .mesa, .girar, .inicio { transition: none; }
 }
 </style>
 </head>
 <body>
 <section class="escena" aria-label="Alforjita te trae una postal">
   <div class="escena__fondo" aria-hidden="true"></div>
-  <video id="video" src="recursos/alforjita.mp4" poster="recursos/alforjita-inicio.jpg" muted autoplay playsinline preload="auto" aria-hidden="true"></video>
+  <video id="video" src="recursos/alforjita.mp4" poster="recursos/alforjita-inicio.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
   <img class="escena__final" src="recursos/alforjita-final.jpg" alt="" aria-hidden="true">
   <div class="titular" id="titular">
     <p class="titular__marca">Somos Loja</p>
@@ -163,6 +178,12 @@ html[data-fase="postal"] .postal { opacity: 1; }
     <p class="titular__evento">Loja 100&nbsp;% Café de Especialidad</p>
   </div>
   <button class="boton boton--fantasma saltar" id="saltar" type="button">Saltar</button>
+  <div class="inicio" role="dialog" aria-labelledby="inicio-titulo">
+    <p class="inicio__marca">Somos Loja</p>
+    <h2 id="inicio-titulo">Te llegó una postal</h2>
+    <p>Alforjita te la trae en persona. Sube el volumen.</p>
+    <button class="boton boton--claro" id="abrir-postal" type="button">Toca para abrirla 🔊</button>
+  </div>
   <div class="girar" role="dialog" aria-labelledby="girar-titulo" inert>
     <div class="girar__telefono" aria-hidden="true"></div>
     <h2 id="girar-titulo">Gira tu teléfono</h2>
@@ -170,6 +191,8 @@ html[data-fase="postal"] .postal { opacity: 1; }
     <button class="boton boton--claro" id="abrir-aqui" type="button">Abrir ya</button>
   </div>
 </section>
+
+<button class="boton boton--fantasma sonido" id="sonido" type="button" aria-pressed="true" aria-label="Sonido" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="sonido__ondas" d="M16 9c1.5 1.5 1.5 4.5 0 6M19 6c3 3 3 9 0 12"/><path class="sonido__corte" d="M17 9l4 6M21 9l-4 6"/></svg></button>
 
 <main class="mesa" id="mesa">
   <div class="sobre" id="sobre" aria-hidden="true">
@@ -225,16 +248,25 @@ html[data-fase="postal"] .postal { opacity: 1; }
   const titulo = document.getElementById('titulo');
   const escena = document.querySelector('.escena');
   const girar = document.querySelector('.girar');
+  const inicio = document.querySelector('.inicio');
+  const botonSonido = document.getElementById('sonido');
   const reducido = matchMedia('(prefers-reduced-motion: reduce)');
   // The video plays 1-4 s at double speed, so the title window is shorter than the original cut.
   const TEXTO_DESDE = 0.4, TEXTO_HASTA = 2.3;
   // The rotate hint stays this long, then the envelope opens in whatever orientation the screen has.
   const GIRAR_MINIMO = 2500;
   const VIDEO_ESPERA_MAX = 8000;
-  let fase = null, rafId = 0, guardia = 0, animaciones = [];
+  // Alforjita's animation ends here; the video holds its last frame while her voice finishes.
+  const FIN_ANIMACION = 9.6;
+  const SONIDOS = { toque: 'recursos/sonido/toque.mp3', solapa: 'recursos/sonido/solapa.mp3', postal: 'recursos/sonido/postal.mp3' };
+  const CLAVE_SONIDO = 'postal-sonido';
+  let fase = null, rafId = 0, guardia = 0, animaciones = [], pistaSigue = false;
+  let sonidoActivo = leerPreferencia(), audio = null;
+  const buffers = {};
 
-  function irA(destino, conFoco) {
+  function irA(destino, conFoco, seguirVideo) {
     if (fase === destino) return;
+    pistaSigue = destino === 'girar' && Boolean(seguirVideo);
     fase = destino;
     raiz.dataset.fase = destino;
     bloquear(destino);
@@ -243,7 +275,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
     animaciones.forEach((a) => a.cancel());
     animaciones = [];
     if (destino === 'video') return empezarVideo();
-    video.pause();
+    if (!pistaSigue) video.pause();
     titular.classList.remove('visible');
     if (destino === 'girar') return esperarGiro();
     if (destino === 'apertura') return abrirSobre();
@@ -260,6 +292,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
     const paso = () => {
       const t = video.currentTime;
       titular.classList.toggle('visible', t >= TEXTO_DESDE && t < TEXTO_HASTA);
+      if (t >= FIN_ANIMACION) return irA('girar', false, true);
       rafId = requestAnimationFrame(paso);
     };
     rafId = requestAnimationFrame(paso);
@@ -268,6 +301,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
   // Only the visible phase may take focus: hidden layers are just transparent, so inert keeps
   // keyboard users from tabbing into controls they cannot see.
   function bloquear(f) {
+    inicio.inert = f !== 'inicio';
     girar.inert = f !== 'girar';
     postal.inert = f !== 'postal';
     escena.inert = f === 'apertura' || f === 'postal';
@@ -291,6 +325,51 @@ html[data-fase="postal"] .postal { opacity: 1; }
     if (!document.hidden) guardia = setTimeout(() => irA('apertura'), GIRAR_MINIMO);
   }
 
+  // Sound: the opening tap is the user gesture that lets the browser play audio at all.
+  function leerPreferencia() {
+    try { return globalThis.localStorage?.getItem(CLAVE_SONIDO) !== '0'; } catch { return true; }
+  }
+
+  function guardarPreferencia() {
+    try { globalThis.localStorage?.setItem(CLAVE_SONIDO, sonidoActivo ? '1' : '0'); } catch {}
+  }
+
+  function prepararAudio() {
+    const Contexto = globalThis.AudioContext || globalThis.webkitAudioContext;
+    if (audio || !Contexto) return Promise.resolve();
+    try { audio = new Contexto(); } catch { return Promise.resolve(); }
+    if (audio.resume) audio.resume().catch(() => {});
+    return Promise.all(Object.entries(SONIDOS).map(([nombre, url]) => fetch(url)
+      .then((r) => r.arrayBuffer())
+      .then((datos) => new Promise((ok, mal) => audio.decodeAudioData(datos, ok, mal)))
+      .then((buffer) => { buffers[nombre] = buffer; })
+      .catch(() => {})));
+  }
+
+  function sonar(nombre, volumen = 1) {
+    if (!audio || !sonidoActivo || !buffers[nombre] || document.hidden) return;
+    const fuente = audio.createBufferSource();
+    const ganancia = audio.createGain();
+    ganancia.gain.value = volumen;
+    fuente.buffer = buffers[nombre];
+    fuente.connect(ganancia).connect(audio.destination);
+    fuente.start();
+  }
+
+  function aplicarSonido() {
+    video.muted = !sonidoActivo;
+    botonSonido.setAttribute('aria-pressed', String(sonidoActivo));
+    botonSonido.setAttribute('aria-label', sonidoActivo ? 'Silenciar' : 'Activar sonido');
+  }
+
+  function abrirPostal() {
+    sonidoActivo = leerPreferencia();
+    aplicarSonido();
+    botonSonido.hidden = false;
+    prepararAudio().then(() => sonar('toque', 0.7));
+    irA('video');
+  }
+
   function falloVideo() {
     if (fase !== 'video') return;
     raiz.dataset.video = 'fallo';
@@ -309,6 +388,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
       solapa.animate([{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(180deg)', zIndex: 1 }], opciones(550, 650)),
       carta.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-62%)' }], opciones(550, 1150)),
     ];
+    guardia = setTimeout(() => sonar('solapa', 0.9), 650);
     const ultima = animaciones[animaciones.length - 1];
     ultima.finished.then(() => {
       if (fase !== 'apertura') return;
@@ -316,6 +396,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
       raiz.dataset.fase = 'postal';
       fase = 'postal';
       bloquear('postal');
+      sonar('postal', 0.8);
       const hasta = postal.getBoundingClientRect();
       const escala = desde.width / hasta.width;
       const dx = desde.left + desde.width / 2 - (hasta.left + hasta.width / 2);
@@ -331,9 +412,16 @@ html[data-fase="postal"] .postal { opacity: 1; }
   document.getElementById('saltar').addEventListener('click', () => irA('girar'));
   document.getElementById('abrir-aqui').addEventListener('click', () => irA('apertura'));
   document.getElementById('repetir').addEventListener('click', () => irA('video'));
+  document.getElementById('abrir-postal').addEventListener('click', abrirPostal);
+  botonSonido.addEventListener('click', () => {
+    sonidoActivo = !sonidoActivo;
+    aplicarSonido();
+    guardarPreferencia();
+  });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       video.pause();
+      if (audio && audio.suspend) audio.suspend().catch(() => {});
       if (fase === 'girar') clearTimeout(guardia);
       return;
     }
@@ -341,10 +429,15 @@ html[data-fase="postal"] .postal { opacity: 1; }
       const intento = video.play();
       if (intento && intento.catch) intento.catch(() => {});
       vigilarVideo();
-    } else if (fase === 'girar') esperarGiro();
+    } else if (fase === 'girar') {
+      if (pistaSigue) video.play().catch(() => {});
+      esperarGiro();
+    }
+    if (audio && audio.resume) audio.resume().catch(() => {});
   });
 
-  irA('video');
+  if (reducido.matches) irA('postal');
+  else irA('inicio');
 })();
 </script>
 </body>
