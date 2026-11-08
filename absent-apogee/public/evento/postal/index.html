@@ -198,8 +198,11 @@ html[data-fase="postal"] .postal { opacity: 1; }
   const titulo = document.getElementById('titulo');
   const horizontal = matchMedia('(orientation: landscape)');
   const reducido = matchMedia('(prefers-reduced-motion: reduce)');
-  const TEXTO_DESDE = 0.4, TEXTO_HASTA = 2.9;
-  let fase = null, rafId = 0, guardia = 0, animaciones = [];
+  // The video plays 1-4 s at double speed, so the title window is shorter than the original cut.
+  const TEXTO_DESDE = 0.4, TEXTO_HASTA = 2.3;
+  // The rotate hint always stays this long, even when the phone is already horizontal.
+  const GIRAR_MINIMO = 2500;
+  let fase = null, rafId = 0, guardia = 0, animaciones = [], girarListo = false;
 
   function irA(destino, conFoco) {
     if (fase === destino) return;
@@ -213,7 +216,11 @@ html[data-fase="postal"] .postal { opacity: 1; }
     video.pause();
     titular.classList.remove('visible');
     if (destino === 'girar') {
-      if (horizontal.matches) return irA('apertura');
+      girarListo = false;
+      guardia = setTimeout(() => {
+        girarListo = true;
+        if (horizontal.matches) irA('apertura');
+      }, GIRAR_MINIMO);
       return;
     }
     if (destino === 'apertura') return abrirSobre();
@@ -268,7 +275,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
     }).catch(() => {});
   }
 
-  horizontal.addEventListener('change', () => { if (horizontal.matches && fase === 'girar') irA('apertura'); });
+  horizontal.addEventListener('change', () => { if (horizontal.matches && fase === 'girar' && girarListo) irA('apertura'); });
   reducido.addEventListener('change', () => { if (reducido.matches) irA('postal'); });
   video.addEventListener('ended', () => irA('girar'));
   video.addEventListener('error', falloVideo);

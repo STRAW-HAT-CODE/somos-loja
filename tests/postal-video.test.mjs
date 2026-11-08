@@ -68,3 +68,10 @@ test('tablet landing and floating card point to the postal page', () => {
   const flotante = readFileSync(new URL('../absent-apogee/src/components/EventoFlotante.astro', import.meta.url), 'utf8');
   assert.match(flotante, /evento\/postal\/index\.html/);
 });
+
+test('rotate hint stays on screen 2-3 seconds before the postcard opens', () => {
+  const html = read();
+  const ms = Number(html.match(/GIRAR_MINIMO\s*=\s*(\d+)/)?.[1]);
+  assert.ok(ms >= 2000 && ms <= 3000, 'GIRAR_MINIMO must be between 2000 and 3000 ms');
+  assert.doesNotMatch(html, /if \(horizontal\.matches\) return irA\('apertura'\)/, 'landscape must not skip the hint instantly');
+});
