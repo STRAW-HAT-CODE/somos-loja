@@ -4,18 +4,18 @@ const eventBase = import.meta.env.BASE_URL;
 
 <div class="evento-flotante" data-event-base={eventBase}>
 	<span class="evento-sentinel" aria-hidden="true"></span>
-	<button type="button" class="evento-card" aria-label="Evento: 50 marcas de café. Abrir">
+	<button type="button" class="evento-card" aria-label="Evento: más de 50 marcas de café. Abrir">
 		<span class="evento-etiqueta">Evento</span>
-		<span class="evento-titulo">50 marcas de café</span>
+		<span class="evento-titulo">+50 marcas de café</span>
 		<span class="evento-flecha" aria-hidden="true">↗</span>
 	</button>
-	<dialog class="evento-dialogo" aria-label="Evento 50 marcas de café">
+	<dialog class="evento-dialogo" aria-label="Evento: más de 50 marcas de café">
 		<button type="button" class="evento-cerrar" aria-label="Cerrar">
 			<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
 				<path d="m6 6 12 12M18 6 6 18" />
 			</svg>
 		</button>
-		<iframe title="Evento 50 marcas de café" allow="autoplay"></iframe>
+		<iframe title="Evento: más de 50 marcas de café" allow="autoplay"></iframe>
 	</dialog>
 </div>
 
@@ -54,7 +54,7 @@ const eventBase = import.meta.env.BASE_URL;
 		border: 0;
 		border-radius: 16px;
 		background: linear-gradient(135deg, color-mix(in srgb, var(--ocre, #e0a93b) 76%, white), var(--ocre, #e0a93b) 52%, color-mix(in srgb, var(--ocre, #e0a93b) 82%, #8c5b12));
-		box-shadow: 0 10px 28px rgb(27 47 107 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.62);
+		box-shadow: 0 10px 28px rgb(24 82 105 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.62);
 		color: var(--tinta, #1b2f6b);
 		font: inherit;
 		text-align: left;
@@ -136,7 +136,7 @@ const eventBase = import.meta.env.BASE_URL;
 		height: 44px;
 		place-items: center;
 		padding: 0;
-		border: 1px solid rgb(27 47 107 / 0.16);
+		border: 1px solid rgb(24 82 105 / 0.16);
 		border-radius: 50%;
 		background: var(--papel, #f6eedd);
 		color: var(--tinta, #1b2f6b);

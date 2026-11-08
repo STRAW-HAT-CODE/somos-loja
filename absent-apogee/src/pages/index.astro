@@ -45,7 +45,7 @@ const cinta = [...productos, ...productos];
 					<a class="hero-ticket hero-ticket--evento" href="#evento">
 						<span class="hero-ticket__sello" aria-hidden="true">Loja<br />✦<br />Café</span>
 						<span class="hero-ticket__etiqueta">Evento</span>
-						<span class="hero-ticket__titulo"><strong>50</strong> marcas<br />de café</span>
+						<span class="hero-ticket__titulo"><strong>+50</strong> marcas<br />de café</span>
 						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
 					</a>
 				</div>
@@ -76,9 +76,9 @@ const cinta = [...productos, ...productos];
 				<canvas id="granos" aria-hidden="true"></canvas>
 				<p class="cincuenta__respaldo" aria-hidden="true">50</p>
 				<div class="cincuenta__texto">
-					<h2 class="titular">marcas y fincas de café</h2>
+					<h2 class="titular"><span class="sr-only">Más de 50 </span>marcas y fincas de café</h2>
 					<p class="cuerpo">En Loja 100 % Café Especial, un campeonato interno elige el top 10 de especialidad. Son 10 días de filtrados, V60 y concurso de chuspas.</p>
-					<p class="cincuenta__evento"><img src={sello} alt="Sello Loja 100 % Café Especial" width="56" height="56" loading="lazy" /><span class="versal versal--chica">Tercera edición</span> {pendiente.fecha ?? <Pendiente dato="fecha" />}</p>
+					<p class="cincuenta__evento"><img src={sello} alt="Sello 100 % Café Especial, Somos Loja Coopser, tercera edición" width="640" height="610" loading="lazy" decoding="async" />{pendiente.fecha ?? <Pendiente dato="fecha" />}</p>
 				</div>
 			</div>
 		</section>

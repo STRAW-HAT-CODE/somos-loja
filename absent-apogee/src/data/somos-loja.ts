@@ -19,7 +19,7 @@ export const enlaces = {
 };
 
 export const logo = `${base}/logo-somos-loja-tienda.webp`;
-export const sello = `${base}/sello-circular.webp`;
+export const sello = `${base}/sello-tercera-edicion.webp`;
 export const letrero = `${base}/paradas/parada-10.webp`;
 export const interior = `${g}/tienda-interior.webp`;
 export const ilustraciones = {
@@ -43,7 +43,7 @@ export const cifras = [
 ];
 
 export const sabores = [
-  { img: `${v}/cafe.webp`, titulo: 'Café de Loja', texto: 'Unas 50 marcas y fincas.', alt: 'Ilustración de un saco de café tostado con cerezas' },
+  { img: `${v}/cafe.webp`, titulo: 'Café de Loja', texto: 'Más de 50 marcas y fincas.', alt: 'Ilustración de un saco de café tostado con cerezas' },
   { img: `${v}/barro.webp`, titulo: 'Barro negro', texto: 'Ollas y tazas hechas a mano.', alt: 'Ilustración de una olla y una taza de barro negro' },
   { img: `${v}/dulces.webp`, titulo: 'Chocolates y bocadillos', texto: 'Para llevar de recuerdo.', alt: 'Ilustración de chocolate, cacao y dulces en una canasta' },
   { img: `${v}/licores.webp`, titulo: 'Vinos y licores', texto: 'Catorce marcas para regalar.', alt: 'Ilustración de botellas de vino y licor con uvas' },
