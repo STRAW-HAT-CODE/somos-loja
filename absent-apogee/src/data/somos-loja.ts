@@ -38,20 +38,29 @@ const f = `${base}/fotos`;
 
 // Each step is told twice: the illustration (memory) and the real photo developed over it.
 export const capitulos = [
-  { img: `${v}/finca.webp`, ancho: 1100, alto: 825, titulo: 'Nace en la finca', texto: 'Familias productoras cuidan cada planta en las laderas de Loja.', alt: 'Ilustración de cafetales en una ladera andina',
-    fotos: [{ src: `${f}/03-caficultores.webp`, ancho: 1200, alto: 799, alt: 'Foto real: caficultores lojanos en su cafetal, con el valle detrás' }] },
+  { img: null, ancho: 0, alto: 0, titulo: 'Nace en la finca', texto: 'Familias productoras cuidan cada planta en las laderas de Loja.', alt: '',
+    fotos: [
+      { src: `${f}/15-recorrido.webp`, ancho: 1200, alto: 800, alt: 'Foto real: caficultores recorren el cafetal y revisan las plantas' },
+      { src: `${f}/14-cosecha.webp`, ancho: 900, alto: 1200, alt: 'Foto real: un caficultor cosecha cerezas rojas entre las ramas' },
+    ] },
   { img: null, ancho: 0, alto: 0, titulo: 'Se lava y se escoge a mano', texto: 'Cada cereza pasa por manos lojanas antes de secarse.', alt: '',
     fotos: [
       { src: `${f}/05-lavado.webp`, ancho: 1200, alto: 800, alt: 'Foto real: lavado de cerezas rojas de café en un balde' },
       { src: `${f}/06-seleccion-1.webp`, ancho: 900, alto: 1200, alt: 'Foto real: personas escogiendo a mano cerezas de café sobre una mesa' },
     ] },
-  { img: `${v}/secado.webp`, ancho: 1100, alto: 825, titulo: 'Se seca al sol', texto: 'Se despulpa y el grano descansa al aire libre.', alt: 'Ilustración de granos de café secándose al sol',
-    fotos: [{ src: `${f}/08-marquesina.webp`, ancho: 1200, alto: 799, alt: 'Foto real: camas de secado de café bajo una marquesina' }] },
-  { img: `${v}/taza.webp`, ancho: 1400, alto: 788, titulo: 'Llega a tu taza', texto: 'Se tuesta, se sirve y cuenta de dónde viene.', alt: 'Ilustración de una taza de café humeante con granos y hojas',
-    fotos: [{ src: `${f}/11-granos-taza.webp`, ancho: 799, alto: 1200, alt: 'Foto real: granos de café tostado cayendo sobre una taza' }] },
+  { img: null, ancho: 0, alto: 0, titulo: 'Se seca al sol', texto: 'Se despulpa y el grano descansa al aire libre.', alt: '',
+    fotos: [
+      { src: `${f}/08-marquesina.webp`, ancho: 1200, alto: 799, alt: 'Foto real: camas de secado de café bajo una marquesina' },
+      { src: `${f}/04-secado-montana.webp`, ancho: 900, alto: 1200, alt: 'Foto real: café secándose al sol con las montañas detrás' },
+    ] },
+  { img: null, ancho: 0, alto: 0, titulo: 'Llega a tu taza', texto: 'Se tuesta, se sirve y cuenta de dónde viene.', alt: '',
+    fotos: [
+      { src: `${f}/13-barista.webp`, ancho: 1200, alto: 799, alt: 'Foto real: barista sirviendo café de filtro en una barra de madera' },
+      { src: `${f}/11-granos-taza.webp`, ancho: 799, alto: 1200, alt: 'Foto real: granos de café tostado cayendo sobre una taza' },
+    ] },
 ];
 
-export const barista = { src: `${f}/13-barista.webp`, ancho: 1200, alto: 799, alt: 'Foto real: barista sirviendo café de filtro en una barra de madera' };
+export const barista = { src: `${f}/16-barra.webp`, ancho: 1200, alto: 800, alt: 'Foto real: barra de café con cafeteras y tazas' };
 
 export const cifras = [
   ['300', 'emprendedores y productores'],
