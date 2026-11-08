@@ -5,7 +5,7 @@ import Flecha from '../components/Flecha.astro';
 import EventoFlotante from '../components/EventoFlotante.astro';
 import Eventos from '../components/Eventos.astro';
 import Invitacion from '../components/Invitacion.astro';
-import { capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sabores, sello } from '../data/somos-loja';
+import { barista, capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sabores, sello } from '../data/somos-loja';
 const cinta = [...productos, ...productos];
 ---
 <Layout>
@@ -61,8 +61,14 @@ const cinta = [...productos, ...productos];
 				<path class="cinta__fina" d="M520 0C860 240 930 540 640 780S150 1060 270 1330 890 1580 800 1890 450 2240 520 2400" />
 			</svg>
 			{capitulos.map((c, i) => (
-				<article class={`capitulo capitulo--${i % 2 ? 'der' : 'izq'}`}>
-					<img class="capitulo__img" src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />
+				<article class={`capitulo capitulo--${i % 2 ? 'der' : 'izq'}${c.img ? '' : ' capitulo--solo-fotos'}`}>
+					<figure class="capitulo__marco">
+						{c.img && <img class="capitulo__img" src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />}
+						{c.fotos.map((foto, k) => (
+							<img class={`capitulo__foto capitulo__foto--${k + 1}`} src={foto.src} alt={foto.alt} width={foto.ancho} height={foto.alto} loading="lazy" decoding="async" />
+						))}
+						<span class="capitulo__sello" aria-hidden="true"><b>N.º {i + 1}</b>Foto real</span>
+					</figure>
 					<div class="capitulo__texto">
 						<h2 class="titular">{c.titulo}</h2>
 						<p class="cuerpo">{c.texto}</p>
@@ -125,6 +131,7 @@ const cinta = [...productos, ...productos];
 				<figure class="mapa">
 					<img src={ilustraciones.plaza} alt="Ilustración del Parque Central de Loja con la Catedral, palmeras y tejados" width="1400" height="788" loading="lazy" decoding="async" />
 					<span class="mapa__marca mapa__marca--catedral"><i></i>Catedral</span>
+					<img class="mapa__foto" src={barista.src} alt={barista.alt} width={barista.ancho} height={barista.alto} loading="lazy" decoding="async" />
 					<figcaption class="nota">Vista ilustrada del Parque Central. La tienda está en la calle José Antonio Eguiguren, frente al parque.</figcaption>
 				</figure>
 				<figure class="foto foto--interior"><img src={interior} alt="Interior de la tienda Somos Loja con una vitrina llena de productos" width="1200" height="1600" loading="lazy" decoding="async" /></figure>
@@ -210,8 +217,16 @@ const cinta = [...productos, ...productos];
 			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top 60%', end: 'bottom 70%', scrub: true } });
 		});
 		gsap.utils.toArray<HTMLElement>('.capitulo').forEach((c) => {
-			gsap.from(c.querySelector('.capitulo__img'), { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
+			const dibujo = c.querySelector('.capitulo__img');
+			if (dibujo) gsap.from(dibujo, { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
 			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 68%' } });
+			// "Del dibujo a la foto": the real print develops from the paper while scrolling.
+			const revelado = gsap.timeline({ scrollTrigger: { trigger: c, start: 'top 65%', end: 'center 50%', scrub: 0.6 } });
+			c.querySelectorAll('.capitulo__foto').forEach((foto, k) => {
+				revelado.fromTo(foto, { clipPath: 'inset(100% 0% 0% 0%)', y: 64, scale: 1.05 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, scale: 1, ease: 'none', duration: 1 }, k * 0.4);
+			});
+			if (dibujo) revelado.to(dibujo, { opacity: 0.62, scale: 0.97, ease: 'none', duration: 1 }, 0);
+			revelado.fromTo(c.querySelector('.capitulo__sello'), { autoAlpha: 0, scale: 1.8 }, { autoAlpha: 1, scale: 1, ease: 'back.out(2.2)', duration: 0.35 }, '>-0.1');
 		});
 
 		// The 50: scroll drives real 3D beans.

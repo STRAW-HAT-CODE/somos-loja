@@ -123,12 +123,26 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 .cinta__fina { stroke: var(--ocre); stroke-width: 5; }
 .capitulo { position: relative; display: grid; grid-template-columns: 7fr 5fr; align-items: center; gap: 48px; }
 .capitulo--der { grid-template-columns: 5fr 7fr; }
-.capitulo--der .capitulo__img { order: 2; }
+.capitulo--der .capitulo__marco { order: 2; }
 .capitulo__img {
   --borde: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent), linear-gradient(transparent, #000 7%, #000 93%, transparent);
   -webkit-mask-image: var(--borde); mask-image: var(--borde);
   -webkit-mask-composite: source-in; mask-composite: intersect;
 }
+/* "Del dibujo a la foto": the real photo is developed over the illustration as a print. */
+.capitulo__marco { position: relative; display: grid; margin: 0; padding-bottom: 14%; }
+.capitulo__marco > * { grid-area: 1 / 1; }
+.capitulo__foto { position: relative; z-index: 1; width: 62%; height: auto; align-self: end; justify-self: end; translate: 4% 22%; rotate: 3deg; filter: drop-shadow(0 18px 22px rgb(61 42 30 / 0.32)); }
+.capitulo--der .capitulo__foto { justify-self: start; translate: -4% 22%; rotate: -3deg; }
+.capitulo__foto[height="1200"] { width: 40%; }
+.capitulo--solo-fotos .capitulo__marco { padding-bottom: 0; min-height: 420px; }
+.capitulo--solo-fotos .capitulo__foto--1 { width: 72%; justify-self: start; align-self: start; translate: 0 0; rotate: -2.5deg; }
+.capitulo--solo-fotos .capitulo__foto--2 { width: 42%; justify-self: end; align-self: end; translate: 0 8%; rotate: 4deg; }
+.capitulo__sello { position: relative; z-index: 2; align-self: end; justify-self: start; display: grid; place-items: center; align-content: center; width: 92px; height: 92px; margin: 0 0 6% 6%; border-radius: 50%; background: var(--tinta); color: var(--papel); box-shadow: 0 0 0 3px var(--papel), 0 0 0 5px var(--durazno); font-size: 0.6875rem; line-height: 1.1; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; rotate: -12deg; }
+.capitulo__sello b { font-family: 'Cormorant', Georgia, serif; font-size: 1.5rem; letter-spacing: 0; text-transform: none; color: var(--durazno); }
+.capitulo--der .capitulo__sello { justify-self: end; margin: 0 6% 6% 0; rotate: 10deg; }
+.capitulo--solo-fotos .capitulo__sello { justify-self: start; margin: 0 0 4% 8%; }
+.mapa .mapa__foto { position: absolute; right: -28px; top: -40px; z-index: 2; width: 36%; height: auto; rotate: 4deg; filter: drop-shadow(0 18px 22px rgb(0 0 0 / 0.35)); }
 .capitulo__texto { display: grid; gap: 16px; padding: 24px; background: var(--papel); border-radius: 48px; box-shadow: 0 0 48px 32px var(--papel); }
 
 /* The 50 */
@@ -217,8 +231,15 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .cuerpo { font-size: 1rem; line-height: 1.5rem; }
   .proceso { padding: 24px 16px 64px; gap: 40px; }
   .capitulo, .capitulo--der { grid-template-columns: 1fr; gap: 8px; }
-  .capitulo--der .capitulo__img { order: 0; }
+  .capitulo--der .capitulo__marco { order: 0; }
   .capitulo__texto { padding: 16px; }
+  .capitulo__foto { width: 70%; translate: 0 18%; }
+  .capitulo--der .capitulo__foto { translate: 0 18%; }
+  .capitulo__foto[height="1200"] { width: 48%; }
+  .capitulo--solo-fotos .capitulo__marco { min-height: 0; }
+  .capitulo__sello { width: 72px; height: 72px; font-size: 0.5625rem; }
+  .capitulo__sello b { font-size: 1.125rem; }
+  .mapa .mapa__foto { right: -8px; top: -28px; width: 46%; }
   .cinta__ancha { stroke-width: 10; }
   .cincuenta__fijo { padding: 0 16px 4vh; }
   .sabores { grid-template-columns: 1fr; padding: 48px 16px 64px; gap: 24px; }
