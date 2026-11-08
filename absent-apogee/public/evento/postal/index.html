@@ -57,12 +57,12 @@ html[data-fase="girar"] .saltar, html[data-fase="girar"] .titular { display: non
 .girar p { max-width: 26ch; font-size: 0.95rem; opacity: 0.9; }
 
 /* Phases 3–4: the table, the envelope and the postcard */
-.mesa { position: fixed; inset: 0; z-index: 10; overflow: auto; display: grid; place-items: center; padding: max(20px, env(safe-area-inset-top)) 16px 24px; background: radial-gradient(120% 90% at 50% 20%, #fbf5e8 0%, var(--papel) 55%, var(--papel-osc) 100%); opacity: 0; pointer-events: none; transition: opacity 450ms ease; }
+.mesa { position: fixed; inset: 0; z-index: 10; overflow: auto; display: flex; padding: max(20px, env(safe-area-inset-top)) 16px 24px; background: radial-gradient(120% 90% at 50% 20%, #fbf5e8 0%, var(--papel) 55%, var(--papel-osc) 100%); opacity: 0; pointer-events: none; transition: opacity 450ms ease; }
 html[data-fase="apertura"] .mesa, html[data-fase="postal"] .mesa { opacity: 1; pointer-events: auto; }
 html[data-fase="postal"] .escena { visibility: hidden; }
 .airmail { background: repeating-linear-gradient(135deg, var(--rojo-correo) 0 14px, #fff 14px 22px, var(--azul-correo) 22px 36px, #fff 36px 44px); }
 
-.sobre { position: absolute; left: 50%; top: 50%; width: min(78vw, 560px); aspect-ratio: 3 / 2; transform: translate(-50%, -50%); perspective: 1200px; }
+.sobre { position: absolute; left: 50%; top: 50%; width: min(88vw, 560px); aspect-ratio: 3 / 2; transform: translate(-50%, -50%); perspective: 1200px; }
 html[data-fase="postal"] .sobre { display: none; }
 .sobre__dorso, .sobre__bolsillo { position: absolute; inset: 0; padding: 7px; border-radius: 6px; box-shadow: 0 22px 50px rgb(15 42 51 / 0.25); }
 .sobre__dorso > span, .sobre__bolsillo > span { display: block; width: 100%; height: 100%; border-radius: 3px; background: #fbf8f1; }
@@ -76,7 +76,7 @@ html[data-fase="postal"] .sobre { display: none; }
 .sobre__carta::before { content: 'Somos Loja'; font: 600 italic clamp(1.4rem, 5vw, 2.2rem)/1 var(--display); color: var(--tinta); }
 
 /* The postcard, horizontal like a real one */
-.postal { position: relative; width: min(100%, 920px); background: var(--papel); border-radius: 6px; box-shadow: 0 30px 70px rgb(15 42 51 / 0.22), 0 0 0 1px rgb(24 82 105 / 0.1); padding: clamp(18px, 3vw, 34px); opacity: 0; }
+.postal { position: relative; margin: auto; width: min(100%, 920px); background: var(--papel); border-radius: 6px; box-shadow: 0 30px 70px rgb(15 42 51 / 0.22), 0 0 0 1px rgb(24 82 105 / 0.1); padding: clamp(18px, 3vw, 34px); opacity: 0; }
 html[data-fase="postal"] .postal { opacity: 1; }
 .postal::before { content: ''; position: absolute; inset: 0; border-radius: 6px; padding: 6px; background: repeating-linear-gradient(135deg, var(--rojo-correo) 0 14px, transparent 14px 22px, var(--azul-correo) 22px 36px, transparent 36px 44px); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
 .postal__grid { display: grid; grid-template-columns: 1.25fr 1px 1fr; gap: clamp(16px, 3vw, 32px); align-items: start; }
@@ -98,7 +98,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
 .sello-qr img, .sello-qr figcaption { position: relative; background: #fff; }
 .sello-qr img { display: block; width: 100%; height: auto; }
 .sello-qr figcaption { margin-top: 6px; text-align: center; color: var(--cafe); font: 700 0.62rem/1.3 var(--texto); letter-spacing: 0.04em; }
-.matasellos { position: absolute; left: -46px; top: 38%; width: 92px; height: 92px; border-radius: 50%; border: 2px solid rgb(24 82 105 / 0.55); display: grid; place-items: center; text-align: center; color: rgb(24 82 105 / 0.7); font: 700 0.58rem/1.25 var(--texto); letter-spacing: 0.12em; transform: rotate(-14deg); pointer-events: none; }
+.matasellos { position: absolute; left: -70px; top: 42%; width: 92px; height: 92px; border-radius: 50%; border: 2px solid rgb(24 82 105 / 0.55); display: grid; place-items: center; text-align: center; color: rgb(24 82 105 / 0.7); font: 700 0.58rem/1.25 var(--texto); letter-spacing: 0.12em; transform: rotate(-14deg); pointer-events: none; }
 .beneficio { width: 100%; padding: 14px 16px; border: 1px solid rgb(252 158 110 / 0.7); border-radius: 4px; background: rgb(252 158 110 / 0.12); }
 .beneficio__marca { font: 700 0.66rem/1.3 var(--texto); letter-spacing: 0.18em; text-transform: uppercase; color: var(--cafe); }
 .beneficio__texto { margin-top: 4px; font: 600 1.35rem/1.15 var(--display); color: var(--tinta); }
@@ -106,18 +106,45 @@ html[data-fase="postal"] .postal { opacity: 1; }
 .postal__pie { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
 @media (orientation: portrait), (max-width: 640px) {
-  .postal__grid { grid-template-columns: 1fr; }
-  .postal__linea { display: none; }
-  .lado-sello { justify-items: center; }
-  .matasellos { display: none; }
+  /* Compact portrait postcard: the column wrappers dissolve so the QR stamp can sit top right. */
+  .postal { padding: 18px 18px 20px; }
+  .postal__grid { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "marca sello" "titulo sello" "apoyo apoyo" "aviso aviso" "datos datos" "beneficio beneficio"; column-gap: 12px; row-gap: 0; }
+  .postal__info, .lado-sello { display: contents; }
+  .postal__linea, .matasellos { display: none; }
+  .postal__marca { grid-area: marca; align-self: end; }
+  .postal h1 { grid-area: titulo; font-size: clamp(1.45rem, 6.6vw, 1.9rem); }
+  .postal__apoyo { grid-area: apoyo; font-size: 0.88rem; }
+  .postal__aviso { grid-area: aviso; font-size: 0.68rem; }
+  .datos { grid-area: datos; margin-top: 12px; gap: 4px; }
+  .datos div { grid-template-columns: 82px minmax(0, 1fr); padding-bottom: 4px; }
+  .datos dd { font-size: 0.9rem; }
+  .sello-qr { grid-area: sello; align-self: start; width: clamp(96px, 28vw, 132px); padding: 8px; background: radial-gradient(circle, var(--papel) 3px, transparent 3.5px) -5px -5px / 10px 10px, #fff; }
+  .sello-qr figcaption { font-size: 0.5rem; }
+  .beneficio { grid-area: beneficio; margin-top: 14px; padding: 10px 12px; }
+  .beneficio__texto { font-size: 1.15rem; }
+  .postal__pie { margin-top: 14px; }
+  .postal__pie .boton { flex: 1 1 auto; justify-content: center; }
 }
 @media (orientation: landscape) and (max-height: 500px) {
-  .mesa { place-items: start center; }
-  .postal { padding: 16px 20px; }
-  .postal h1 { font-size: 1.6rem; }
+  /* Landscape phones: everything, buttons included, fits one screen. */
+  .mesa { padding-top: 12px; padding-bottom: 12px; }
+  .postal { padding: 12px 18px; }
+  .postal__grid { gap: 16px; }
+  .postal h1 { margin-top: 6px; font-size: 1.35rem; }
   .postal__apoyo { display: none; }
-  .datos { margin-top: 10px; }
-  .sello-qr { width: 150px; }
+  .postal__aviso { margin-top: 4px; font-size: 0.66rem; }
+  .datos { margin-top: 8px; gap: 2px; }
+  .datos div { padding-bottom: 3px; }
+  .datos dd { font-size: 0.85rem; }
+  .sello-qr { width: 128px; padding: 9px; }
+  .beneficio { padding: 8px 12px; }
+  .beneficio__texto { font-size: 1.05rem; }
+  .beneficio__demo { font-size: 0.7rem; }
+  .postal__pie { margin-top: 10px; }
+  .postal__pie .boton { min-height: 40px; padding: 8px 18px; }
+}
+@media (orientation: portrait) and (max-height: 700px) {
+  .postal__apoyo { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .girar__telefono { animation: none; transform: rotate(-90deg); }
@@ -139,8 +166,8 @@ html[data-fase="postal"] .postal { opacity: 1; }
   <div class="girar" role="dialog" aria-labelledby="girar-titulo">
     <div class="girar__telefono" aria-hidden="true"></div>
     <h2 id="girar-titulo">Gira tu teléfono</h2>
-    <p>Ponlo en horizontal para abrir tu postal.</p>
-    <button class="boton boton--claro" id="abrir-aqui" type="button">Abrir aquí</button>
+    <p>Tu postal se ve mejor en horizontal. Se abre en un momento.</p>
+    <button class="boton boton--claro" id="abrir-aqui" type="button">Abrir ya</button>
   </div>
 </section>
 
@@ -155,7 +182,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
 
   <article class="postal" id="postal" aria-labelledby="titulo">
     <div class="postal__grid">
-      <div>
+      <div class="postal__info">
         <p class="postal__marca">Somos Loja · Postal</p>
         <h1 id="titulo" tabindex="-1">Estás invitado a Loja 100&nbsp;% Café Especial.</h1>
         <p class="postal__apoyo">Ven a descubrir el café de Loja y a quienes lo hacen, en la tienda de las 50 especialidades.</p>
@@ -196,14 +223,13 @@ html[data-fase="postal"] .postal { opacity: 1; }
   const titular = document.getElementById('titular');
   const postal = document.getElementById('postal');
   const titulo = document.getElementById('titulo');
-  const horizontal = matchMedia('(orientation: landscape)');
   const reducido = matchMedia('(prefers-reduced-motion: reduce)');
   // The video plays 1-4 s at double speed, so the title window is shorter than the original cut.
   const TEXTO_DESDE = 0.4, TEXTO_HASTA = 2.3;
-  // The rotate hint always stays this long, even when the phone is already horizontal.
+  // The rotate hint stays this long, then the envelope opens in whatever orientation the screen has.
   const GIRAR_MINIMO = 2500;
   const VIDEO_ESPERA_MAX = 8000;
-  let fase = null, rafId = 0, guardia = 0, animaciones = [], girarListo = false;
+  let fase = null, rafId = 0, guardia = 0, animaciones = [];
 
   function irA(destino, conFoco) {
     if (fase === destino) return;
@@ -217,11 +243,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
     video.pause();
     titular.classList.remove('visible');
     if (destino === 'girar') {
-      girarListo = false;
-      guardia = setTimeout(() => {
-        girarListo = true;
-        if (horizontal.matches) irA('apertura');
-      }, GIRAR_MINIMO);
+      guardia = setTimeout(() => irA('apertura'), GIRAR_MINIMO);
       return;
     }
     if (destino === 'apertura') return abrirSobre();
@@ -281,7 +303,6 @@ html[data-fase="postal"] .postal { opacity: 1; }
     }).catch(() => {});
   }
 
-  horizontal.addEventListener('change', () => { if (horizontal.matches && fase === 'girar' && girarListo) irA('apertura'); });
   reducido.addEventListener('change', () => { if (reducido.matches) irA('postal'); });
   video.addEventListener('ended', () => irA('girar'));
   video.addEventListener('error', falloVideo);

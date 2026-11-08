@@ -89,3 +89,11 @@ test('slow video loading is not treated as a failure', () => {
   assert.match(html, /VIDEO_ESPERA_MAX\s*=\s*\d{4,}/, 'a longer wait must exist for buffering videos');
   assert.doesNotMatch(html, /video\.paused \|\| video\.currentTime === 0\) falloVideo/, 'buffering at time 0 must not fail at 2.5 s');
 });
+
+test('envelope opens after the hint in any orientation and the postcard adapts to portrait', () => {
+  const html = read();
+  assert.match(html, /setTimeout\(\(\) => irA\('apertura'\), GIRAR_MINIMO\)/, 'the hint must open the envelope even without rotating');
+  const portrait = html.match(/@media \(orientation: portrait\)[^{]*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+  assert.match(portrait, /grid-template-areas/, 'portrait postcard needs its own compact layout');
+  assert.match(portrait, /"marca sello"/, 'QR stamp sits at the top right in portrait');
+});
