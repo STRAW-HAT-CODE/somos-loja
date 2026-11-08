@@ -93,7 +93,145 @@ test('slow video loading is not treated as a failure', () => {
 test('envelope opens after the hint in any orientation and the postcard adapts to portrait', () => {
   const html = read();
   assert.match(html, /setTimeout\(\(\) => irA\('apertura'\), GIRAR_MINIMO\)/, 'the hint must open the envelope even without rotating');
-  const portrait = html.match(/@media \(orientation: portrait\)[^{]*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+  const portrait = html.match(/@media \(orientation: portrait\), \(max-width: 640px\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
+  assert.ok(portrait, 'the compact postcard block must live in the portrait / narrow media query');
   assert.match(portrait, /grid-template-areas/, 'portrait postcard needs its own compact layout');
   assert.match(portrait, /"marca sello"/, 'QR stamp sits at the top right in portrait');
+});
+
+// Behaviour harness: runs the page script against a minimal fake DOM with a manual clock,
+// so the phase machine is exercised instead of only matched as text.
+function montar({ autoplay = true, reducido = false } = {}) {
+  const html = read();
+  const code = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+  let ahora = 0, sig = 1;
+  const timers = new Map();
+  const el = () => {
+    const l = {};
+    const clases = new Set();
+    return {
+      dataset: {}, inert: false, listeners: l, focused: 0,
+      classList: { add: (c) => clases.add(c), remove: (c) => clases.delete(c), toggle: (c, on) => (on ? clases.add(c) : clases.delete(c)), contains: (c) => clases.has(c) },
+      addEventListener: (t, f) => ((l[t] ||= []).push(f)),
+      emit(t) { (l[t] || []).forEach((f) => f()); },
+      focus() { this.focused++; },
+      animate: () => ({ cancel() {}, finished: Promise.resolve() }),
+      getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
+    };
+  };
+  const ids = {};
+  for (const id of ['video', 'titular', 'postal', 'titulo', 'solapa', 'carta', 'sobre', 'lacre', 'saltar', 'abrir-aqui', 'repetir', 'mesa']) ids[id] = el();
+  const sel = { '.escena': el(), '.girar': el() };
+  const video = Object.assign(ids.video, {
+    paused: true, currentTime: 0,
+    play() { if (!autoplay) return Promise.reject(new Error('blocked')); this.paused = false; return Promise.resolve(); },
+    pause() { this.paused = true; },
+  });
+  const raiz = { dataset: {} };
+  const docL = {};
+  const document = {
+    documentElement: raiz, hidden: false,
+    getElementById: (id) => ids[id], querySelector: (s) => sel[s],
+    addEventListener: (t, f) => ((docL[t] ||= []).push(f)),
+  };
+  const ctx = {
+    document,
+    matchMedia: () => ({ matches: reducido, addEventListener() {} }),
+    setTimeout: (f, ms) => { const id = sig++; timers.set(id, { f, at: ahora + ms }); return id; },
+    clearTimeout: (id) => timers.delete(id),
+    requestAnimationFrame: () => 0, cancelAnimationFrame() {},
+  };
+  vm.runInNewContext(code, ctx);
+  const flush = () => new Promise((r) => setImmediate(r));
+  return {
+    raiz, ids, sel, video, document,
+    fase: () => raiz.dataset.fase,
+    async avanzar(ms) {
+      const fin = ahora + ms;
+      for (;;) {
+        const prox = [...timers].filter(([, t]) => t.at <= fin).sort((a, b) => a[1].at - b[1].at)[0];
+        if (!prox) break;
+        timers.delete(prox[0]); ahora = prox[1].at; prox[1].f(); await flush();
+      }
+      ahora = fin; await flush();
+    },
+    async ocultar(oculto) { document.hidden = oculto; (docL.visibilitychange || []).forEach((f) => f()); await flush(); },
+    flush,
+  };
+}
+
+test('a playing video survives a hidden tab during the first seconds', async () => {
+  const p = montar();
+  await p.flush();
+  p.video.currentTime = 0.5;
+  await p.ocultar(true);
+  await p.avanzar(9000);
+  assert.equal(p.fase(), 'video', 'hiding the tab must not skip the video');
+  assert.notEqual(p.raiz.dataset.video, 'fallo');
+  await p.ocultar(false);
+  assert.equal(p.video.paused, false, 'the video resumes when the tab returns');
+  await p.avanzar(3000);
+  assert.equal(p.fase(), 'video');
+});
+
+test('the rotate hint waits for a visible tab before opening the envelope', async () => {
+  const p = montar();
+  await p.flush();
+  p.ids.saltar.emit('click');
+  assert.equal(p.fase(), 'girar');
+  await p.ocultar(true);
+  await p.avanzar(10000);
+  assert.equal(p.fase(), 'girar', 'the envelope must not open while nobody is looking');
+  await p.ocultar(false);
+  await p.avanzar(2500);
+  assert.notEqual(p.fase(), 'girar');
+});
+
+test('blocked autoplay falls back to the still image and the rotate hint', async () => {
+  const p = montar({ autoplay: false });
+  await p.flush();
+  assert.equal(p.raiz.dataset.video, 'fallo');
+  assert.equal(p.fase(), 'girar');
+});
+
+test('the full flow reaches the postcard, focuses its title and replays', async () => {
+  const p = montar();
+  await p.flush();
+  p.ids.video.emit('ended');
+  assert.equal(p.fase(), 'girar');
+  await p.avanzar(2500);
+  assert.equal(p.fase(), 'postal');
+  assert.equal(p.ids.titulo.focused, 1);
+  p.ids.repetir.emit('click');
+  assert.equal(p.fase(), 'video');
+  assert.equal(p.video.paused, false);
+});
+
+test('reduced motion goes straight to the postcard', async () => {
+  const p = montar({ reducido: true });
+  await p.flush();
+  assert.equal(p.fase(), 'postal');
+});
+
+test('only the visible phase can take keyboard focus', async () => {
+  const p = montar();
+  await p.flush();
+  const estado = () => ({ escena: p.sel['.escena'].inert, girar: p.sel['.girar'].inert, postal: p.ids.postal.inert });
+  assert.deepEqual(estado(), { escena: false, girar: true, postal: true }, 'video phase');
+  p.ids.saltar.emit('click');
+  assert.deepEqual(estado(), { escena: false, girar: false, postal: true }, 'rotate phase');
+  await p.avanzar(2500);
+  assert.deepEqual(estado(), { escena: true, girar: true, postal: false }, 'postcard phase');
+  const html = read();
+  assert.match(html, /<div class="girar"[^>]*\binert\b/, 'rotate overlay starts inert before the script runs');
+  assert.match(html, /<article class="postal"[^>]*\binert\b/, 'postcard starts inert before the script runs');
+});
+
+test('postcard address and map match the site data', () => {
+  const html = read();
+  const datos = readFileSync(new URL('../absent-apogee/src/data/somos-loja.ts', import.meta.url), 'utf8');
+  const direccion = datos.match(/direccion: '([^']+)'/)[1];
+  const mapa = datos.match(/mapa: '([^']+)'/)[1];
+  assert.ok(html.includes(`<dd>${direccion}</dd>`), 'postcard must show the store address');
+  assert.ok(html.includes(`href="${mapa.replace(/&/g, '&amp;')}"`), 'postcard must use the same map link as the home page');
 });

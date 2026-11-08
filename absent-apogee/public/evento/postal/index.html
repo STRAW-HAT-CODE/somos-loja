@@ -163,7 +163,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
     <p class="titular__evento">Loja 100&nbsp;% Café de Especialidad</p>
   </div>
   <button class="boton boton--fantasma saltar" id="saltar" type="button">Saltar</button>
-  <div class="girar" role="dialog" aria-labelledby="girar-titulo">
+  <div class="girar" role="dialog" aria-labelledby="girar-titulo" inert>
     <div class="girar__telefono" aria-hidden="true"></div>
     <h2 id="girar-titulo">Gira tu teléfono</h2>
     <p>Tu postal se ve mejor en horizontal. Se abre en un momento.</p>
@@ -180,19 +180,19 @@ html[data-fase="postal"] .postal { opacity: 1; }
     <div class="sobre__lacre" id="lacre">LOJA</div>
   </div>
 
-  <article class="postal" id="postal" aria-labelledby="titulo">
+  <article class="postal" id="postal" aria-labelledby="titulo" inert>
     <div class="postal__grid">
       <div class="postal__info">
         <p class="postal__marca">Somos Loja · Postal</p>
         <h1 id="titulo" tabindex="-1">Estás invitado a Loja 100&nbsp;% Café Especial.</h1>
-        <p class="postal__apoyo">Ven a descubrir el café de Loja y a quienes lo hacen, en la tienda de las 50 especialidades.</p>
+        <p class="postal__apoyo">Ven a descubrir el café de Loja y a quienes lo hacen, en la tienda de más de 50 marcas de café.</p>
         <p class="postal__aviso">Prototipo: datos de ejemplo; fecha y sede reales por confirmar.</p>
         <dl class="datos">
           <div><dt>Fecha</dt><dd>Sáb. 21 nov 2026</dd></div>
           <div><dt>Horario</dt><dd>10:00 a 18:00</dd></div>
           <div><dt>Lugar</dt><dd>Tienda Somos Loja</dd></div>
-          <div><dt>Dirección</dt><dd>Centro histórico, Loja</dd></div>
-          <div><dt>Mapa</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Tienda+Somos+Loja%2C+Loja%2C+Ecuador" target="_blank" rel="noopener noreferrer">Abrir mapa ↗</a></dd></div>
+          <div><dt>Dirección</dt><dd>José Antonio Eguiguren y Bernardo Valdivieso, frente al Parque Central</dd></div>
+          <div><dt>Mapa</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=TIENDA+SOMOS+LOJA+2Q3X%2BGC+Loja" target="_blank" rel="noopener noreferrer">Abrir mapa ↗</a></dd></div>
         </dl>
       </div>
       <span class="postal__linea" aria-hidden="true"></span>
@@ -223,6 +223,8 @@ html[data-fase="postal"] .postal { opacity: 1; }
   const titular = document.getElementById('titular');
   const postal = document.getElementById('postal');
   const titulo = document.getElementById('titulo');
+  const escena = document.querySelector('.escena');
+  const girar = document.querySelector('.girar');
   const reducido = matchMedia('(prefers-reduced-motion: reduce)');
   // The video plays 1-4 s at double speed, so the title window is shorter than the original cut.
   const TEXTO_DESDE = 0.4, TEXTO_HASTA = 2.3;
@@ -235,6 +237,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
     if (fase === destino) return;
     fase = destino;
     raiz.dataset.fase = destino;
+    bloquear(destino);
     cancelAnimationFrame(rafId);
     clearTimeout(guardia);
     animaciones.forEach((a) => a.cancel());
@@ -242,10 +245,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
     if (destino === 'video') return empezarVideo();
     video.pause();
     titular.classList.remove('visible');
-    if (destino === 'girar') {
-      guardia = setTimeout(() => irA('apertura'), GIRAR_MINIMO);
-      return;
-    }
+    if (destino === 'girar') return esperarGiro();
     if (destino === 'apertura') return abrirSobre();
     if (destino === 'postal' && conFoco) titulo.focus({ preventScroll: true });
   }
@@ -255,19 +255,40 @@ html[data-fase="postal"] .postal { opacity: 1; }
     raiz.dataset.video = 'ok';
     video.currentTime = 0;
     const intento = video.play();
-    if (intento && intento.catch) intento.catch(() => falloVideo());
-    // Blocked autoplay leaves the video paused: fail fast. A video that is still buffering
-    // keeps trying up to VIDEO_ESPERA_MAX before falling back to the still image.
-    guardia = setTimeout(() => {
-      if (video.paused) return falloVideo();
-      if (video.currentTime === 0) guardia = setTimeout(() => { if (video.currentTime === 0) falloVideo(); }, VIDEO_ESPERA_MAX - 2500);
-    }, 2500);
+    if (intento && intento.catch) intento.catch(() => { if (!document.hidden) falloVideo(); });
+    vigilarVideo();
     const paso = () => {
       const t = video.currentTime;
       titular.classList.toggle('visible', t >= TEXTO_DESDE && t < TEXTO_HASTA);
       rafId = requestAnimationFrame(paso);
     };
     rafId = requestAnimationFrame(paso);
+  }
+
+  // Only the visible phase may take focus: hidden layers are just transparent, so inert keeps
+  // keyboard users from tabbing into controls they cannot see.
+  function bloquear(f) {
+    girar.inert = f !== 'girar';
+    postal.inert = f !== 'postal';
+    escena.inert = f === 'apertura' || f === 'postal';
+  }
+
+  // Blocked autoplay leaves the video paused: fail fast. A video that is still buffering
+  // keeps trying up to VIDEO_ESPERA_MAX before falling back to the still image.
+  // A hidden tab pauses the video on purpose, so the guard never judges it while hidden.
+  function vigilarVideo() {
+    clearTimeout(guardia);
+    guardia = setTimeout(() => {
+      if (document.hidden) return;
+      if (video.paused) return falloVideo();
+      if (video.currentTime === 0) guardia = setTimeout(() => { if (!document.hidden && video.currentTime === 0) falloVideo(); }, VIDEO_ESPERA_MAX - 2500);
+    }, 2500);
+  }
+
+  // The hint always gets its full time on a visible screen before the envelope opens.
+  function esperarGiro() {
+    clearTimeout(guardia);
+    if (!document.hidden) guardia = setTimeout(() => irA('apertura'), GIRAR_MINIMO);
   }
 
   function falloVideo() {
@@ -294,6 +315,7 @@ html[data-fase="postal"] .postal { opacity: 1; }
       const desde = carta.getBoundingClientRect();
       raiz.dataset.fase = 'postal';
       fase = 'postal';
+      bloquear('postal');
       const hasta = postal.getBoundingClientRect();
       const escala = desde.width / hasta.width;
       const dx = desde.left + desde.width / 2 - (hasta.left + hasta.width / 2);
@@ -310,8 +332,16 @@ html[data-fase="postal"] .postal { opacity: 1; }
   document.getElementById('abrir-aqui').addEventListener('click', () => irA('apertura'));
   document.getElementById('repetir').addEventListener('click', () => irA('video'));
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) video.pause();
-    else if (fase === 'video') video.play().catch(() => {});
+    if (document.hidden) {
+      video.pause();
+      if (fase === 'girar') clearTimeout(guardia);
+      return;
+    }
+    if (fase === 'video') {
+      const intento = video.play();
+      if (intento && intento.catch) intento.catch(() => {});
+      vigilarVideo();
+    } else if (fase === 'girar') esperarGiro();
   });
 
   irA('video');
