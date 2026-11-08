@@ -133,7 +133,7 @@ Leyenda: **HECHO** (implementado), **PARCIAL** (existe una base, falta lo pedido
 
 ### Resumen
 
-- **HECHO:** 6 puntos (postal como concepto, animación de Alforjita, postal con datos, escena de tienda, scroll único, Alforjita fucsia/verde).
-- **PARCIAL:** 6 puntos.
-- **PENDIENTE:** 10 puntos.
+- **HECHO:** 8 puntos.
+- **PARCIAL:** 7 puntos.
+- **PENDIENTE:** 11 puntos.
 - **N/A:** 1 punto.
