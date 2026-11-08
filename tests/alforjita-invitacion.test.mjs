@@ -127,10 +127,10 @@ test('main serves the same animation and preserves the illustrative inactive QR'
   assert.match(publicHtml,/loading="eager" fetchpriority="high"/);
   assert.ok(existsSync(new URL('recursos/qr-puerta-loja-mvp.png',served)));
   const home=readFileSync(new URL('../absent-apogee/src/components/EventoFlotante.astro',import.meta.url),'utf8');
-  assert.match(home,/evento\/cartero\/index\.html/);
+  assert.match(home,/evento\/postal\/index\.html/);
 });
 
 test('the served tablet links to the explicit invitation HTML supported by Astro dev', {skip:!existsSync(new URL('index.html',served))},()=>{
   const tablet=readFileSync(new URL('../absent-apogee/public/evento/index.html',import.meta.url),'utf8');
-  assert.match(tablet,/COURIER_INVITATION_URL\s*=\s*["']\.\/cartero\/index\.html["']/);
+  assert.match(tablet,/COURIER_INVITATION_URL\s*=\s*["']\.\/postal\/index\.html["']/);
 });

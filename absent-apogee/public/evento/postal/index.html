@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="es" data-fase="video">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2a33">
+<link rel="icon" href="data:,">
+<title>Te llegó una postal | Somos Loja</title>
+<meta name="description" content="Alforjita te trae una postal: estás invitado a Loja 100 % Café de Especialidad en Somos Loja.">
+<style>
+@font-face { font-family: 'Cormorant'; src: url('../fuentes/cormorant-latin-var.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: 'Manrope'; src: url('../fuentes/manrope-latin-var.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+:root {
+  --papel: #f6eedd; --papel-osc: #ecdfc4; --tinta: #185269; --tinta-suave: #306d7c; --ocre: #fc9e6e; --cafe: #5a331c;
+  --rojo-correo: #c8323a; --azul-correo: #1d4f91; --noche: #0f2a33;
+  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+  --display: 'Cormorant', Georgia, serif; --texto: 'Manrope', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--noche); color: var(--tinta); font: 400 1rem/1.5 var(--texto); -webkit-text-size-adjust: 100%; }
+h1, h2, p, dl, dd, figure { margin: 0; }
+button, a { font: inherit; }
+:focus-visible { outline: 3px solid var(--ocre); outline-offset: 3px; }
+[tabindex="-1"]:focus { outline: none; }
+[hidden] { display: none !important; }
+
+/* Shared buttons */
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 20px; border-radius: 999px; border: 1px solid transparent; cursor: pointer; text-decoration: none; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.02em; transition: transform 160ms var(--curva), background 160ms ease; }
+.boton:active { transform: scale(0.97); }
+.boton--claro { background: rgb(255 255 255 / 0.92); color: var(--noche); }
+.boton--fantasma { background: rgb(15 42 51 / 0.45); color: #fff; border-color: rgb(255 255 255 / 0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.boton--tinta { background: var(--tinta); color: var(--papel); }
+.boton--linea { background: transparent; color: var(--tinta); border-color: rgb(24 82 105 / 0.35); }
+
+/* Phase 1: video */
+.escena { position: fixed; inset: 0; overflow: hidden; background: var(--noche); }
+.escena__fondo { position: absolute; inset: -40px; background: url('recursos/alforjita-inicio.jpg') center / cover; filter: blur(28px) brightness(0.55); }
+.escena video, .escena__final { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+@media (orientation: portrait) { .escena video, .escena__final { object-fit: cover; } }
+.escena__final { opacity: 0; transition: opacity 300ms ease; }
+html[data-video="fallo"] .escena__final { opacity: 1; }
+.titular { position: absolute; top: max(9vh, env(safe-area-inset-top)); left: 0; right: 0; padding: 0 24px; text-align: center; color: #fff; text-shadow: 0 2px 18px rgb(0 0 0 / 0.45); opacity: 0; transform: translateY(12px); transition: opacity 500ms ease, transform 600ms var(--curva); pointer-events: none; }
+.titular.visible { opacity: 1; transform: none; }
+.titular__marca { font: 700 0.75rem/1 var(--texto); letter-spacing: 0.32em; text-transform: uppercase; }
+.titular h2 { margin-top: 12px; font: 600 clamp(2.4rem, 11vw, 4.2rem)/1 var(--display); font-style: italic; }
+.titular__evento { margin-top: 10px; font: 600 0.95rem/1.3 var(--texto); letter-spacing: 0.04em; }
+.saltar { position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px; z-index: 5; }
+
+/* Phase 2: rotate */
+.girar { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: center; gap: 20px; padding: 24px; text-align: center; color: #fff; background: rgb(10 26 32 / 0.62); opacity: 0; pointer-events: none; transition: opacity 400ms ease; }
+html[data-fase="girar"] .girar { opacity: 1; pointer-events: auto; }
+html[data-fase="girar"] .saltar, html[data-fase="girar"] .titular { display: none; }
+.girar__telefono { width: 58px; height: 100px; border: 4px solid #fff; border-radius: 14px; position: relative; animation: girar-telefono 2.4s var(--curva) infinite; }
+.girar__telefono::after { content: ''; position: absolute; left: 50%; bottom: 7px; width: 14px; height: 4px; margin-left: -7px; border-radius: 4px; background: #fff; }
+@keyframes girar-telefono { 0%, 20% { transform: rotate(0); } 55%, 80% { transform: rotate(-90deg); } 100% { transform: rotate(0); } }
+.girar h2 { font: 600 clamp(1.9rem, 8vw, 2.6rem)/1.05 var(--display); }
+.girar p { max-width: 26ch; font-size: 0.95rem; opacity: 0.9; }
+
+/* Phases 3–4: the table, the envelope and the postcard */
+.mesa { position: fixed; inset: 0; z-index: 10; overflow: auto; display: grid; place-items: center; padding: max(20px, env(safe-area-inset-top)) 16px 24px; background: radial-gradient(120% 90% at 50% 20%, #fbf5e8 0%, var(--papel) 55%, var(--papel-osc) 100%); opacity: 0; pointer-events: none; transition: opacity 450ms ease; }
+html[data-fase="apertura"] .mesa, html[data-fase="postal"] .mesa { opacity: 1; pointer-events: auto; }
+html[data-fase="postal"] .escena { visibility: hidden; }
+.airmail { background: repeating-linear-gradient(135deg, var(--rojo-correo) 0 14px, #fff 14px 22px, var(--azul-correo) 22px 36px, #fff 36px 44px); }
+
+.sobre { position: absolute; left: 50%; top: 50%; width: min(78vw, 560px); aspect-ratio: 3 / 2; transform: translate(-50%, -50%); perspective: 1200px; }
+html[data-fase="postal"] .sobre { display: none; }
+.sobre__dorso, .sobre__bolsillo { position: absolute; inset: 0; padding: 7px; border-radius: 6px; box-shadow: 0 22px 50px rgb(15 42 51 / 0.25); }
+.sobre__dorso > span, .sobre__bolsillo > span { display: block; width: 100%; height: 100%; border-radius: 3px; background: #fbf8f1; }
+.sobre__bolsillo { z-index: 3; clip-path: polygon(0 34%, 50% 70%, 100% 34%, 100% 100%, 0 100%); box-shadow: none; }
+.sobre__bolsillo > span { background: linear-gradient(#fbf8f1, #f1ead9); }
+.sobre__solapa { position: absolute; left: 0; right: 0; top: 0; height: 66%; z-index: 4; transform-origin: 50% 0; transform-style: preserve-3d; }
+.sobre__solapa > span { position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 100%); padding: 7px; }
+.sobre__solapa > span::after { content: ''; position: absolute; inset: 7px 7px 10px; clip-path: polygon(0 0, 100% 0, 50% 100%); background: #f4eedf; }
+.sobre__lacre { position: absolute; left: 50%; top: 62%; z-index: 5; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #ffb48f, var(--ocre) 55%, #d9784a); color: var(--cafe); font: 700 0.62rem/1 var(--texto); letter-spacing: 0.08em; box-shadow: 0 4px 10px rgb(90 51 28 / 0.35); }
+.sobre__carta { position: absolute; left: 6%; right: 6%; top: 8%; bottom: 8%; z-index: 2; border-radius: 3px; background: var(--papel); box-shadow: 0 6px 18px rgb(15 42 51 / 0.18); display: grid; place-items: center; }
+.sobre__carta::before { content: 'Somos Loja'; font: 600 italic clamp(1.4rem, 5vw, 2.2rem)/1 var(--display); color: var(--tinta); }
+
+/* The postcard, horizontal like a real one */
+.postal { position: relative; width: min(100%, 920px); background: var(--papel); border-radius: 6px; box-shadow: 0 30px 70px rgb(15 42 51 / 0.22), 0 0 0 1px rgb(24 82 105 / 0.1); padding: clamp(18px, 3vw, 34px); opacity: 0; }
+html[data-fase="postal"] .postal { opacity: 1; }
+.postal::before { content: ''; position: absolute; inset: 0; border-radius: 6px; padding: 6px; background: repeating-linear-gradient(135deg, var(--rojo-correo) 0 14px, transparent 14px 22px, var(--azul-correo) 22px 36px, transparent 36px 44px); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.postal__grid { display: grid; grid-template-columns: 1.25fr 1px 1fr; gap: clamp(16px, 3vw, 32px); align-items: start; }
+.postal__linea { align-self: stretch; background: rgb(24 82 105 / 0.25); }
+.postal__marca { font: 700 0.72rem/1 var(--texto); letter-spacing: 0.28em; text-transform: uppercase; color: var(--tinta-suave); }
+.postal h1 { margin-top: 10px; font: 600 clamp(1.7rem, 3.6vw, 2.6rem)/1.05 var(--display); color: var(--tinta); text-wrap: balance; }
+.postal__apoyo { margin-top: 10px; font-size: 0.95rem; color: var(--tinta-suave); text-wrap: pretty; }
+.postal__aviso { margin-top: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: var(--cafe); }
+.datos { margin-top: 16px; display: grid; gap: 6px; }
+.datos div { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: baseline; padding-bottom: 6px; border-bottom: 1px dashed rgb(24 82 105 / 0.3); }
+.datos dt { font: 700 0.68rem/1.3 var(--texto); letter-spacing: 0.18em; text-transform: uppercase; color: var(--tinta-suave); }
+.datos dd { font: 600 0.95rem/1.3 var(--texto); color: var(--tinta); }
+.datos a { color: inherit; text-decoration-color: var(--ocre); text-underline-offset: 3px; }
+
+.lado-sello { display: grid; gap: 16px; justify-items: end; }
+.sello-qr { position: relative; width: min(100%, 200px); padding: 12px; transform: rotate(2.5deg); filter: drop-shadow(0 6px 12px rgb(15 42 51 / 0.2));
+  /* Perforated edge: paper-coloured dots painted under the content, so they only show in the padding. */
+  background: radial-gradient(circle, var(--papel) 4px, transparent 4.5px) -7px -7px / 14px 14px, #fff; }
+.sello-qr img, .sello-qr figcaption { position: relative; background: #fff; }
+.sello-qr img { display: block; width: 100%; height: auto; }
+.sello-qr figcaption { margin-top: 6px; text-align: center; color: var(--cafe); font: 700 0.62rem/1.3 var(--texto); letter-spacing: 0.04em; }
+.matasellos { position: absolute; left: -46px; top: 38%; width: 92px; height: 92px; border-radius: 50%; border: 2px solid rgb(24 82 105 / 0.55); display: grid; place-items: center; text-align: center; color: rgb(24 82 105 / 0.7); font: 700 0.58rem/1.25 var(--texto); letter-spacing: 0.12em; transform: rotate(-14deg); pointer-events: none; }
+.beneficio { width: 100%; padding: 14px 16px; border: 1px solid rgb(252 158 110 / 0.7); border-radius: 4px; background: rgb(252 158 110 / 0.12); }
+.beneficio__marca { font: 700 0.66rem/1.3 var(--texto); letter-spacing: 0.18em; text-transform: uppercase; color: var(--cafe); }
+.beneficio__texto { margin-top: 4px; font: 600 1.35rem/1.15 var(--display); color: var(--tinta); }
+.beneficio__demo { margin-top: 4px; font-size: 0.78rem; color: var(--tinta-suave); }
+.postal__pie { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+@media (orientation: portrait), (max-width: 640px) {
+  .postal__grid { grid-template-columns: 1fr; }
+  .postal__linea { display: none; }
+  .lado-sello { justify-items: center; }
+  .matasellos { display: none; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .mesa { place-items: start center; }
+  .postal { padding: 16px 20px; }
+  .postal h1 { font-size: 1.6rem; }
+  .postal__apoyo { display: none; }
+  .datos { margin-top: 10px; }
+  .sello-qr { width: 150px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .girar__telefono { animation: none; transform: rotate(-90deg); }
+  .titular, .mesa, .girar { transition: none; }
+}
+</style>
+</head>
+<body>
+<section class="escena" aria-label="Alforjita te trae una postal">
+  <div class="escena__fondo" aria-hidden="true"></div>
+  <video id="video" src="recursos/alforjita.mp4" poster="recursos/alforjita-inicio.jpg" muted autoplay playsinline preload="auto" aria-hidden="true"></video>
+  <img class="escena__final" src="recursos/alforjita-final.jpg" alt="" aria-hidden="true">
+  <div class="titular" id="titular">
+    <p class="titular__marca">Somos Loja</p>
+    <h2>Te llegó una postal</h2>
+    <p class="titular__evento">Loja 100&nbsp;% Café de Especialidad</p>
+  </div>
+  <button class="boton boton--fantasma saltar" id="saltar" type="button">Saltar</button>
+  <div class="girar" role="dialog" aria-labelledby="girar-titulo">
+    <div class="girar__telefono" aria-hidden="true"></div>
+    <h2 id="girar-titulo">Gira tu teléfono</h2>
+    <p>Ponlo en horizontal para abrir tu postal.</p>
+    <button class="boton boton--claro" id="abrir-aqui" type="button">Abrir aquí</button>
+  </div>
+</section>
+
+<main class="mesa" id="mesa">
+  <div class="sobre" id="sobre" aria-hidden="true">
+    <div class="sobre__dorso airmail"><span></span></div>
+    <div class="sobre__carta" id="carta"></div>
+    <div class="sobre__bolsillo airmail"><span></span></div>
+    <div class="sobre__solapa" id="solapa"><span class="airmail"></span></div>
+    <div class="sobre__lacre" id="lacre">LOJA</div>
+  </div>
+
+  <article class="postal" id="postal" aria-labelledby="titulo">
+    <div class="postal__grid">
+      <div>
+        <p class="postal__marca">Somos Loja · Postal</p>
+        <h1 id="titulo" tabindex="-1">Estás invitado a Loja 100&nbsp;% Café Especial.</h1>
+        <p class="postal__apoyo">Ven a descubrir el café de Loja y a quienes lo hacen, en la tienda de las 50 especialidades.</p>
+        <p class="postal__aviso">Prototipo: datos de ejemplo; fecha y sede reales por confirmar.</p>
+        <dl class="datos">
+          <div><dt>Fecha</dt><dd>Sáb. 21 nov 2026</dd></div>
+          <div><dt>Horario</dt><dd>10:00 a 18:00</dd></div>
+          <div><dt>Lugar</dt><dd>Tienda Somos Loja</dd></div>
+          <div><dt>Dirección</dt><dd>Centro histórico, Loja</dd></div>
+          <div><dt>Mapa</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Tienda+Somos+Loja%2C+Loja%2C+Ecuador" target="_blank" rel="noopener noreferrer">Abrir mapa ↗</a></dd></div>
+        </dl>
+      </div>
+      <span class="postal__linea" aria-hidden="true"></span>
+      <div class="lado-sello">
+        <figure class="sello-qr">
+          <img src="recursos/qr-puerta-loja-mvp.png" alt="Código QR de muestra con la Puerta de la Ciudad de Loja" width="640" height="640" loading="eager" fetchpriority="high">
+          <figcaption>Diseño de muestra · QR aún no activo</figcaption>
+          <span class="matasellos" aria-hidden="true">LOJA<br>· NOV ·<br>2026</span>
+        </figure>
+        <div class="beneficio">
+          <p class="beneficio__marca">Beneficio de muestra</p>
+          <p class="beneficio__texto">Una degustación por persona.</p>
+          <p class="beneficio__demo">Prototipo: esta postal todavía no sirve para canjear.</p>
+        </div>
+      </div>
+    </div>
+    <div class="postal__pie">
+      <a class="boton boton--tinta" href="/">Ver la página del evento →</a>
+      <button class="boton boton--linea" id="repetir" type="button">Ver de nuevo</button>
+    </div>
+  </article>
+</main>
+
+<script>
+(() => {
+  const raiz = document.documentElement;
+  const video = document.getElementById('video');
+  const titular = document.getElementById('titular');
+  const postal = document.getElementById('postal');
+  const titulo = document.getElementById('titulo');
+  const horizontal = matchMedia('(orientation: landscape)');
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)');
+  const TEXTO_DESDE = 0.4, TEXTO_HASTA = 2.9;
+  let fase = null, rafId = 0, guardia = 0, animaciones = [];
+
+  function irA(destino, conFoco) {
+    if (fase === destino) return;
+    fase = destino;
+    raiz.dataset.fase = destino;
+    cancelAnimationFrame(rafId);
+    clearTimeout(guardia);
+    animaciones.forEach((a) => a.cancel());
+    animaciones = [];
+    if (destino === 'video') return empezarVideo();
+    video.pause();
+    titular.classList.remove('visible');
+    if (destino === 'girar') {
+      if (horizontal.matches) return irA('apertura');
+      return;
+    }
+    if (destino === 'apertura') return abrirSobre();
+    if (destino === 'postal' && conFoco) titulo.focus({ preventScroll: true });
+  }
+
+  function empezarVideo() {
+    if (reducido.matches) return irA('postal');
+    raiz.dataset.video = 'ok';
+    video.currentTime = 0;
+    const intento = video.play();
+    if (intento && intento.catch) intento.catch(() => falloVideo());
+    guardia = setTimeout(() => { if (video.paused || video.currentTime === 0) falloVideo(); }, 2500);
+    const paso = () => {
+      const t = video.currentTime;
+      titular.classList.toggle('visible', t >= TEXTO_DESDE && t < TEXTO_HASTA);
+      rafId = requestAnimationFrame(paso);
+    };
+    rafId = requestAnimationFrame(paso);
+  }
+
+  function falloVideo() {
+    if (fase !== 'video') return;
+    raiz.dataset.video = 'fallo';
+    irA('girar');
+  }
+
+  function abrirSobre() {
+    const opciones = (duracion, retraso) => ({ duration: duracion, delay: retraso, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
+    const solapa = document.getElementById('solapa');
+    const carta = document.getElementById('carta');
+    const sobre = document.getElementById('sobre');
+    const lacre = document.getElementById('lacre');
+    animaciones = [
+      sobre.animate([{ transform: 'translate(-50%, -30%) scale(0.85)', opacity: 0 }, { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }], opciones(450, 0)),
+      lacre.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(1.3)', opacity: 0 }], opciones(250, 500)),
+      solapa.animate([{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(180deg)', zIndex: 1 }], opciones(550, 650)),
+      carta.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-62%)' }], opciones(550, 1150)),
+    ];
+    const ultima = animaciones[animaciones.length - 1];
+    ultima.finished.then(() => {
+      if (fase !== 'apertura') return;
+      const desde = carta.getBoundingClientRect();
+      raiz.dataset.fase = 'postal';
+      fase = 'postal';
+      const hasta = postal.getBoundingClientRect();
+      const escala = desde.width / hasta.width;
+      const dx = desde.left + desde.width / 2 - (hasta.left + hasta.width / 2);
+      const dy = desde.top + desde.height / 2 - (hasta.top + hasta.height / 2);
+      postal.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${escala})`, opacity: 0.6 }, { transform: 'none', opacity: 1 }], opciones(650, 0));
+      titulo.focus({ preventScroll: true });
+    }).catch(() => {});
+  }
+
+  horizontal.addEventListener('change', () => { if (horizontal.matches && fase === 'girar') irA('apertura'); });
+  reducido.addEventListener('change', () => { if (reducido.matches) irA('postal'); });
+  video.addEventListener('ended', () => irA('girar'));
+  video.addEventListener('error', falloVideo);
+  document.getElementById('saltar').addEventListener('click', () => irA('girar'));
+  document.getElementById('abrir-aqui').addEventListener('click', () => irA('apertura'));
+  document.getElementById('repetir').addEventListener('click', () => irA('video'));
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) video.pause();
+    else if (fase === 'video') video.play().catch(() => {});
+  });
+
+  irA('video');
+})();
+</script>
+</body>
+</html>
