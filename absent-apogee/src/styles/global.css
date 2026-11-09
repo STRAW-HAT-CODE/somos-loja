@@ -283,8 +283,15 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .mapa__vista { flex: none; aspect-ratio: 4 / 3; }
   .mapa__ubicacion { top: 10px; bottom: auto; left: 10px; }
   .mapa__completo { right: 10px; bottom: 10px; }
+  /* Mobile: map and store photo read as one rounded pair, without the offset block. */
+  .mapa { margin: 0; padding: 8px; gap: 8px; border-radius: 22px; box-shadow: 0 24px 40px -24px rgb(0 0 0 / 0.45); }
+  .mapa::before { display: none; }
+  .mapa__vista { border-radius: 16px; }
+  .mapa__selector { align-self: stretch; }
+  .mapa__selector button { flex: 1; }
+  .tienda__rejilla .foto--letrero img { aspect-ratio: 4 / 3; border-radius: 22px; box-shadow: 0 24px 40px -24px rgb(0 0 0 / 0.45); }
   .cinta__ancha { stroke-width: 10; }
-  .tienda { padding: 64px 0 48px; }
+  .tienda { padding: 64px 0 72px; }
   .tienda__rejilla { grid-template-columns: 1fr; padding: 0 16px; gap: 24px; }
   .tienda__texto, .tienda__rejilla .foto--letrero { grid-row: auto; grid-column: auto; }
   .producto { width: 150px; }
