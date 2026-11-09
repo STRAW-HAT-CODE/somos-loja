@@ -1,0 +1,335 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("assets/fuentes/manrope-latin-var.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+
+  /* Paleta oficial — Manual de Marca (2da propuesta) */
+  --color-petroleo: #185269;
+  --color-crema: #E0E0D5;
+  --color-coral: #FC9E6E;
+  --color-amarillo: #FFD300;
+  --color-verde-azulado: #007779;
+  --color-negro: #1D1D1B;
+  --color-gris: #575756;
+
+  /* Sustituto temporal aprobado a falta de Gresmako y Visby CF */
+  --fuente-base: "Manrope", system-ui, -apple-system, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: max(1.25rem, env(safe-area-inset-top));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
+  background-color: var(--color-petroleo);
+  color: var(--color-negro);
+  font-family: var(--fuente-base);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.tarjeta {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  margin-inline: auto;
+  padding: clamp(1.375rem, 3.8vw, 2rem) clamp(1.125rem, 3.8vw, 1.75rem);
+  background-color: var(--color-crema);
+  border: 2px solid var(--color-coral);
+  border-radius: 0.75rem;
+}
+
+/* Filete interior sutil de estilo papel / etiqueta vintage (no textual) */
+.tarjeta::before {
+  content: "";
+  position: absolute;
+  inset: 0.375rem;
+  border: 1px solid var(--color-verde-azulado);
+  border-radius: 0.5rem;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.cabecera {
+  position: relative;
+  text-align: center;
+  margin-bottom: clamp(1.125rem, 2.8vw, 1.5rem);
+}
+
+/* Logo principal en cabecera (Sello 100 % Café Especial — Somos Loja Coopser) */
+.marca-principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.logo-sello {
+  display: block;
+  width: 176px;
+  height: 220px;
+  margin-top: -1.75rem;
+  margin-bottom: -1.5rem;
+  margin-inline: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .logo-sello {
+    width: 192px;
+    height: 240px;
+    margin-top: -1.875rem;
+    margin-bottom: -1.625rem;
+  }
+}
+
+.regla-editorial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 11rem;
+  margin: 0.875rem auto 0.75rem;
+}
+
+.regla-editorial::before,
+.regla-editorial::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-coral);
+}
+
+.regla-rombo {
+  width: 0.375rem;
+  height: 0.375rem;
+  background-color: var(--color-verde-azulado);
+  transform: rotate(45deg);
+}
+
+.titulo-principal {
+  margin: 0;
+  color: var(--color-petroleo);
+  font-size: clamp(1.0625rem, 0.96rem + 0.45vw, 1.3125rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.navegacion-redes {
+  position: relative;
+}
+
+.lista-enlaces {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6875rem;
+}
+
+.item-enlace {
+  margin: 0;
+  padding: 0;
+}
+
+.boton-enlace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-petroleo);
+  color: var(--color-crema);
+  border: 2px solid var(--color-petroleo);
+  border-radius: 0.5rem;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.boton-enlace:hover,
+.boton-enlace:active {
+  background-color: var(--color-crema);
+  color: var(--color-petroleo);
+  border-color: var(--color-coral);
+}
+
+.boton-enlace:focus-visible,
+.tarjeta-evento:focus-visible {
+  outline: 2px solid var(--color-negro);
+  outline-offset: 3px;
+}
+
+.boton-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.boton-texto {
+  flex: 1;
+  text-align: left;
+}
+
+.boton-texto-google {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.boton-estrellas {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  color: var(--color-coral);
+  transition: color 160ms ease;
+}
+
+.boton-enlace:hover .boton-estrellas,
+.boton-enlace:active .boton-estrellas {
+  color: var(--color-petroleo);
+}
+
+.boton-flecha {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: var(--color-coral);
+  transition: transform 160ms ease, color 160ms ease;
+}
+
+.boton-enlace:hover .boton-flecha,
+.boton-enlace:active .boton-flecha {
+  color: var(--color-petroleo);
+  transform: translate(2px, -2px);
+}
+
+.bloque-evento {
+  position: relative;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-coral);
+}
+
+.tarjeta-evento {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.875rem;
+  width: 100%;
+  min-height: 4.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-petroleo);
+  color: var(--color-crema);
+  border: 2px solid var(--color-amarillo);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.tarjeta-evento:hover,
+.tarjeta-evento:active {
+  background-color: var(--color-crema);
+  color: var(--color-petroleo);
+  border-color: var(--color-coral);
+}
+
+.sello-evento {
+  display: block;
+  width: 96px;
+  height: 120px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.evento-cuerpo {
+  flex: 1;
+  text-align: left;
+}
+
+.evento-titulo {
+  display: block;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  font-weight: 700;
+}
+
+.pie-tarjeta {
+  position: relative;
+  margin-top: clamp(1.125rem, 2.8vw, 1.5rem);
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--color-coral);
+  text-align: center;
+}
+
+.pie-texto {
+  margin: 0;
+  color: var(--color-gris);
+  font-size: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .boton-enlace:hover .boton-flecha,
+  .boton-enlace:active .boton-flecha {
+    transform: none;
+  }
+}
