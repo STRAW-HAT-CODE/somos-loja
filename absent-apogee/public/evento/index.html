@@ -118,7 +118,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        width: min(100%, clamp(310px, 36vw, 440px));
+        width: min(100%, clamp(340px, 39vw, 475px));
       }
 
       /* Tarjeta principal con acabado pergamino/cristal ligero */
@@ -138,23 +138,72 @@
           inset 0 1px 0 rgba(255, 255, 255, 0.85);
       }
 
-      /* Logo oficial protagonista: Sello 100 % Café Especial Somos Loja Coopser */
-      .main-seal-wrap {
+      /* Composición equilibrada de los 2 logos: Somos Loja Tienda + Sello 100 % Café Especial */
+      .logos-lockup {
         margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: clamp(185px, 19vw, 265px);
+        gap: clamp(14px, 1.8vw, 24px);
+        width: 100%;
+        padding: clamp(2px, 0.5vh, 6px) 0;
+      }
+
+      .logo-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .logo-item--tienda img {
+        display: block;
+        width: auto;
+        height: clamp(122px, 14vw, 168px);
+        object-fit: contain;
+        filter: drop-shadow(0 8px 18px rgba(15, 56, 73, 0.18));
+      }
+
+      .logos-divider {
+        position: relative;
+        width: 1.5px;
+        height: clamp(86px, 9.8vw, 124px);
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(184, 137, 70, 0.55) 20%,
+          rgba(252, 158, 110, 0.85) 50%,
+          rgba(184, 137, 70, 0.55) 80%,
+          transparent 100%
+        );
+        flex-shrink: 0;
+      }
+
+      .logos-divider::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 7px;
+        height: 7px;
+        background: var(--coral);
+        border: 1.5px solid rgba(245, 235, 214, 0.95);
+        transform: translate(-50%, -50%) rotate(45deg);
+        box-shadow: 0 0 8px rgba(252, 158, 110, 0.5);
+      }
+
+      .logo-item--sello {
+        width: clamp(134px, 15.2vw, 182px);
         aspect-ratio: 1 / 1;
       }
 
-      .main-seal-logo {
+      .logo-item--sello img {
         display: block;
         width: 100%;
         height: 100%;
         object-fit: contain;
-        transform: scale(1.14);
-        filter: drop-shadow(0 12px 24px rgba(15, 56, 73, 0.28));
+        transform: scale(1.2);
+        filter: drop-shadow(0 10px 22px rgba(15, 56, 73, 0.26));
       }
 
       /* Lema dentro de la tarjeta para mantener el video 100% despejado */
@@ -434,11 +483,15 @@
 
         .intro {
           align-items: center;
-          width: min(100%, 440px);
+          width: min(100%, 465px);
         }
 
-        .main-seal-wrap {
-          width: clamp(165px, 38vw, 225px);
+        .logo-item--tienda img {
+          height: clamp(114px, 24vw, 152px);
+        }
+
+        .logo-item--sello {
+          width: clamp(124px, 26vw, 166px);
         }
 
         .qr-showcase {
@@ -453,12 +506,24 @@
         }
 
         .brand-showcase {
-          padding: 14px 16px;
+          padding: 14px 14px;
           border-radius: 20px;
         }
 
-        .main-seal-wrap {
-          width: clamp(145px, 44vw, 185px);
+        .logos-lockup {
+          gap: clamp(10px, 3.2vw, 16px);
+        }
+
+        .logo-item--tienda img {
+          height: clamp(98px, 28vw, 126px);
+        }
+
+        .logos-divider {
+          height: clamp(68px, 19vw, 90px);
+        }
+
+        .logo-item--sello {
+          width: clamp(106px, 31vw, 138px);
         }
 
         .qr-showcase {
@@ -488,16 +553,26 @@
         <video id="plaza-video" autoplay muted loop playsinline poster="./recursos/plaza.jpg"></video>
       </div>
 
-      <section class="intro" aria-label="Identidad 100 % Café Especial Somos Loja Coopser">
+      <section class="intro" aria-label="Identidad Somos Loja Tienda y 100 % Café Especial Somos Loja Coopser">
         <div class="brand-showcase">
-          <h1 class="main-seal-wrap" aria-label="100 % Café Especial Somos Loja Coopser">
-            <img
-              class="main-seal-logo"
-              src="./recursos/sello-circular.webp"
-              alt="100 % Café Especial • Somos Loja Coopser"
-              width="320"
-              height="320"
-            />
+          <h1 class="logos-lockup" aria-label="Somos Loja Tienda • 100 % Café Especial Somos Loja Coopser">
+            <span class="logo-item logo-item--tienda">
+              <img
+                src="./recursos/logo-somos-loja-tienda.png"
+                alt="Somos Loja Tienda"
+                width="300"
+                height="386"
+              />
+            </span>
+            <span class="logos-divider" aria-hidden="true"></span>
+            <span class="logo-item logo-item--sello">
+              <img
+                src="./recursos/sello-circular.webp"
+                alt="100 % Café Especial • Somos Loja Coopser"
+                width="320"
+                height="320"
+              />
+            </span>
           </h1>
 
           <p class="tagline">Tierra de gente noble, historia viva y el mejor café de especialidad que inspira.</p>
