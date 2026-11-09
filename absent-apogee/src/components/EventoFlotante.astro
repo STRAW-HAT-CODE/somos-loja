@@ -3,7 +3,6 @@ const eventBase = import.meta.env.BASE_URL;
 ---
 
 <div class="evento-flotante" data-event-base={eventBase}>
-	<span class="evento-sentinel" aria-hidden="true"></span>
 	<button type="button" class="evento-card" aria-label="Evento: más de 50 marcas de café. Abrir">
 		<span class="evento-etiqueta">Evento</span>
 		<span class="evento-titulo">+50 marcas de café</span>
@@ -27,15 +26,6 @@ const eventBase = import.meta.env.BASE_URL;
 		width: 100%;
 		height: 0;
 		z-index: 81;
-		pointer-events: none;
-	}
-
-	.evento-sentinel {
-		position: absolute;
-		top: 60vh;
-		left: 0;
-		width: 1px;
-		height: 0;
 		pointer-events: none;
 	}
 
@@ -182,19 +172,18 @@ const eventBase = import.meta.env.BASE_URL;
 	const frame = host?.querySelector<HTMLIFrameElement>('iframe');
 
 	if (host && card && dialog && closeButton && frame) {
-		const reveal = () => host.setAttribute('data-visible', '');
-		if ('IntersectionObserver' in window) {
-			if (window.scrollY > 0.6 * window.innerHeight) reveal();
-			else {
-				const observer = new IntersectionObserver(([entry]) => {
-					if (!entry.isIntersecting && window.scrollY > 0.6 * window.innerHeight) {
-						reveal();
-						observer.disconnect();
-					}
-				});
-				observer.observe(host.querySelector('.evento-sentinel')!);
-			}
-		} else reveal();
+		const opening = document.querySelector<HTMLElement>('.apertura');
+		const updateVisibility = () => {
+			if (!opening) return;
+			const bounds = opening.getBoundingClientRect();
+			const scrollRange = Math.max(0, bounds.height - window.innerHeight);
+			// Reveal only once the cathedral has faded into the coffee-bean scene.
+			const visible = -bounds.top >= Math.max(1, scrollRange * 0.98);
+			host.toggleAttribute('data-visible', visible);
+		};
+		window.addEventListener('scroll', updateVisibility, { passive: true });
+		window.addEventListener('resize', updateVisibility);
+		updateVisibility();
 
 		card.addEventListener('click', () => {
 			const base = host.dataset.eventBase ?? '/';

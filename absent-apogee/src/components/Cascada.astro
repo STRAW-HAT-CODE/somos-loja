@@ -1,0 +1,171 @@
+---
+---
+
+<section id="taza" class="cascada" aria-label="Un grano de café cae y se junta en una taza">
+	<div class="cascada__escena">
+		<div class="cascada__granitos" aria-hidden="true"></div>
+		<div class="cascada__polvo" aria-hidden="true"><img src="/cascada/polvo.webp" alt="" width="1254" height="1254" loading="lazy" decoding="async" /></div>
+
+		<div class="cascada__taza-wrap">
+			<div class="cascada__taza">
+				<img class="cascada__taza-img" src="/cascada/taza.webp" alt="Taza andina de café" width="1536" height="1024" loading="lazy" decoding="async" />
+				<img class="cascada__taza-fase cascada__taza-granos" src="/cascada/taza-con-granos-v1.webp" alt="" width="768" height="512" loading="lazy" decoding="async" />
+				<img class="cascada__taza-fase cascada__taza-cafe" src="/cascada/taza-cafe-servido-v1.webp" alt="" width="768" height="512" loading="lazy" decoding="async" />
+			</div>
+		</div>
+
+		<div class="cascada__grano-grande" aria-hidden="true"><img src="/cascada/grano.webp" alt="" width="1254" height="1254" loading="lazy" decoding="async" /></div>
+
+		<div class="cascada__texto">
+			<p class="versal versal--chica">El camino del café</p>
+			<h2 class="titular titular--media">El grano llega a la taza</h2>
+			<p class="cuerpo">Catas, filtrados y encuentros con las marcas de Loja.</p>
+		</div>
+	</div>
+</section>
+
+<style is:global>
+	.cascada {
+		position: relative;
+		background: var(--papel);
+	}
+
+	.cascada__escena {
+		position: relative;
+		height: 100svh;
+		overflow: hidden;
+		background: var(--papel);
+	}
+
+	.cascada__grano-grande {
+		position: absolute;
+		left: 50%;
+		top: 27%;
+		z-index: 6;
+		width: min(38vh, 54vw);
+		margin: calc(min(38vh, 54vw) / -2) 0 0 calc(min(38vh, 54vw) / -2);
+		will-change: transform, opacity;
+		display: none;
+	}
+
+	.cascada__granitos {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		pointer-events: none;
+	}
+
+	.cascada__granito {
+		position: absolute;
+		left: 50%;
+		top: 27%;
+		width: calc(clamp(28px, 6vh, 70px) * var(--k, 1));
+		aspect-ratio: 1;
+		margin-left: calc(clamp(28px, 6vh, 70px) * var(--k, 1) / -2);
+		margin-top: calc(clamp(28px, 6vh, 70px) * var(--k, 1) / -2);
+		background: url('/cascada/grano.webp') center / contain no-repeat;
+		opacity: 0;
+		will-change: transform, opacity;
+	}
+
+	.cascada__polvo {
+		position: absolute;
+		left: 50%;
+		top: 27%;
+		z-index: 7;
+		width: min(46vh, 62vw);
+		margin: calc(min(46vh, 62vw) / -2) 0 0 calc(min(46vh, 62vw) / -2);
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.cascada__taza-wrap {
+		position: absolute;
+		left: 50%;
+		bottom: 9vh;
+		z-index: 3;
+		width: min(50vh, 60vw);
+		margin-left: calc(min(50vh, 60vw) / -2);
+	}
+
+	.cascada__taza {
+		position: relative;
+		width: 100%;
+	}
+
+	.cascada__taza-img {
+		width: 100%;
+		filter: drop-shadow(0 22px 26px rgb(24 82 105 / 0.18));
+	}
+
+	.cascada__taza-fase {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		opacity: 0;
+		will-change: opacity;
+	}
+
+	.cascada__texto {
+		position: absolute;
+		left: 50%;
+		top: 28vh;
+		z-index: 8;
+		width: min(92vw, 620px);
+		translate: -50% 0;
+		display: grid;
+		gap: 10px;
+		text-align: center;
+	}
+
+	.cascada__texto .cuerpo {
+		max-width: 44ch;
+		margin: 0 auto;
+		color: var(--tinta-suave);
+	}
+
+	/* Animated mode: the scene is pinned and its pieces start hidden. */
+	.cascada--animada {
+		height: 300vh;
+	}
+
+	.cascada--animada .cascada__escena {
+		position: sticky;
+		top: 0;
+	}
+
+	.cascada--animada .cascada__grano-grande {
+		display: block;
+	}
+
+	.cascada--animada .cascada__texto {
+		opacity: 0;
+	}
+
+	@media (max-width: 760px) {
+		.cascada--animada {
+			height: 200vh;
+		}
+
+		.cascada__escena {
+			height: 100svh;
+		}
+
+		.cascada__texto {
+			top: 24svh;
+		}
+
+		.cascada__taza-wrap {
+			bottom: 18svh;
+			width: min(46vh, 82vw);
+			margin-left: calc(min(46vh, 82vw) / -2);
+		}
+
+		.cascada__grano-grande {
+			width: min(34vh, 62vw);
+			margin: calc(min(34vh, 62vw) / -2) 0 0 calc(min(34vh, 62vw) / -2);
+		}
+	}
+</style>

@@ -2,10 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
-import EventoFlotante from '../components/EventoFlotante.astro';
-import Eventos from '../components/Eventos.astro';
 import Invitacion from '../components/Invitacion.astro';
-import { barista, capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sabores, sello } from '../data/somos-loja';
+import Cascada from '../components/Cascada.astro';
+import { capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sello } from '../data/somos-loja';
 const cinta = [...productos, ...productos];
 ---
 <Layout>
@@ -16,7 +15,6 @@ const cinta = [...productos, ...productos];
 			<a href="#inicio" aria-current="page">Inicio</a>
 			<a href="#tienda">Tienda</a>
 			<a href="#evento">Evento</a>
-			<a href="#nosotros">Nosotros</a>
 		</nav>
 		<a class="boton boton--tinta cabecera__lugar" href="#tienda"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg><span>Dónde estamos</span></a>
 	</header>
@@ -33,20 +31,21 @@ const cinta = [...productos, ...productos];
 							<p class="firma titulo__somos"><span>Somos</span></p>
 							<p class="firma titulo__loja"><span>Loja</span></p>
 						</div>
-						<h1 class="titulo__lema">El sabor de Loja, a pasos de la Catedral</h1>
-						<div class="titulo__adorno" aria-hidden="true"><span>✻</span></div>
+						<h1 class="titulo__lema">El sabor de nuestra tierra, el arte de nuestra gente.</h1>
+						<div class="titulo__regla" aria-hidden="true"></div>
 					</div>
 					<a class="hero-ticket hero-ticket--tienda" href="#tienda">
 						<svg class="hero-ticket__icono" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M8 16h32l-2 26H10L8 16Z M17 19v-8a7 7 0 0 1 14 0v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 						<span class="hero-ticket__titulo">Tienda</span>
 						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
-						<span class="hero-ticket__accion">Conoce la tienda <span class="hero-ticket__flecha" aria-hidden="true">→</span></span>
+						<span class="hero-ticket__accion">Conoce la tienda</span>
 					</a>
 					<a class="hero-ticket hero-ticket--evento" href="#evento">
 						<span class="hero-ticket__sello" aria-hidden="true">Loja<br />✦<br />Café</span>
 						<span class="hero-ticket__etiqueta">Evento</span>
 						<span class="hero-ticket__titulo"><strong>+50</strong> marcas<br />de café</span>
 						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
+						<span class="hero-ticket__accion">Ver evento</span>
 					</a>
 				</div>
 				<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
@@ -77,6 +76,8 @@ const cinta = [...productos, ...productos];
 			))}
 		</section>
 
+		<Cascada />
+
 		<section id="evento" class="cincuenta">
 			<div class="cincuenta__fijo">
 				<canvas id="granos" aria-hidden="true"></canvas>
@@ -87,26 +88,6 @@ const cinta = [...productos, ...productos];
 					<p class="cincuenta__evento"><img src={sello} alt="Sello 100 % Café Especial, Somos Loja Coopser, tercera edición" width="640" height="610" loading="lazy" decoding="async" />{pendiente.fecha ?? <Pendiente dato="fecha" />}</p>
 				</div>
 			</div>
-		</section>
-
-		<Eventos />
-
-		<section id="nosotros" class="sabores" aria-labelledby="titulo-sabores">
-			<div class="sabores__cabeza">
-				<p class="firma firma--media">Sabe a Loja</p>
-				<h2 id="titulo-sabores" class="titular titular--media">Lo que hacemos aquí, para que te lo lleves</h2>
-				<img class="sabores__guitarra" src={ilustraciones.guitarra} alt="Ilustración de una guitarra antigua con hojas de café" width="800" height="800" loading="lazy" decoding="async" />
-				<p class="cuerpo">Loja es café, música, arte y cultura. Todo eso cabe en una bolsa de la tienda.</p>
-			</div>
-			<ul class="sabores__lista">
-				{sabores.map((s) => (
-					<li class="sabor">
-						<img src={s.img} alt={s.alt} width="700" height="700" loading="lazy" decoding="async" />
-						<h3 class="titular titular--chica">{s.titulo}</h3>
-						<p class="nota">{s.texto}</p>
-					</li>
-				))}
-			</ul>
 		</section>
 
 		<Invitacion />
@@ -129,10 +110,15 @@ const cinta = [...productos, ...productos];
 					</div>
 				</div>
 				<figure class="mapa">
-					<img src={ilustraciones.plaza} alt="Ilustración del Parque Central de Loja con la Catedral, palmeras y tejados" width="1400" height="788" loading="lazy" decoding="async" />
-					<span class="mapa__marca mapa__marca--catedral"><i></i>Catedral</span>
-					<img class="mapa__foto" src={barista.src} alt={barista.alt} width={barista.ancho} height={barista.alto} loading="lazy" decoding="async" />
-					<figcaption class="nota">Vista ilustrada del Parque Central. La tienda está en la calle José Antonio Eguiguren, frente al parque.</figcaption>
+					<iframe
+						class="mapa__lienzo"
+						src="https://www.google.com/maps?q=TIENDA%20SOMOS%20LOJA%2C%20Loja%2C%20Ecuador&z=17&hl=es&output=embed"
+						title="Ubicación de Tienda Somos Loja en el mapa"
+						loading="lazy"
+						referrerpolicy="no-referrer-when-downgrade"
+						allowfullscreen
+					></iframe>
+					<figcaption class="nota">Tienda Somos Loja, José Antonio Eguiguren y Bernardo Valdivieso, frente al Parque Central. Arrastrá el mapa para explorar o usá «Cómo llegar».</figcaption>
 				</figure>
 				<figure class="foto foto--interior"><img src={interior} alt="Interior de la tienda Somos Loja con una vitrina llena de productos" width="1200" height="1600" loading="lazy" decoding="async" /></figure>
 				<figure class="foto foto--letrero"><img src={letrero} alt="Letrero de Somos Loja sobre los estantes de la tienda" width="1024" height="576" loading="lazy" decoding="async" /></figure>
@@ -155,13 +141,13 @@ const cinta = [...productos, ...productos];
 		<p>Somos Loja, Coopser. Productos de emprendedores y productores locales.</p>
 		<Pendiente dato="enlaces legales" />
 	</footer>
-	<EventoFlotante />
 </Layout>
 
 <script>
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import Lenis from 'lenis';
+	import { iniciarCascada } from '../scripts/cascada-taza.js';
 
 	const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
 	const ahorro = (navigator as any).connection?.saveData;
@@ -229,6 +215,9 @@ const cinta = [...productos, ...productos];
 			revelado.fromTo(c.querySelector('.capitulo__sello'), { autoAlpha: 0, scale: 1.8 }, { autoAlpha: 1, scale: 1, ease: 'back.out(2.2)', duration: 0.35 }, '>-0.1');
 		});
 
+		// Cascade: the bean falls and the cup fills.
+		iniciarCascada(gsap, ScrollTrigger);
+
 		// The 50: scroll drives real 3D beans.
 		const etapa = document.querySelector<HTMLElement>('.cincuenta')!;
 		const canvas = document.getElementById('granos') as HTMLCanvasElement | null;
@@ -249,25 +238,6 @@ const cinta = [...productos, ...productos];
 			vigia.observe(etapa);
 		}
 		gsap.fromTo('.cincuenta__texto', { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, ease: 'none', scrollTrigger: { trigger: etapa, start: () => 'top+=' + etapa.offsetHeight * 0.14 + ' top', end: () => 'top+=' + etapa.offsetHeight * 0.34 + ' top', scrub: true } });
-
-		// Flavours: each illustration tilts toward the pointer like an object in hand.
-		gsap.from('.sabores__cabeza > *', { autoAlpha: 0, y: 28, duration: 0.7, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.sabores', start: 'top 72%' } });
-		gsap.from('.sabor', { autoAlpha: 0, y: 48, scale: 0.94, duration: 0.8, stagger: 0.07, ease: 'power3.out', scrollTrigger: { trigger: '.sabores__lista', start: 'top 78%' } });
-		if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-			document.querySelectorAll<HTMLElement>('.sabor').forEach((s) => {
-				const img = s.querySelector('img')!;
-				const rx = gsap.quickTo(img, 'rotationX', { duration: 0.5, ease: 'power3.out' });
-				const ry = gsap.quickTo(img, 'rotationY', { duration: 0.5, ease: 'power3.out' });
-				const sc = gsap.quickTo(img, 'scale', { duration: 0.5, ease: 'power3.out' });
-				s.addEventListener('pointermove', (e) => {
-					const r = s.getBoundingClientRect();
-					ry(((e.clientX - r.left) / r.width - 0.5) * 22);
-					rx(((e.clientY - r.top) / r.height - 0.5) * -22);
-					sc(1.07);
-				});
-				s.addEventListener('pointerleave', () => { rx(0); ry(0); sc(1); });
-			});
-		}
 
 		// Store.
 		gsap.from('.tienda__texto > *', { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.tienda', start: 'top 68%' } });
