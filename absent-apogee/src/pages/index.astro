@@ -226,8 +226,9 @@ const cinta = [...productos, ...productos];
 			.to('.titulo', { y: -90, autoAlpha: 0, duration: 0.18 }, 0.7)
 			.to('.apertura__seguir', { autoAlpha: 0, duration: 0.15 }, 0)
 			.to('.apertura__rama', { x: -120, y: -120, autoAlpha: 0, duration: 0.2 }, 0.7)
-			.to('.escenario', { scale: 1.08, y: 80, duration: 0.7, transformOrigin: '50% 45%' }, 0.05)
-			.to('.escenario', { autoAlpha: 0, duration: 0.2 }, 0.72)
+			// The cathedral zooms in from its base (no gap opens below it), then fades as the bean lands.
+			.to('.escenario', { scale: 1.18, duration: 0.6, transformOrigin: '50% 100%' }, 0)
+			.to('.escenario', { autoAlpha: 0, scale: 1.26, duration: 0.25 }, 0.5)
 			.fromTo('.apertura__grano', { yPercent: -180, rotate: -50, scale: 0.55 }, { yPercent: 0, rotate: 18, scale: 1, duration: 0.65 }, 0)
 			.fromTo('.apertura__frase', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 0.55)
 			.to('.apertura__grano', { rotate: 40, duration: 0.3 }, 0.65);
