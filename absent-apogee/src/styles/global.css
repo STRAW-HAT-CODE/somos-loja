@@ -310,6 +310,13 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .apertura__seguir { left: 50%; bottom: max(18px, env(safe-area-inset-bottom) + 12px); translate: -50% 0; }
 }
 
+@media (max-width: 860px) {
+  /* Phones: the stage is as tall as the screen with the address bar hidden, so hiding the bar
+     never opens a gap under the cathedral; the scroll cue stays clear of the bar when it shows. */
+  .apertura__fijo { height: 100lvh; }
+  .apertura__seguir { bottom: calc(100lvh - 100svh + max(18px, env(safe-area-inset-bottom) + 12px)); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .boton, .flecha, .hero-ticket, .cabecera__nav a::after { transition: none; }
   .apertura { height: auto; }
