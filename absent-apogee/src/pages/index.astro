@@ -256,11 +256,18 @@ const cinta = [...productos, ...productos];
 		// The 50: scroll drives real 3D beans.
 		const etapa = document.querySelector<HTMLElement>('.cincuenta')!;
 		const canvas = document.getElementById('granos') as HTMLCanvasElement | null;
+		// Mobile: once the section arrives, the 50 finishes forming on its own in 1.6 s, so it never
+		// freezes half built when the visitor stops scrolling; scrolling back above it resets it.
+		const formacion = { v: 0 };
+		let lanzada = false;
 		function progreso() {
 			const r = etapa.getBoundingClientRect();
-			// Mobile: the 50 forms over one screen of scroll; the text sheet starts rising at 40 % and reaches the 50 as it completes.
 			const recorrido = movil ? innerHeight : (r.height - innerHeight) * 0.7 + innerHeight * 0.6;
-			return Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / recorrido));
+			const p = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / recorrido));
+			if (!movil) return p;
+			if (p > 0.05 && !lanzada) { lanzada = true; gsap.to(formacion, { v: 1, duration: 1.6, ease: 'none' }); }
+			else if (p === 0 && lanzada) { lanzada = false; gsap.killTweensOf(formacion); formacion.v = 0; }
+			return formacion.v;
 		}
 		if (canvas && !ahorro) {
 			const vigia = new IntersectionObserver(([e]) => {
