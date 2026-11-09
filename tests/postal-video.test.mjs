@@ -66,11 +66,13 @@ test('inline scripts parse', () => {
   for (const code of scripts) assert.doesNotThrow(() => new vm.Script(code));
 });
 
-test('tablet landing and floating card point to the postal page', () => {
+test('tablet landing and the home invitation button point to the postal page', () => {
   const landing = readFileSync(new URL('../absent-apogee/public/evento/index.html', import.meta.url), 'utf8');
   assert.match(landing, /COURIER_INVITATION_URL = "\.\/postal\/index\.html"/);
-  const flotante = readFileSync(new URL('../absent-apogee/src/components/EventoFlotante.astro', import.meta.url), 'utf8');
-  assert.match(flotante, /evento\/postal\/index\.html/);
+  const datos = readFileSync(new URL('../absent-apogee/src/data/somos-loja.ts', import.meta.url), 'utf8');
+  assert.match(datos, /postal: '\/evento\/postal\/index\.html'/);
+  const home = readFileSync(new URL('../absent-apogee/src/pages/index.astro', import.meta.url), 'utf8');
+  assert.match(home, /href=\{evento\.postal\}>Abrir la invitación/);
 });
 
 test('rotate hint stays on screen 2-3 seconds before the postcard opens', () => {

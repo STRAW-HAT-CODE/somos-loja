@@ -172,6 +172,7 @@ const cinta = [...productos, ...productos];
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import Lenis from 'lenis';
 	import { iniciarCascada } from '../scripts/cascada-taza.js';
+	import { iniciarMapa } from '../scripts/mapa-rotacion.js';
 
 	const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
 	const ahorro = (navigator as any).connection?.saveData;
@@ -301,78 +302,7 @@ const cinta = [...productos, ...productos];
 		}).observe(tienda);
 	}
 
-	// Store location: the map and a 4 s clip of the walk from the Cathedral take turns.
-	// The rotation only runs on screen, keeps going after a button pick, pauses while
-	// the pointer or focus is on the frame, and stops once the visitor uses the map
-	// itself or opens the full walk. Reduced motion and data saver get the buttons only.
+	// Store location: map and walk clip take turns (src/scripts/mapa-rotacion.js).
 	const marco = document.querySelector<HTMLElement>('.mapa');
-	if (marco) {
-		const video = marco.querySelector('video')!;
-		const capa = marco.querySelector<HTMLElement>('.mapa__recorrido')!;
-		const iframe = marco.querySelector('iframe')!;
-		const botones = marco.querySelectorAll<HTMLButtonElement>('[data-ver]');
-		const completo = marco.querySelector<HTMLButtonElement>('.mapa__completo')!;
-		const DURACION = { mapa: 4000, recorrido: 4000 };
-		let vista: 'mapa' | 'recorrido' = 'mapa';
-		let temporizador = 0;
-		let visible = false;
-		let encima = false;
-		let detenido = false;
-		let entero = false;
-
-		const cargar = (src: string) => { if (video.getAttribute('src') !== src) video.src = src; };
-		const verTramo = () => {
-			entero = false;
-			marco.classList.remove('mapa--entero');
-			video.controls = false;
-			cargar(video.dataset.tramo!);
-		};
-		const mostrar = (nueva: typeof vista) => {
-			vista = nueva;
-			marco.dataset.vista = nueva;
-			botones.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ver === nueva)));
-			capa.setAttribute('aria-hidden', String(nueva !== 'recorrido'));
-			iframe.toggleAttribute('inert', nueva !== 'mapa');
-			if (nueva === 'recorrido') {
-				if (!entero) { verTramo(); video.currentTime = 0; }
-				video.play().catch(() => {});
-			} else video.pause();
-		};
-		const programar = () => {
-			clearTimeout(temporizador);
-			if (detenido || entero || encima || !visible || reducir || ahorro) return;
-			temporizador = window.setTimeout(() => { mostrar(vista === 'mapa' ? 'recorrido' : 'mapa'); programar(); }, DURACION[vista]);
-		};
-
-		botones.forEach((b) => b.addEventListener('click', () => {
-			if (entero) verTramo();
-			mostrar(b.dataset.ver as typeof vista);
-			programar();
-		}));
-		completo.addEventListener('click', () => {
-			clearTimeout(temporizador);
-			entero = true;
-			marco.classList.add('mapa--entero');
-			cargar(video.dataset.completo!);
-			video.controls = true;
-			video.currentTime = 0;
-			mostrar('recorrido');
-			video.focus();
-		});
-		// After the full walk, return to the map and let the rotation resume.
-		video.addEventListener('ended', () => { if (entero) { verTramo(); mostrar('mapa'); programar(); } });
-		const pausar = (v: boolean) => () => { encima = v; programar(); };
-		marco.addEventListener('pointerenter', pausar(true));
-		marco.addEventListener('pointerleave', pausar(false));
-		marco.addEventListener('focusin', pausar(true));
-		marco.addEventListener('focusout', pausar(false));
-		// A click inside the map iframe never reaches the page: the window blurs instead.
-		addEventListener('blur', () => { if (document.activeElement === iframe) { detenido = true; clearTimeout(temporizador); } });
-
-		new IntersectionObserver(([e]) => {
-			visible = e.isIntersecting;
-			if (!visible) { clearTimeout(temporizador); video.pause(); }
-			else { if (vista === 'recorrido' && entero) video.play().catch(() => {}); programar(); }
-		}, { threshold: 0.4 }).observe(marco);
-	}
+	if (marco) iniciarMapa(marco, { reducir, ahorro });
 </script>
