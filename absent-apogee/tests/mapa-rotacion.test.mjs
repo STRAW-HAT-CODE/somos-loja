@@ -32,7 +32,7 @@ class Video extends Nodo {
   pause() { this.reproduciendo = false; }
 }
 
-function montar({ reducir = false, ahorro = false } = {}) {
+function montar({ reducir = false, ahorro = false, tactil = false } = {}) {
   const video = new Video();
   video.dataset = { tramo: '/tramo.mp4', completo: '/completo.mp4' };
   const capa = new Nodo({ 'aria-hidden': 'true' });
@@ -68,7 +68,7 @@ function montar({ reducir = false, ahorro = false } = {}) {
   let alVer = () => {};
   const observar = (_el, cb) => { alVer = cb; };
 
-  iniciarMapa(marco, { reducir, ahorro, reloj, ventana, observar });
+  iniciarMapa(marco, { reducir, ahorro, tactil, reloj, ventana, observar });
   return { marco, video, capa, iframe, verMapa, verRecorrido, completo, ventana, avanzar, mostrar: (v) => alVer(v), pendientes };
 }
 
@@ -169,5 +169,24 @@ test('leaving the screen pauses the video and the timer', () => {
   m.mostrar(false);
   assert.equal(m.video.reproduciendo, false);
   m.avanzar(20000);
+  assert.equal(m.marco.dataset.vista, 'recorrido');
+});
+
+test('on touch screens a tap on the map only pauses the rotation for 10 s', () => {
+  const m = montar({ tactil: true });
+  m.mostrar(true);
+  m.ventana.document.activeElement = m.iframe;
+  m.ventana.emitir('blur');
+  m.avanzar(9000);
+  assert.equal(m.marco.dataset.vista, 'mapa');
+  m.avanzar(1000 + 4000);
+  assert.equal(m.marco.dataset.vista, 'recorrido', 'rotation resumes after the pause');
+});
+
+test('a touch pointer entering the frame does not pause the rotation', () => {
+  const m = montar({ tactil: true });
+  m.mostrar(true);
+  for (const fn of m.marco.oyentes.pointerenter) fn({ type: 'pointerenter', pointerType: 'touch' });
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'recorrido');
 });

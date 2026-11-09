@@ -1,15 +1,18 @@
 // Store location: the map and a 4 s clip of the walk from the Cathedral take turns.
 // The rotation only runs on screen, keeps going after a button pick, pauses while
 // the pointer or focus is on the frame, and stops once the visitor uses the map
-// itself or opens the full walk. Reduced motion and data saver get the buttons only.
+// itself or opens the full walk. On touch screens a tap on the map (often just a scroll
+// that landed on it) only pauses the rotation for a while. Reduced motion and data saver
+// get the buttons only.
 // Timers, the window and the visibility observer are injectable for tests.
-export const DURACION = { mapa: 4000, recorrido: 4000 };
+export const DURACION = { mapa: 4000, recorrido: 4000, pausaTactil: 10000 };
 
 export function iniciarMapa(marco, {
   reducir = false,
   ahorro = false,
   reloj = { poner: (fn, ms) => setTimeout(fn, ms), quitar: (id) => clearTimeout(id) },
   ventana = window,
+  tactil = ventana.matchMedia?.('(pointer: coarse)').matches ?? false,
   observar = (el, cb) => new IntersectionObserver(([e]) => cb(e.isIntersecting), { threshold: 0.4 }).observe(el),
 } = {}) {
   const video = marco.querySelector('video');
@@ -66,14 +69,22 @@ export function iniciarMapa(marco, {
   });
   // After the full walk, return to the map and let the rotation resume.
   video.addEventListener('ended', () => { if (entero) { verTramo(); mostrar('mapa'); programar(); } });
-  const pausar = (v) => () => { encima = v; programar(); };
+  // Hover pauses only for a mouse; focus pauses unless it is a tap landing in the map.
+  const pausar = (v) => (e) => {
+    if (e?.pointerType && e.pointerType !== 'mouse') return;
+    if (tactil && e?.target === iframe) return;
+    encima = v; programar();
+  };
   marco.addEventListener('pointerenter', pausar(true));
   marco.addEventListener('pointerleave', pausar(false));
   marco.addEventListener('focusin', pausar(true));
   marco.addEventListener('focusout', pausar(false));
   // A click inside the map iframe never reaches the page: the window blurs instead.
   ventana.addEventListener('blur', () => {
-    if (ventana.document.activeElement === iframe) { detenido = true; reloj.quitar(temporizador); }
+    if (ventana.document.activeElement !== iframe) return;
+    reloj.quitar(temporizador);
+    if (!tactil) { detenido = true; return; }
+    temporizador = reloj.poner(programar, DURACION.pausaTactil);
   });
 
   observar(marco, (enPantalla) => {
