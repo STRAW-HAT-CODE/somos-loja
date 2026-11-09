@@ -34,10 +34,12 @@ test('rotate step asks to turn the phone and lets locked phones open anyway', ()
   assert.match(html, /id="abrir-aqui"/);
 });
 
-test('postcard keeps the QR stamp contract and the demo notice', () => {
+test('postcard keeps the QR stamp contract with the live coffee QR', () => {
   const html = read();
   assert.match(html, /class="[^"]*sello-qr/);
-  assert.match(html, /QR aún no activo/);
+  assert.match(html, /src="recursos\/qr-cafe\.webp"/, 'the stamp uses the coffee-plant QR');
+  assert.match(html, /<figcaption>Escanéame<\/figcaption>/);
+  assert.ok(existsSync(join(pageDir, 'recursos/qr-cafe.webp')), 'missing recursos/qr-cafe.webp');
   assert.match(html, /loading="eager" fetchpriority="high"/);
   assert.match(html, /Una degustación por persona/);
   assert.match(html, /id="titulo"/);
@@ -231,13 +233,13 @@ test('only the visible phase can take keyboard focus', async () => {
   assert.match(html, /<article class="postal"[^>]*\binert\b/, 'postcard starts inert before the script runs');
 });
 
-test('postcard address and map match the site data', () => {
+test('postcard shows the event dates, place and map at Parque Central', () => {
   const html = read();
-  const datos = readFileSync(new URL('../absent-apogee/src/data/somos-loja.ts', import.meta.url), 'utf8');
-  const direccion = datos.match(/direccion: '([^']+)'/)[1];
-  const mapa = datos.match(/mapa: '([^']+)'/)[1];
-  assert.ok(html.includes(`<dd>${direccion}</dd>`), 'postcard must show the store address');
-  assert.ok(html.includes(`href="${mapa.replace(/&/g, '&amp;')}"`), 'postcard must use the same map link as the home page');
+  assert.ok(html.includes('<dd>Del 13 al 22 de noviembre</dd>'), 'postcard must show the event dates');
+  assert.ok(html.includes('<dd>Por confirmar</dd>'), 'the time stays marked as pending');
+  assert.ok(html.includes('<dd>Parque Central</dd>'), 'postcard must name the venue');
+  assert.ok(html.includes('<dd>José Antonio Eguiguren y Bernardo Valdivieso, esquina</dd>'), 'postcard must show the venue corner');
+  assert.match(html, /href="https:\/\/www\.google\.com\/maps\/search\/\?api=1&amp;query=Parque\+Central\+Loja\+Ecuador"/, 'map must point at Parque Central');
 });
 
 test('an opening tap unlocks sound, which can be muted and remembered', () => {
@@ -255,7 +257,8 @@ test('opening sounds exist and the rotate hint shows over the frozen last frame'
   const sonidos = [...html.matchAll(/'(recursos\/sonido\/[a-z-]+\.mp3)'/g)].map((m) => m[1]);
   assert.ok(sonidos.length >= 3, 'expected tap, flap and postcard sounds');
   for (const ref of sonidos) assert.ok(existsSync(join(pageDir, ref)), `missing ${ref}`);
-  assert.match(html, /FIN_ANIMACION\s*=\s*9\.\d/, 'the hint starts when the animation ends, while the voice keeps playing');
+  const fin = Number(html.match(/FIN_ANIMACION\s*=\s*([\d.]+)/)[1]);
+  assert.ok(fin >= 9, 'the rotate hint must wait until Alforjita finishes speaking and her animation ends');
 });
 
 test('the page waits on the opening screen and the tap starts the video with sound', async () => {

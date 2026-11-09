@@ -109,9 +109,10 @@ export async function iniciarGranos(canvas, seccion, progreso) {
     const ancho = alto * camera.aspect;
     const m = w <= 860;
     uniforms.uW.value = ancho;
-    uniforms.uAncho.value = m ? ancho * 0.92 : Math.min(ancho * 0.5, 6.4);
+    uniforms.uAncho.value = m ? ancho * 0.92 : Math.min(ancho * 0.4, 5.6);
     uniforms.uTam.value = 0.09 * (uniforms.uAncho.value / 5) * (m ? 1.35 : 1.1);
-    uniforms.uCentro.value.set(0, alto * 0.12);
+    // Desktop: the 50 sits in the right half, leaving the left column for the event details.
+    uniforms.uCentro.value.set(m ? 0 : ancho * 0.24, m ? alto * 0.12 : 0);
   }
   medir();
   addEventListener('resize', medir);

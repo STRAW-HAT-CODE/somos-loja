@@ -5,7 +5,6 @@ const v = `${base}/vintage`;
 const g = `${base}/galeria`;
 
 export const pendiente = {
-  fecha: null as string | null,
   // Google Maps pin (2Q3X+GC Loja), on Eguiguren facing Parque Central; manual mockup: "José A. Eguiguren y Bernardo Valdivieso".
   direccion: 'José Antonio Eguiguren y Bernardo Valdivieso, frente al Parque Central' as string | null,
   horario: null as string | null,
@@ -21,12 +20,30 @@ export const enlaces = {
   telefonoVisible: '096 294 7777',
 };
 
-export const logo = `${base}/logo-somos-loja-tienda.webp`;
+// Loja 100 % Café Especial, third edition: the event the home page invites to.
+export const evento = {
+  fechas: 'Del 13 al 22 de noviembre',
+  lugar: 'Parque Central de Loja',
+  esquina: 'Eguiguren y Bernardo Valdivieso',
+  hora: null as string | null,
+  mapa: 'https://www.google.com/maps/search/?api=1&query=Parque+Central+Loja+Ecuador',
+  postal: '/evento/postal/index.html',
+};
+
+// Walk from the Cathedral to the store (client video, re-framed 16:10 with a blurred fill).
+export const recorrido = {
+  // 4 s clip (Cathedral to the store sign, 2.15x) for the rotation; the full walk loads on demand.
+  tramo: `${base}/video/tienda-tramo.mp4`,
+  src: `${base}/video/tienda-recorrido.mp4`,
+  poster: `${base}/video/tienda-recorrido.webp`,
+};
+
+export const logo = `${base}/logo-somos-loja-tienda-240.webp`;
 export const sello = `${base}/sello-tercera-edicion.webp`;
 export const letrero = `${base}/paradas/parada-10.webp`;
-export const interior = `${g}/tienda-interior.webp`;
 export const ilustraciones = {
   fachada: `${v}/fachada.webp`,
+  fachadaChica: `${v}/fachada-900.webp`,
   plaza: `${v}/plaza.webp`,
   grano: `${v}/grano.webp`,
   rama: `${v}/rama.webp`,
@@ -60,7 +77,6 @@ export const capitulos = [
     ] },
 ];
 
-export const barista = { src: `${f}/16-barra.webp`, ancho: 1200, alto: 800, alt: 'Foto real: barra de café con cafeteras y tazas' };
 
 export const cifras = [
   ['300', 'emprendedores y productores'],
@@ -68,48 +84,7 @@ export const cifras = [
   ['14', 'marcas de vinos y licores'],
 ];
 
-export const sabores = [
-  { img: `${v}/cafe.webp`, titulo: 'Café de Loja', texto: 'Más de 50 marcas y fincas.', alt: 'Ilustración de un saco de café tostado con cerezas' },
-  { img: `${v}/barro.webp`, titulo: 'Barro negro', texto: 'Ollas y tazas hechas a mano.', alt: 'Ilustración de una olla y una taza de barro negro' },
-  { img: `${v}/dulces.webp`, titulo: 'Chocolates y bocadillos', texto: 'Para llevar de recuerdo.', alt: 'Ilustración de chocolate, cacao y dulces en una canasta' },
-  { img: `${v}/licores.webp`, titulo: 'Vinos y licores', texto: 'Catorce marcas para regalar.', alt: 'Ilustración de botellas de vino y licor con uvas' },
-  { img: `${v}/textil.webp`, titulo: 'Textiles', texto: 'Tejidos y trabajo artesanal.', alt: 'Ilustración de textiles andinos tejidos a mano' },
-  { img: `${v}/belleza.webp`, titulo: 'Salud y belleza', texto: 'Cuidado natural de aquí.', alt: 'Ilustración de jabones naturales y bálsamos' },
-];
 
-// Agenda shape agreed in the meeting: past, current and upcoming events.
-// No event name or date exists in the materials yet, so every unknown stays
-// null and is rendered with <Pendiente> instead of being invented.
-type Evento = {
-  titulo: string;
-  detalle?: string;
-  fecha: string | null;
-  lugar: string | null;
-};
-
-export const agenda: { id: string; etiqueta: string; items: Evento[] }[] = [
-  { id: 'en-curso', etiqueta: 'En curso', items: [] },
-  {
-    id: 'proximos',
-    etiqueta: 'Próximos',
-    items: [
-      {
-        titulo: 'Loja 100 % Café Especial',
-        detalle: 'Tercera edición',
-        fecha: pendiente.fecha,
-        lugar: 'Tienda Somos Loja, a pasos de la Catedral',
-      },
-    ],
-  },
-  { id: 'pasados', etiqueta: 'Pasados', items: [] },
-];
-
-export const invitacion = {
-  titulo: 'Te invitamos a Loja 100 % Café Especial',
-  texto: 'Café, barro negro, chocolates, textiles y licores de productores de Loja. Te esperamos en la tienda.',
-  // Placeholder until the client sends the vertical footage used in the posts.
-  video: { src: '/evento/recursos/plaza.mp4', poster: `${v}/plaza.webp` },
-};
 
 export const productos = [
   { src: `${g}/cafe-la-papaya.webp`, titulo: 'La Papaya', alt: 'Bolsa de café La Papaya' },
