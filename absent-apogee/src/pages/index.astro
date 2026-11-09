@@ -82,6 +82,8 @@ const cinta = [...productos, ...productos];
 			<div class="cincuenta__fijo">
 				<canvas id="granos" aria-hidden="true"></canvas>
 				<p class="cincuenta__respaldo" aria-hidden="true">50</p>
+			</div>
+			<div class="cincuenta__capa">
 				<div class="cincuenta__texto">
 					<h2 class="titular"><span class="sr-only">Unas 50 </span>marcas y fincas de café</h2>
 					<p class="cuerpo">Te invitamos a Loja 100 % Café Especial: un campeonato interno elige el top 10 de especialidad. Son 10 días de filtrados, V60 y concurso de chuspas.</p>
@@ -253,7 +255,9 @@ const cinta = [...productos, ...productos];
 		const canvas = document.getElementById('granos') as HTMLCanvasElement | null;
 		function progreso() {
 			const r = etapa.getBoundingClientRect();
-			return Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / ((r.height - innerHeight) * 0.7 + innerHeight * 0.6)));
+			// Mobile: the 50 forms over one screen of scroll, before the text sheet slides over it.
+			const recorrido = movil ? innerHeight : (r.height - innerHeight) * 0.7 + innerHeight * 0.6;
+			return Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / recorrido));
 		}
 		if (canvas && !ahorro) {
 			const vigia = new IntersectionObserver(([e]) => {
@@ -278,13 +282,23 @@ const cinta = [...productos, ...productos];
 			const k = gsap.utils.clamp(0, 1, avance * total - i * paso);
 			gsap.set(b, { autoAlpha: k, y: 32 * (1 - k) });
 		});
-		leer(0);
-		ScrollTrigger.create({ trigger: etapa, start: 'top 30%', end: () => 'top+=' + (etapa.offsetHeight - innerHeight) * 0.7 + ' top', invalidateOnRefresh: true, onUpdate: (self) => leer(self.progress), onRefresh: (self) => leer(self.progress) });
+		// Desktop only: on mobile the text is a sheet that scrolls over the finished 50.
+		if (!movil) leer(0);
+		if (!movil) ScrollTrigger.create({ trigger: etapa, start: 'top 30%', end: () => 'top+=' + (etapa.offsetHeight - innerHeight) * 0.7 + ' top', invalidateOnRefresh: true, onUpdate: (self) => leer(self.progress), onRefresh: (self) => leer(self.progress) });
 
 		// Store.
 		gsap.from('.tienda__texto > *', { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.tienda', start: 'top 68%' } });
 		gsap.from('.mapa, .foto', { autoAlpha: 0, y: 48, duration: 0.9, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.tienda__rejilla', start: 'top 70%' } });
 		addEventListener('load', () => ScrollTrigger.refresh());
+	}
+
+	// Header turns petrol while the store section sits under it.
+	const cabecera = document.querySelector<HTMLElement>('.cabecera');
+	const tienda = document.querySelector<HTMLElement>('.tienda');
+	if (cabecera && tienda) {
+		new IntersectionObserver(([e]) => cabecera.classList.toggle('cabecera--oscura', e.isIntersecting), {
+			rootMargin: `0px 0px -${Math.max(0, innerHeight - 64)}px 0px`,
+		}).observe(tienda);
 	}
 
 	// Store location: the map and a 4 s clip of the walk from the Cathedral take turns.

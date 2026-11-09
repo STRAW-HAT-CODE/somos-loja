@@ -67,6 +67,11 @@ section[id] { scroll-margin-top: 0; }
 .saltar { position: fixed; top: 8px; left: 8px; z-index: 90; padding: 8px 12px; border-radius: 8px; background: var(--tinta); color: var(--papel); text-decoration: none; transform: translateY(-64px); }
 .saltar:focus { transform: none; }
 .cabecera { position: fixed; inset: 0 0 auto; z-index: 80; display: grid; grid-template-columns: 140px 1fr 230px; align-items: start; gap: 24px; padding: 22px clamp(24px, 4vw, 72px) 30px; background: linear-gradient(var(--papel), rgb(246 238 221 / 0.94) 72%, transparent); }
+/* Over the petrol store the cream fade would leave a light band: the header turns petrol. */
+.cabecera--oscura { background: linear-gradient(var(--tinta), rgb(24 82 105 / 0.94) 72%, transparent); }
+.cabecera--oscura .cabecera__logo { border-radius: 12px; background: var(--papel); box-shadow: 0 0 0 4px var(--papel); }
+.cabecera--oscura .cabecera__nav a, .cabecera--oscura .cabecera__lugar svg { color: var(--papel); }
+.cabecera--oscura :focus-visible { outline-color: var(--papel); }
 .cabecera__logo { display: block; width: 92px; }
 .cabecera img { width: 92px; height: auto; object-fit: contain; }
 .cabecera__nav { display: flex; justify-content: center; gap: clamp(24px, 4vw, 80px); padding-top: 10px; }
@@ -147,12 +152,14 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 .capitulo__texto { display: grid; gap: 16px; padding: 24px; background: var(--papel); border-radius: 48px; box-shadow: 0 0 48px 32px var(--papel); }
 
 /* The 50 */
-.cincuenta { height: 150vh; }
-.cincuenta__fijo { position: sticky; top: 0; height: 100dvh; overflow: hidden; display: grid; align-content: end; justify-items: center; padding: 0 24px 6vh; }
+/* Mobile: the 50 forms pinned, then the text sheet scrolls over it. Desktop overlays both (see min-width: 861px). */
+.cincuenta { position: relative; }
+.cincuenta__fijo { position: sticky; top: 0; height: 100dvh; overflow: hidden; }
+.cincuenta__capa { position: relative; z-index: 2; margin-top: 10vh; padding: 40px 16px 64px; border-radius: 28px 28px 0 0; background: var(--papel); box-shadow: 0 -24px 40px -28px rgb(24 82 105 / 0.35); }
 #granos { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .cincuenta__respaldo { position: absolute; top: 8vh; left: 0; right: 0; text-align: center; font-size: min(40vh, 40vw); line-height: 1; font-weight: 800; color: var(--cafe); }
 .con-granos .cincuenta__respaldo { visibility: hidden; }
-.cincuenta__texto { position: relative; max-width: 720px; display: grid; gap: 12px; justify-items: center; text-align: center; }
+.cincuenta__texto { position: relative; max-width: 720px; margin: 0 auto; display: grid; gap: 12px; justify-items: center; text-align: center; }
 .cincuenta__ficha { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 24px; margin-top: 4px; text-align: left; }
 .cincuenta__ficha dl { display: grid; gap: 8px; }
 .cincuenta__ficha dl div { display: grid; grid-template-columns: 4.5rem 1fr; align-items: baseline; gap: 12px; }
@@ -164,7 +171,10 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 
 /* Desktop: event details on the left as a ticket, the bean 50 on the right. */
 @media (min-width: 861px) {
-  .cincuenta__fijo { align-content: center; justify-items: start; padding: 0 max(48px, calc((100vw - 1400px) / 2 + 48px)); }
+  .cincuenta { display: grid; height: 150vh; }
+  .cincuenta__fijo, .cincuenta__capa { grid-area: 1 / 1; align-self: start; }
+  .cincuenta__capa { position: sticky; top: 0; height: 100dvh; margin: 0; display: grid; align-content: center; justify-items: start; padding: 0 max(48px, calc((100vw - 1400px) / 2 + 48px)); border-radius: 0; background: none; box-shadow: none; pointer-events: none; }
+  .cincuenta__texto { margin: 0; pointer-events: auto; }
   .cincuenta__respaldo { left: 50%; right: 0; top: 50%; translate: 0 -50%; font-size: min(50vh, 30vw); }
   .cincuenta__texto { max-width: min(540px, 44vw); justify-items: start; text-align: left; gap: 16px; }
   .cincuenta__texto .titular { font-size: clamp(2.75rem, 4.4vw, 4.5rem); line-height: 1; }
@@ -274,7 +284,6 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .mapa__ubicacion { top: 10px; bottom: auto; left: 10px; }
   .mapa__completo { right: 10px; bottom: 10px; }
   .cinta__ancha { stroke-width: 10; }
-  .cincuenta__fijo { padding: 0 16px 4vh; }
   .tienda { padding: 64px 0 48px; }
   .tienda__rejilla { grid-template-columns: 1fr; padding: 0 16px; gap: 24px; }
   .tienda__texto, .tienda__rejilla .foto--letrero { grid-row: auto; grid-column: auto; }
@@ -299,7 +308,8 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .apertura { height: auto; }
   .apertura__fijo { position: relative; height: 100dvh; }
   .cincuenta { height: auto; }
-  .cincuenta__fijo { position: relative; height: auto; min-height: 100dvh; padding-top: 50vh; }
+  .cincuenta__fijo { position: relative; height: 70vh; }
+  .cincuenta__capa { margin-top: 0; }
   .cinta { display: none; }
   .carrusel { overflow-x: auto; }
 }
