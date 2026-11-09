@@ -178,6 +178,8 @@ const cinta = [...productos, ...productos];
 	const ahorro = (navigator as any).connection?.saveData;
 	const movil = innerWidth <= 860;
 	gsap.registerPlugin(ScrollTrigger);
+	// The address bar showing or hiding must not re-measure every scene mid-scroll.
+	ScrollTrigger.config({ ignoreMobileResize: true });
 
 	if (!reducir) {
 		document.documentElement.classList.add('animado');

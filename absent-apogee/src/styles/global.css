@@ -84,7 +84,7 @@ section[id] { scroll-margin-top: 0; }
 
 /* The illustrated cathedral, hand-lettered name, and paper tickets share one stage. */
 .apertura { height: 300vh; }
-.apertura__fijo { position: sticky; top: 0; height: 100dvh; overflow: hidden; background: var(--papel); }
+.apertura__fijo { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--papel); }
 .escenario { position: absolute; inset: 0; overflow: hidden; }
 .escenario::before { content: ''; position: absolute; inset: 0; background: url('/carpeta-a-usar-web/vintage/fachada.webp') center bottom / cover no-repeat; opacity: 0.8; -webkit-mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 75%, #000); mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 75%, #000); }
 .escenario__img, .escenario__video { position: absolute; left: 50%; bottom: 0; width: min(78vw, 1380px); height: auto; transform: translateX(-50%); object-fit: contain; }
@@ -154,7 +154,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 /* The 50 */
 /* Mobile: the 50 forms pinned, then the text sheet scrolls over it. Desktop overlays both (see min-width: 861px). */
 .cincuenta { position: relative; }
-.cincuenta__fijo { position: sticky; top: 0; height: 100dvh; overflow: hidden; }
+.cincuenta__fijo { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 .cincuenta__capa { position: relative; z-index: 2; margin-top: -10vh; padding: 40px 16px 64px; border-radius: 28px 28px 0 0; background: var(--papel); box-shadow: 0 -24px 40px -28px rgb(24 82 105 / 0.35); }
 #granos { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .cincuenta__respaldo { position: absolute; top: 8vh; left: 0; right: 0; text-align: center; font-size: min(40vh, 40vw); line-height: 1; font-weight: 800; color: var(--cafe); }
@@ -173,7 +173,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 @media (min-width: 861px) {
   .cincuenta { display: grid; height: 150vh; }
   .cincuenta__fijo, .cincuenta__capa { grid-area: 1 / 1; align-self: start; }
-  .cincuenta__capa { position: sticky; top: 0; height: 100dvh; margin: 0; display: grid; align-content: center; justify-items: start; padding: 0 max(48px, calc((100vw - 1400px) / 2 + 48px)); border-radius: 0; background: none; box-shadow: none; pointer-events: none; }
+  .cincuenta__capa { position: sticky; top: 0; height: 100svh; margin: 0; display: grid; align-content: center; justify-items: start; padding: 0 max(48px, calc((100vw - 1400px) / 2 + 48px)); border-radius: 0; background: none; box-shadow: none; pointer-events: none; }
   .cincuenta__texto { margin: 0; pointer-events: auto; }
   .cincuenta__respaldo { left: 50%; right: 0; top: 50%; translate: 0 -50%; font-size: min(50vh, 30vw); }
   .cincuenta__texto { max-width: min(540px, 44vw); justify-items: start; text-align: left; gap: 16px; }
@@ -306,7 +306,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 @media (prefers-reduced-motion: reduce) {
   .boton, .flecha, .hero-ticket, .cabecera__nav a::after { transition: none; }
   .apertura { height: auto; }
-  .apertura__fijo { position: relative; height: 100dvh; }
+  .apertura__fijo { position: relative; height: 100svh; }
   .cincuenta { height: auto; }
   .cincuenta__fijo { position: relative; height: 70vh; }
   .cincuenta__capa { margin-top: 0; }

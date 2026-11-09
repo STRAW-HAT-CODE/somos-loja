@@ -126,7 +126,9 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		cancelAnimationFrame(raf);
 		raf = requestAnimationFrame(() => ScrollTrigger.refresh());
 	};
-	addEventListener('resize', refreshGeometry, { passive: true });
+	// Mobile browsers fire resize when the address bar hides; only a width change needs new geometry.
+	let ancho = innerWidth;
+	addEventListener('resize', () => { if (innerWidth !== ancho) { ancho = innerWidth; refreshGeometry(); } }, { passive: true });
 	seccion.querySelectorAll('img').forEach((image) => {
 		if (!image.complete) image.addEventListener('load', refreshGeometry, { once: true });
 	});
