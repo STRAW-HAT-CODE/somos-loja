@@ -34,7 +34,7 @@ button, a { font: inherit; }
 
 /* Phase 1: video */
 .escena { position: fixed; inset: 0; overflow: hidden; background: var(--noche); }
-.escena__fondo { position: absolute; inset: -40px; background: url('recursos/alforjita-inicio.jpg') center / cover; filter: blur(28px) brightness(0.55); }
+.escena__fondo { position: absolute; inset: -40px; background: url('recursos/alforjita-inicio.webp') center / cover; filter: blur(28px) brightness(0.55); }
 .escena video, .escena__final { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 @media (orientation: portrait) { .escena video, .escena__final { object-fit: cover; } }
 .escena__final { opacity: 0; transition: opacity 300ms ease; }
@@ -170,8 +170,8 @@ html[data-fase="postal"] .postal { opacity: 1; }
 <body>
 <section class="escena" aria-label="Alforjita te trae una postal">
   <div class="escena__fondo" aria-hidden="true"></div>
-  <video id="video" src="recursos/alforjita.mp4" poster="recursos/alforjita-inicio.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
-  <img class="escena__final" src="recursos/alforjita-final.jpg" alt="" aria-hidden="true">
+  <video id="video" src="recursos/alforjita.mp4" poster="recursos/alforjita-inicio.webp" muted playsinline preload="auto" aria-hidden="true"></video>
+  <img class="escena__final" src="recursos/alforjita-final.webp" alt="" aria-hidden="true">
   <div class="titular" id="titular">
     <p class="titular__marca">Somos Loja</p>
     <h2>Te llegó una postal</h2>

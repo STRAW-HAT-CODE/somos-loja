@@ -125,7 +125,7 @@ test('main serves the same animation and preserves the illustrative inactive QR'
   }
   assert.match(publicHtml,/QR aún no activo/);
   assert.match(publicHtml,/loading="eager" fetchpriority="high"/);
-  assert.ok(existsSync(new URL('recursos/qr-puerta-loja-mvp.png',served)));
+  assert.ok(existsSync(new URL('recursos/qr-puerta-loja-mvp.webp',served)));
   const datos=readFileSync(new URL('../absent-apogee/src/data/somos-loja.ts',import.meta.url),'utf8');
   assert.match(datos,/postal: '\/evento\/postal\/index\.html'/);
 });
