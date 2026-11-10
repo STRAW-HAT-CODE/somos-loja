@@ -259,7 +259,9 @@ const cinta = [...productos, ...productos];
 		// The coffee ribbon draws itself through three alternating chapters.
 		gsap.utils.toArray<SVGPathElement>('.cinta path').forEach((p) => {
 			const largo = p.getTotalLength();
-			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top 60%', end: 'bottom 70%', scrub: true } });
+			// Mobile: the ribbon is already flowing when the chapters arrive (a visible lead-in, not a dot)
+				// and keeps drawing from the moment the section enters the screen.
+				gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo * (movil ? 0.84 : 1) }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: movil ? 'top bottom' : 'top 60%', end: movil ? 'bottom 85%' : 'bottom 70%', scrub: true } });
 		});
 		gsap.utils.toArray<HTMLElement>('.capitulo').forEach((c) => {
 			const dibujo = c.querySelector('.capitulo__img');
