@@ -51,7 +51,6 @@ const cinta = [...productos, ...productos];
 				</div>
 				<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
 				<h2 class="titular apertura__frase">En Loja, cada grano<br />tiene una historia</h2>
-				<a class="apertura__seguir" href="#proceso"><span aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg></span>Explora Loja</a>
 			</div>
 		</section>
 
@@ -163,6 +162,8 @@ const cinta = [...productos, ...productos];
 		</section>
 	</main>
 
+	<!-- Scroll cue: fixed at the bottom edge on every section; it always points to the next one. -->
+	<a class="apertura__seguir" href="#proceso"><span aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg></span>Explora Loja</a>
 	<WhatsappFlotante />
 
 	<footer class="pie">
@@ -332,6 +333,21 @@ const cinta = [...productos, ...productos];
 		new IntersectionObserver(([e]) => cabecera.classList.toggle('cabecera--oscura', e.isIntersecting), {
 			rootMargin: `0px 0px -${Math.max(0, innerHeight - 64)}px 0px`,
 		}).observe(tienda);
+	}
+
+	// The fixed "Explora Loja" cue always leads to the next section and leaves once the store is reached.
+	const seguir = document.querySelector<HTMLAnchorElement>('.apertura__seguir');
+	const paradas = ['#proceso', '#taza', '#evento', '#tienda'].map((id) => document.querySelector<HTMLElement>(id)).filter(Boolean) as HTMLElement[];
+	if (seguir && paradas.length) {
+		let pendiente = 0;
+		const apuntar = () => {
+			pendiente = 0;
+			const siguiente = paradas.find((p) => p.getBoundingClientRect().top > innerHeight * 0.35);
+			seguir.classList.toggle('apertura__seguir--fin', !siguiente);
+			if (siguiente) seguir.setAttribute('href', `#${siguiente.id}`);
+		};
+		addEventListener('scroll', () => { if (!pendiente) pendiente = requestAnimationFrame(apuntar); }, { passive: true });
+		apuntar();
 	}
 
 	// Header steps aside while reading down and returns on any upward scroll, so the logo never
