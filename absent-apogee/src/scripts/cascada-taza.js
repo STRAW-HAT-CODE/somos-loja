@@ -40,22 +40,49 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		sc: 0.72 + Math.random() * 0.55
 	}));
 
+	// Touch screens play the whole scene by time once it arrives: a single swipe must not leave it half built.
+	const porTiempo = typeof matchMedia === 'function'
+		&& matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+	const DURACION_TACTIL = 2.8;
+
 	let tl;
-	tl = gsap.timeline({
-		defaults: { ease: 'none', immediateRender: false },
-		scrollTrigger: {
-			trigger: seccion,
-			start: 'top 85%',
-			end: 'bottom bottom',
-			scrub: 0.55,
-			invalidateOnRefresh: true,
-			onRefreshInit: () => {
-				// Rewind before invalidation so later tweens cannot capture the final state.
-				tl?.time(0);
-				medir();
-			}
+	let avance;
+	let guardado = 0;
+	const reproducir = () => {
+		if (tl.progress() >= 1 || avance?.isActive()) return;
+		avance = tl.tweenTo(tl.duration(), { duration: DURACION_TACTIL * (1 - tl.progress()), ease: 'power1.inOut' });
+	};
+	const detener = () => {
+		// A killed tween reports itself active, so drop the reference too.
+		avance?.kill();
+		avance = null;
+	};
+	const reiniciar = () => {
+		detener();
+		tl.pause(0);
+	};
+	const activador = {
+		trigger: seccion,
+		start: 'top 85%',
+		end: 'bottom bottom',
+		invalidateOnRefresh: true,
+		onRefreshInit: () => {
+			guardado = tl?.progress() ?? 0;
+			detener();
+			// Rewind before invalidation so later tweens cannot capture the final state.
+			tl?.time(0);
+			medir();
 		}
-	});
+	};
+
+	if (porTiempo) {
+		tl = gsap.timeline({ defaults: { ease: 'none', immediateRender: false }, paused: true });
+	} else {
+		tl = gsap.timeline({
+			defaults: { ease: 'none', immediateRender: false },
+			scrollTrigger: { ...activador, scrub: 0.55 }
+		});
+	}
 
 	// Explicit baseline makes every refresh and reverse scroll deterministic.
 	tl.set('.cascada__grano-grande', { autoAlpha: 1, scale: 0.38, yPercent: -10, rotate: -12 }, 0);
@@ -120,6 +147,22 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	tl.fromTo('.cascada__texto',
 		{ autoAlpha: 0, y: 38 },
 		{ autoAlpha: 1, y: 0, duration: 0.14 }, 0.6);
+
+	if (porTiempo) {
+		ScrollTrigger.create({
+			...activador,
+			onEnter: reproducir,
+			onLeaveBack: reiniciar,
+			onRefresh: (self) => {
+				if (self.progress >= 1) guardado = 1;
+				// Without a scrubbing trigger nothing invalidates the timeline, so do it here; the nudge
+				// forces a render even when the playhead is already at the requested frame.
+				tl.invalidate().pause().progress(guardado > 0 ? 0 : 1e-4).progress(guardado);
+				if (guardado > 0 && guardado < 1) reproducir();
+				else if (guardado === 0 && self.isActive) reproducir();
+			}
+		});
+	}
 
 	let raf = 0;
 	const refreshGeometry = () => {
