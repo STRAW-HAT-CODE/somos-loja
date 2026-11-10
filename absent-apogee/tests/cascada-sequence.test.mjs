@@ -21,7 +21,7 @@ for (const [width, height] of [[360,640],[400,778],[430,932],[844,390],[1440,900
     globalThis.addEventListener=()=>{};
     let tl, config;
     const adapter = {
-      utils:{toArray:()=>grains},
+      utils:{toArray:s=>s==='.cascada__marca'?[]:grains},
       timeline(options) {
         config=options.scrollTrigger;
         tl=gsap.timeline({paused:true,defaults:options.defaults});

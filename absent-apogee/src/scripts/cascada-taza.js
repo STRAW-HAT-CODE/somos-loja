@@ -16,7 +16,12 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	}
 
 	const granos = gsap.utils.toArray('.cascada__granito');
+	const marcas = gsap.utils.toArray('.cascada__marca');
+	const texto = seccion.querySelector('.cascada__texto');
+	// Each logo bobs on its own beat once it has settled (CSS, independent of the timeline).
+	marcas.forEach((m, i) => m.style.setProperty('--retraso', `${-((i * 0.7) % 4.6).toFixed(2)}s`));
 	let geo = {};
+	let destinos = [];
 
 	function medir() {
 		// Use layout coordinates so refreshes ignore animated transforms.
@@ -27,8 +32,49 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 			crackY: escena.offsetHeight * 0.27,
 			rimY: wrap.offsetTop + taza.offsetTop + taza.offsetHeight * 0.225
 		};
+		geo.W = escena.offsetWidth;
+		medirMarcas(wrap);
+	}
+
+	// Final resting places: rows centred in the free band between the headline and the cup.
+	function medirMarcas(wrap) {
+		if (!marcas.length) return;
+		const arriba = texto ? texto.offsetTop + texto.offsetHeight + 18 : escena.offsetHeight * 0.4;
+		const abajo = wrap.offsetTop - 10;
+		const ancho = Math.min(geo.W * 0.94, 1100);
+		const gap = geo.W <= 760 ? 10 : 28;
+		const filas = [];
+		let fila = [];
+		let usado = 0;
+		marcas.forEach((m) => {
+			const w = m.offsetWidth;
+			if (fila.length && usado + gap + w > ancho) { filas.push({ fila, usado }); fila = []; usado = 0; }
+			usado += (fila.length ? gap : 0) + w;
+			fila.push(m);
+		});
+		if (fila.length) filas.push({ fila, usado });
+		const alto = Math.max(...marcas.map((m) => m.offsetHeight));
+		const banda = Math.max(alto, abajo - arriba);
+		// Never squeeze rows tighter than the logo height: overlapping badges read as clutter.
+		const paso = Math.max(alto + 6, Math.min(alto + 12, banda / filas.length));
+		const y0 = arriba + (banda - paso * filas.length) / 2;
+		destinos = [];
+		filas.forEach(({ fila: f, usado: u }, r) => {
+			let x = (geo.W - u) / 2;
+			f.forEach((m, c) => {
+				// A slight zigzag keeps the rows from reading as a rigid grid.
+				destinos[marcas.indexOf(m)] = { x, y: y0 + r * paso + (c % 2 ? 5 : -5), w: m.offsetWidth, h: m.offsetHeight };
+				x += m.offsetWidth + gap;
+			});
+		});
 	}
 	medir();
+
+	const chispas = marcas.map(() => ({
+		ang: Math.random() * Math.PI * 2,
+		rad: 0.22 + Math.random() * 0.2,
+		rot: (Math.random() - 0.5) * 40
+	}));
 
 	const semillas = granos.map(() => ({
 		x0: (Math.random() - 0.5) * 74,
@@ -90,6 +136,11 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	tl.set('.cascada__taza-granos', { opacity: 0 }, 0);
 	tl.set('.cascada__taza-cafe', { opacity: 0 }, 0);
 	tl.set('.cascada__texto', { autoAlpha: 0, y: 38 }, 0);
+	// Logos start shrunk inside the bean's crack point.
+	const enGrano = (i) => ({ x: geo.W / 2 - (destinos[i]?.w ?? 0) / 2, y: geo.crackY - (destinos[i]?.h ?? 0) / 2 });
+	marcas.forEach((m, i) => tl.set(m, {
+		opacity: 0, scale: 0.15, rotate: chispas[i].rot, x: () => enGrano(i).x, y: () => enGrano(i).y
+	}, 0));
 	granos.forEach((grano, i) => tl.set(grano, {
 		opacity: 0, scale: 0.35, x: semillas[i].x0, y: semillas[i].y0, rotate: semillas[i].rot0
 	}, 0));
@@ -137,6 +188,28 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 			}, start + half);
 
 		tl.to(grano, { scale: 0, opacity: 0, duration: 0.05 }, start + dur);
+	});
+
+	/* 3b. The bean bursts into the brands: they fly out of the crack, then settle between headline and cup. */
+	marcas.forEach((m, i) => {
+		const ch = chispas[i];
+		const inicio = 0.165 + i * (0.06 / Math.max(1, marcas.length));
+		tl.to(m, {
+			opacity: 1,
+			scale: 0.85,
+			x: () => enGrano(i).x + Math.cos(ch.ang) * ch.rad * geo.W * 0.6,
+			y: () => enGrano(i).y + Math.sin(ch.ang) * ch.rad * escena.offsetHeight * 0.5,
+			duration: 0.12,
+			ease: 'power3.out'
+		}, inicio);
+		tl.to(m, {
+			scale: 1,
+			rotate: 0,
+			x: () => destinos[i]?.x ?? 0,
+			y: () => destinos[i]?.y ?? 0,
+			duration: 0.24,
+			ease: 'power2.inOut'
+		}, 0.35 + i * (0.08 / Math.max(1, marcas.length)));
 	});
 
 	/* 4. The gathered beans resolve into the filled cup, then brewed coffee. */

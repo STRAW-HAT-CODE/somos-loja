@@ -37,7 +37,7 @@ Tablet en la tienda ──QR──▶ Postal de Alforjita ──▶ Código + "C
 4. **Evento**: el "50" formado con granos, fechas y lugar, y el enlace a la postal.
 5. **Tienda**: dirección, teléfono, redes, mapa y recorrido en video.
 6. **Productos**: carrusel con 16 productos.
-7. **Marcas**: cinta infinita con 14 logos de marcas aliadas.
+7. **Marcas**: los 14 logos de marcas aliadas salen del grano en la cascada y flotan sobre la taza.
 
 <img src="manual/03-cascada-cafe.webp" alt="Cascada del café" width="300">
 

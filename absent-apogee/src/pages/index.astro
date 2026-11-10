@@ -4,9 +4,8 @@ import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
 import Redes from '../components/Redes.astro';
 import Cascada from '../components/Cascada.astro';
-import CintaMarcas from '../components/CintaMarcas.astro';
 import WhatsappFlotante from '../components/WhatsappFlotante.astro';
-import { capitulos, cifras, enlaces, evento, ilustraciones, letrero, logo, pendiente, recorrido, productos, sello } from '../data/somos-loja';
+import { capitulos, cifras, enlaces, evento, whatsapp, ilustraciones, letrero, logo, pendiente, recorrido, productos, sello } from '../data/somos-loja';
 const cinta = [...productos, ...productos];
 ---
 <Layout>
@@ -79,7 +78,6 @@ const cinta = [...productos, ...productos];
 		</section>
 
 		<Cascada />
-		<CintaMarcas />
 
 		<section id="evento" class="cincuenta">
 			<div class="cincuenta__fijo">
@@ -88,8 +86,8 @@ const cinta = [...productos, ...productos];
 			</div>
 			<div class="cincuenta__capa">
 				<div class="cincuenta__texto">
-					<h2 class="titular"><span class="sr-only">Unas 50 </span>marcas y fincas de café</h2>
-					<p class="cuerpo">Te invitamos a Loja 100 % Café Especial: un campeonato interno elige el top 10 de especialidad. Son 10 días de filtrados, V60 y concurso de chuspas.</p>
+					<h2 class="titular">Más de 50 marcas de café, un solo parque</h2>
+					<p class="cuerpo">Diez días para probar el café de Loja: filtrados, V60 y concurso de chuspas. Las marcas compiten y eligen su top 10 de especialidad.</p>
 					<div class="cincuenta__ficha">
 						<img class="cincuenta__sello" src={sello} alt="Sello 100 % Café Especial, Somos Loja Coopser, tercera edición" width="640" height="610" loading="lazy" decoding="async" />
 						<dl>
@@ -101,6 +99,7 @@ const cinta = [...productos, ...productos];
 					<div class="cincuenta__acciones">
 						<a class="boton boton--tinta" href={evento.postal}>Abrir la invitación<Flecha /></a>
 						<a class="boton boton--linea" href={evento.mapa} target="_blank" rel="noopener">Cómo llegar al parque</a>
+						<a class="enlace-wa" href={whatsapp.evento} target="_blank" rel="noopener">Pregúntanos por el evento</a>
 					</div>
 				</div>
 			</div>
@@ -125,6 +124,7 @@ const cinta = [...productos, ...productos];
 					<div class="tienda__acciones">
 						<a class="boton boton--ocre" href={enlaces.mapa} target="_blank" rel="noopener">Cómo llegar a la tienda<Flecha /></a>
 						<Redes />
+						<a class="enlace-wa enlace-wa--claro" href={whatsapp.tienda} target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
 					</div>
 				</div>
 				<figure class="mapa" data-vista="mapa">
@@ -167,7 +167,9 @@ const cinta = [...productos, ...productos];
 
 	<footer class="pie">
 		<img src={logo} alt="Somos Loja Tienda" width="56" height="56" loading="lazy" />
+		<p class="pie__invitacion">Te esperamos a pasos de la Catedral.</p>
 		<p>Somos Loja, Coopser. Productos de emprendedores y productores locales.</p>
+		<p class="pie__contacto"><a href={`tel:${enlaces.telefono}`}>{enlaces.telefonoVisible}</a> · <a href={whatsapp.general} target="_blank" rel="noopener">WhatsApp</a> · <a href={enlaces.mapa} target="_blank" rel="noopener">Cómo llegar</a></p>
 		<p class="pie__credito">© 2026 · Desarrollado por <a href="https://strawhatcode.com" target="_blank" rel="noopener">Straw Hat Code <span aria-hidden="true">👒</span></a></p>
 	</footer>
 </Layout>
@@ -226,8 +228,23 @@ const cinta = [...productos, ...productos];
 			new IntersectionObserver(([e]) => { if (e.isIntersecting) video.play().catch(() => {}); else video.pause(); }).observe(video);
 		}
 
-		// Scroll: the square gives way to one large bean.
-		gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.apertura', start: 'top top', end: 'bottom bottom', scrub: true } })
+		// Scroll: the square gives way to one large bean. A small scroll plays the whole fall by
+		// time, so the bean never hangs halfway over the cathedral; scrolling back to the top rewinds it.
+		const caida = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
+		let caidaTween: gsap.core.Tween | null = null;
+		const caidaHacia = (fin: number, segundos: number) => {
+			caidaTween?.kill();
+			const resto = Math.abs(fin - caida.progress());
+			if (resto < 0.001) return;
+			caidaTween = caida.tweenTo(fin * caida.duration(), { duration: segundos * resto, ease: 'power2.inOut' });
+		};
+		ScrollTrigger.create({
+			trigger: '.apertura', start: 'top -2%', end: 'bottom bottom',
+			onEnter: () => caidaHacia(1, 1.6),
+			onLeaveBack: () => caidaHacia(0, 1),
+			onRefresh: (self) => { if (self.scroll() > self.start) { caidaTween?.kill(); caida.progress(1); } }
+		});
+		caida
 			.to('.titulo', { y: -90, autoAlpha: 0, duration: 0.18 }, 0.7)
 			.to('.apertura__seguir', { autoAlpha: 0, duration: 0.15 }, 0)
 			.to('.apertura__rama', { x: -120, y: -120, autoAlpha: 0, duration: 0.2 }, 0.7)

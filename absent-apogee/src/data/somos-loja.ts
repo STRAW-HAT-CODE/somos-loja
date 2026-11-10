@@ -44,6 +44,8 @@ export const marcas: { nombre: string; src: string }[] = [
 
 export const whatsapp = {
   general: wa('Hola Somos Loja, vengo de la página web y quiero más información.'),
+  evento: wa('Hola Somos Loja, vi la página web y quiero saber más del evento Loja 100 % Café Especial.'),
+  tienda: wa('Hola Somos Loja, vi la página web y quiero preguntar por los productos de la tienda.'),
 };
 
 // Loja 100 % Café Especial, third edition: the event the home page invites to.

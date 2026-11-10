@@ -22,7 +22,7 @@ test('on touch screens the cascade plays to its final frame on its own and repla
   let proxy, real, timelineOptions, trigger;
   const playback = () => gsap.getTweensOf(real).at(-1);
   const adapter = {
-    utils:{toArray:()=>grains},
+    utils:{toArray:s=>s==='.cascada__marca'?[]:grains},
     timeline(options) {
       timelineOptions = options;
       const tl = real = gsap.timeline({paused:true,defaults:options.defaults});
