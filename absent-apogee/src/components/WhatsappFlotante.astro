@@ -1,0 +1,43 @@
+---
+// Floating WhatsApp button, always reachable on every screen size.
+import { whatsapp } from '../data/somos-loja';
+---
+
+<a class="wa-flotante" href={whatsapp.general} target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+	<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+		<path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.4-1.48-.88-.79-1.48-1.76-1.66-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.3 1.27.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35ZM12.05 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.72.97 1-3.62-.24-.37a9.8 9.8 0 0 1-1.5-5.22c0-5.42 4.41-9.83 9.84-9.83 2.63 0 5.1 1.03 6.95 2.88a9.77 9.77 0 0 1 2.88 6.96c0 5.42-4.41 9.82-9.84 9.82Zm8.37-18.2A11.76 11.76 0 0 0 12.05.13C5.5.13.17 5.46.17 12.01c0 2.1.55 4.14 1.59 5.94L.07 24.1l6.3-1.65a11.85 11.85 0 0 0 5.67 1.44h.01c6.55 0 11.88-5.33 11.88-11.88 0-3.17-1.24-6.16-3.48-8.4Z" />
+	</svg>
+</a>
+
+<style>
+	.wa-flotante {
+		position: fixed;
+		right: max(16px, env(safe-area-inset-right));
+		bottom: max(16px, env(safe-area-inset-bottom));
+		z-index: 60;
+		display: grid;
+		place-items: center;
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		background: #25d366;
+		color: #fff;
+		box-shadow: 0 8px 22px rgb(0 0 0 / 0.25);
+		transition: transform 200ms ease, box-shadow 200ms ease;
+	}
+
+	.wa-flotante svg {
+		width: 30px;
+		height: 30px;
+	}
+
+	.wa-flotante:hover {
+		transform: translateY(-2px) scale(1.04);
+		box-shadow: 0 12px 28px rgb(0 0 0 / 0.3);
+	}
+
+	.wa-flotante:focus-visible {
+		outline: 3px solid #fff;
+		outline-offset: 3px;
+	}
+</style>

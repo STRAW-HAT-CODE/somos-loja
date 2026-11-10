@@ -4,6 +4,8 @@ import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
 import Redes from '../components/Redes.astro';
 import Cascada from '../components/Cascada.astro';
+import CintaMarcas from '../components/CintaMarcas.astro';
+import WhatsappFlotante from '../components/WhatsappFlotante.astro';
 import { capitulos, cifras, enlaces, evento, ilustraciones, letrero, logo, pendiente, recorrido, productos, sello } from '../data/somos-loja';
 const cinta = [...productos, ...productos];
 ---
@@ -157,8 +159,11 @@ const cinta = [...productos, ...productos];
 					))}
 				</ul>
 			</div>
+			<CintaMarcas />
 		</section>
 	</main>
+
+	<WhatsappFlotante />
 
 	<footer class="pie">
 		<img src={logo} alt="Somos Loja Tienda" width="56" height="56" loading="lazy" />

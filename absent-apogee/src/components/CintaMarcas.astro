@@ -1,0 +1,105 @@
+---
+// Infinite logo strip of partner brands. Pure CSS loop: the list is rendered
+// twice and the track shifts by half its width; it pauses on hover/focus and
+// stops (wrapping instead) under prefers-reduced-motion.
+import { marcas } from '../data/somos-loja';
+
+const pista = [...marcas, ...marcas];
+---
+
+{marcas.length > 0 && (
+	<div class="marcas" aria-label="Marcas y productores en la tienda">
+		<p class="marcas__titulo">Marcas que encuentras en Somos Loja</p>
+		<div class="marcas__ventana">
+			<ul class="marcas__pista" style={`--marcas-duracion: ${Math.max(20, marcas.length * 3.5)}s`}>
+				{pista.map((m, i) => (
+					<li class="marcas__item" aria-hidden={i >= marcas.length ? 'true' : undefined}>
+						<img src={m.src} alt={i >= marcas.length ? '' : m.nombre} height="80" loading="lazy" decoding="async" />
+					</li>
+				))}
+			</ul>
+		</div>
+	</div>
+)}
+
+<style>
+	.marcas {
+		margin-top: clamp(40px, 6vw, 72px);
+	}
+
+	.marcas__titulo {
+		margin: 0 0 18px;
+		text-align: center;
+		font-size: 0.85rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		opacity: 0.75;
+	}
+
+	.marcas__ventana {
+		overflow: hidden;
+		mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+	}
+
+	.marcas__pista {
+		display: flex;
+		width: max-content;
+		margin: 0;
+		padding: 8px 0;
+		list-style: none;
+		animation: marcas-correr var(--marcas-duracion, 40s) linear infinite;
+	}
+
+	.marcas:hover .marcas__pista,
+	.marcas:focus-within .marcas__pista {
+		animation-play-state: paused;
+	}
+
+	.marcas__item {
+		display: grid;
+		place-items: center;
+		box-sizing: border-box;
+		width: clamp(120px, 30vw, 168px);
+		height: clamp(84px, 20vw, 112px);
+		padding: 12px 16px;
+		border-radius: 18px;
+		/* Cream tile: dark and light logos both stay legible on the petrol band. */
+		background: #f6eedf;
+		/* Spacing as a trailing margin (not flex gap) so -50% lands exactly on the copy. */
+		margin-right: clamp(14px, 3vw, 24px);
+		transition: transform 200ms ease;
+	}
+
+	.marcas__item img {
+		display: block;
+		max-width: 100%;
+		max-height: 100%;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+		border-radius: 6px;
+	}
+
+	.marcas__item:hover {
+		transform: translateY(-3px);
+	}
+
+	@keyframes marcas-correr {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.marcas__pista {
+			animation: none;
+			flex-wrap: wrap;
+			justify-content: center;
+			width: auto;
+		}
+
+		.marcas__item[aria-hidden='true'] {
+			display: none;
+		}
+	}
+</style>

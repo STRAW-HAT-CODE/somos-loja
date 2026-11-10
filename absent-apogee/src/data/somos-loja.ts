@@ -8,8 +8,9 @@ export const pendiente = {
   // Google Maps pin (2Q3X+GC Loja), on Eguiguren facing Parque Central; manual mockup: "José A. Eguiguren y Bernardo Valdivieso".
   direccion: 'José Antonio Eguiguren y Bernardo Valdivieso, frente al Parque Central' as string | null,
   horario: null as string | null,
-  facebook: null as string | null,
-  tiktok: null as string | null,
+  // Confirmed in ENLACES-REDES-SOCIALES.md (store social links page).
+  facebook: 'https://www.facebook.com/share/1E2P1Ln8Uq/' as string | null,
+  tiktok: 'https://www.tiktok.com/@tiendasomosloja' as string | null,
 };
 
 export const enlaces = {
@@ -18,6 +19,31 @@ export const enlaces = {
   mapa: 'https://www.google.com/maps/search/?api=1&query=TIENDA+SOMOS+LOJA+2Q3X%2BGC+Loja',
   telefono: '+593962947777',
   telefonoVisible: '096 294 7777',
+};
+
+// WhatsApp deep links with a pre-filled message.
+const wa = (texto: string) => `https://wa.me/${enlaces.telefono.replace(/\D/g, '')}?text=${encodeURIComponent(texto)}`;
+// Partner brand logos for the infinite strip (public/carpeta-a-usar-web/marcas).
+const m = `${base}/marcas`;
+export const marcas: { nombre: string; src: string }[] = [
+  ['Café Abraham', 'cafe-abraham'],
+  ['Tierras del Sur', 'tierras-del-sur'],
+  ['Sapikuna Café', 'sapikuna'],
+  ['Yaraz’s', 'yarazs'],
+  ['Café del Abuelo', 'cafe-del-abuelo'],
+  ['Café El Viajero', 'cafe-el-viajero'],
+  ['Café Juan Antonio', 'cafe-juan-antonio'],
+  ['Café Yunguilla Cariamanga', 'cafe-yunguilla-cariamanga'],
+  ['Granadillo Coffee', 'granadillo-coffee'],
+  ['Guambona Coffee Estate', 'guambona-coffee-estate'],
+  ['Lojanías', 'lojanias'],
+  ['Los Ceibos', 'los-ceibos'],
+  ['Lojanísimos', 'productos-mn-lojanisimos'],
+  ['Vida Campestre', 'vida-campestre'],
+].map(([nombre, slug]) => ({ nombre, src: `${m}/${slug}.webp` }));
+
+export const whatsapp = {
+  general: wa('Hola Somos Loja, vengo de la página web y quiero más información.'),
 };
 
 // Loja 100 % Café Especial, third edition: the event the home page invites to.
