@@ -68,6 +68,8 @@ section[id] { scroll-margin-top: 0; }
 .saltar:focus { transform: none; }
 .cabecera { position: fixed; inset: 0 0 auto; z-index: 80; display: grid; grid-template-columns: 140px 1fr 230px; align-items: start; gap: 24px; padding: 22px clamp(24px, 4vw, 72px) 30px; background: linear-gradient(var(--papel), rgb(246 238 221 / 0.94) 72%, transparent); }
 /* Over the petrol store the cream fade would leave a light band: the header turns petrol. */
+.cabecera { transition: translate 320ms var(--curva), background 200ms var(--curva); }
+.cabecera--oculta { translate: 0 -110%; }
 .cabecera--oscura { background: linear-gradient(var(--tinta), rgb(24 82 105 / 0.94) 72%, transparent); }
 .cabecera--oscura .cabecera__logo { border-radius: 12px; background: var(--papel); box-shadow: 0 0 0 4px var(--papel); }
 .cabecera--oscura .cabecera__nav a, .cabecera--oscura .cabecera__lugar svg { color: var(--papel); }
@@ -342,3 +344,8 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 .pie__contacto a { color: var(--tinta); font-weight: 600; text-decoration: underline; text-decoration-color: var(--durazno); text-underline-offset: 4px; }
 /* Keep the floating WhatsApp button clear of the footer credit. */
 .pie { padding-bottom: 96px; }
+
+/* Mobile: the 50 starts forming right under the cup as the cascade scene leaves. */
+@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+  .cincuenta { margin-top: -24svh; }
+}

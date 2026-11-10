@@ -334,6 +334,18 @@ const cinta = [...productos, ...productos];
 		}).observe(tienda);
 	}
 
+	// Header steps aside while reading down and returns on any upward scroll, so the logo never
+	// sits on top of the scenes below the hero.
+	if (cabecera) {
+		let ultimo = scrollY;
+		addEventListener('scroll', () => {
+			const y = scrollY;
+			if (Math.abs(y - ultimo) < 6) return;
+			cabecera.classList.toggle('cabecera--oculta', y > ultimo && y > innerHeight * 0.6 && !cabecera.contains(document.activeElement));
+			ultimo = y;
+		}, { passive: true });
+	}
+
 	// Store location: map and walk clip take turns (src/scripts/mapa-rotacion.js).
 	const marco = document.querySelector<HTMLElement>('.mapa');
 	if (marco) iniciarMapa(marco, { reducir, ahorro });

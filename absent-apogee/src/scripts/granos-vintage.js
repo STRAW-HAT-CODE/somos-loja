@@ -112,7 +112,8 @@ export async function iniciarGranos(canvas, seccion, progreso) {
     uniforms.uAncho.value = m ? ancho * 0.92 : Math.min(ancho * 0.4, 5.6);
     uniforms.uTam.value = 0.09 * (uniforms.uAncho.value / 5) * (m ? 1.35 : 1.1);
     // Desktop: the 50 sits in the right half, leaving the left column for the event details.
-    uniforms.uCentro.value.set(m ? 0 : ancho * 0.24, m ? alto * 0.07 : 0);
+    // Mobile: high in the frame, so it forms right under the cup that is leaving above.
+    uniforms.uCentro.value.set(m ? 0 : ancho * 0.24, m ? alto * 0.18 : 0);
   }
   medir();
   addEventListener('resize', medir);

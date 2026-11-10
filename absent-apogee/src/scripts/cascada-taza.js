@@ -71,16 +71,20 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		const ancho = Math.min(geo.W - 32, 1100);
 		const maxCols = Math.max(1, Math.floor((ancho + gapX) / (celdaW + gapX)));
 		// Same number of logos per row (the last row differs by at most one), never one orphan.
+		// Rows differ by at most one logo (14 on four columns: 4, 4, 3, 3), never a lonely pair.
 		const filas = Math.ceil(marcas.length / maxCols);
-		const cols = Math.ceil(marcas.length / filas);
+		const base = Math.floor(marcas.length / filas);
+		const extra = marcas.length % filas;
+		const tam = Array.from({ length: filas }, (_, r) => base + (r < extra ? 1 : 0));
 		const altoTotal = filas * celdaH + (filas - 1) * gapY;
 		const y0 = arriba + Math.max(0, (abajo - arriba - altoTotal) / 2);
-		destinos = marcas.map((m, i) => {
-			const r = Math.floor(i / cols);
-			const enFila = Math.min(cols, marcas.length - r * cols);
-			const c = i - r * cols;
+		destinos = [];
+		let i = 0;
+		tam.forEach((enFila, r) => {
 			const x0 = (geo.W - (enFila * celdaW + (enFila - 1) * gapX)) / 2;
-			return { x: x0 + c * (celdaW + gapX), y: y0 + r * (celdaH + gapY), w: celdaW, h: celdaH };
+			for (let c = 0; c < enFila; c++, i++) {
+				destinos[i] = { x: x0 + c * (celdaW + gapX), y: y0 + r * (celdaH + gapY), w: celdaW, h: celdaH };
+			}
 		});
 	}
 	medir();
