@@ -121,4 +121,12 @@ export const productos = [
   { src: `${g}/taza-pintada.webp`, titulo: 'Taza pintada', alt: 'Taza con plato pintados a mano' },
   { src: `${g}/cafe-yarazs.webp`, titulo: 'Yaraz’s', alt: 'Bolsa dorada de café Yaraz’s' },
   { src: `${g}/cuadro-loja.webp`, titulo: 'Cuadro de Loja', alt: 'Cuadro de Loja pintado a mano' },
+  { src: `${g}/donrey-geisha-presidencial.webp`, titulo: 'Don Rey', alt: 'Café Geisha Presidencial Don Rey, ganador del concurso Loja' },
+  { src: `${g}/sapikuna-raices-gourmet.webp`, titulo: 'Sapikuna', alt: 'Café Sapikuna Raíces con planta de café y prensa' },
+  { src: `${g}/granadillo-bolsas.webp`, titulo: 'Granadillo', alt: 'Dos bolsas negras de café Granadillo de Loja' },
+  { src: `${g}/lojanias-bolsa-taza.webp`, titulo: 'Lojanías', alt: 'Bolsa de café Lojanías junto a una taza de café negro' },
+  { src: `${g}/cafe-del-abuelo-bolsas.webp`, titulo: 'Café del Abuelo', alt: 'Bolsas de Café del Abuelo, microlote de Olmedo' },
+  { src: `${g}/cafe-el-viajero-bolsa.webp`, titulo: 'Café El Viajero', alt: 'Bolsa dorada de Café El Viajero' },
+  { src: `${g}/cafe-yunguilla-cariamanga-latte.webp`, titulo: 'Café Yunguilla', alt: 'Café Yunguilla de Cariamanga con un latte y granos' },
+  { src: `${g}/vallicoffee-bolsas.webp`, titulo: 'Vallicoffee', alt: 'Bolsas de Vallicoffee con paisaje de montaña' },
 ];
