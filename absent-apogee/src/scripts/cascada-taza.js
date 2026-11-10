@@ -36,15 +36,38 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		medirMarcas(wrap);
 	}
 
-	// Final resting places: a balanced grid of equal cells, centred between the headline and the cup.
+	// Final resting places. Wide screens: two honeycomb wings framing the cup, so nothing crowds
+	// the headline or the rim. Narrow screens: a balanced grid in the free band above the cup.
 	function medirMarcas(wrap) {
 		if (!marcas.length) return;
-		const arriba = texto ? texto.offsetTop + texto.offsetHeight + 16 : escena.offsetHeight * 0.4;
-		const abajo = wrap.offsetTop - 8;
+		const arriba = texto ? texto.offsetTop + texto.offsetHeight + 24 : escena.offsetHeight * 0.4;
 		const celdaW = marcas[0].offsetWidth;
 		const celdaH = marcas[0].offsetHeight;
-		const gapX = geo.W <= 760 ? 8 : 20;
-		const gapY = geo.W <= 760 ? 8 : 14;
+		const cupL = wrap.offsetLeft;
+		const cupR = cupL + wrap.offsetWidth;
+		const cupBottom = wrap.offsetTop + wrap.offsetHeight;
+		const hueco = Math.max(28, celdaW * 0.3);
+		const lado = cupL;
+		if (lado >= 2 * celdaW + hueco * 2 + 24) {
+			const mitad = Math.ceil(marcas.length / 2);
+			const disponible = cupBottom - arriba;
+			const filas = Math.ceil(mitad / 2);
+			const paso = Math.min(celdaH * 2.1, (disponible - celdaH) / Math.max(1, filas - 0.5));
+			const y0 = arriba + Math.max(0, (disponible - (paso * (filas - 0.5) + celdaH)) / 2);
+			destinos = marcas.map((m, i) => {
+				const derecha = i >= mitad;
+				const k = derecha ? i - mitad : i;
+				const exterior = k % 2 === 1;
+				const fila = Math.floor(k / 2) + (exterior ? 0.5 : 0);
+				const desde = hueco + (exterior ? celdaW + hueco * 0.6 : 0);
+				const x = derecha ? cupR + desde : cupL - desde - celdaW;
+				return { x, y: y0 + fila * paso, w: celdaW, h: celdaH };
+			});
+			return;
+		}
+		const abajo = wrap.offsetTop + wrap.offsetHeight * 0.18;
+		const gapX = geo.W <= 760 ? 10 : 20;
+		const gapY = geo.W <= 760 ? 14 : 18;
 		const ancho = Math.min(geo.W - 32, 1100);
 		const maxCols = Math.max(1, Math.floor((ancho + gapX) / (celdaW + gapX)));
 		// Same number of logos per row (the last row differs by at most one), never one orphan.
