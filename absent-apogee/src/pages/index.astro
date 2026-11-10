@@ -266,13 +266,13 @@ const cinta = [...productos, ...productos];
 		gsap.utils.toArray<HTMLElement>('.capitulo').forEach((c) => {
 			const dibujo = c.querySelector('.capitulo__img');
 			if (dibujo) gsap.from(dibujo, { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
-			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: movil ? 'top 88%' : 'top 68%' } });
+			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: movil ? 'top 88%' : 'top 85%' } });
 			// "Del dibujo a la foto": the real print develops from the paper while scrolling.
 			// Mobile: the print develops by itself as soon as the chapter peeks in, so the visitor never
 				// scrolls through an empty frame waiting for a scrubbed reveal.
 				const revelado = gsap.timeline(movil
 					? { scrollTrigger: { trigger: c, start: 'top 92%', toggleActions: 'play none none reverse' }, defaults: { duration: 0.8 } }
-					: { scrollTrigger: { trigger: c, start: 'top 65%', end: 'center 50%', scrub: 0.6 } });
+					: { scrollTrigger: { trigger: c, start: 'top 95%', end: 'top 30%', scrub: 0.6 } });
 			c.querySelectorAll('.capitulo__foto').forEach((foto, k) => {
 				revelado.fromTo(foto, { clipPath: 'inset(100% 0% 0% 0%)', y: 64, scale: 1.05 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, scale: 1, ease: movil ? 'power3.out' : 'none', duration: movil ? 0.9 : 1 }, k * (movil ? 0.25 : 0.4));
 			});
