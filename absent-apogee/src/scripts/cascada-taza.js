@@ -18,8 +18,8 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	const granos = gsap.utils.toArray('.cascada__granito');
 	const marcas = gsap.utils.toArray('.cascada__marca');
 	const texto = seccion.querySelector('.cascada__texto');
-	// Each logo bobs on its own beat once it has settled (CSS, independent of the timeline).
-	marcas.forEach((m, i) => m.style.setProperty('--retraso', `${-((i * 0.7) % 4.6).toFixed(2)}s`));
+	// A slow left-to-right wave: the logos bob in sequence once they have settled (CSS).
+	marcas.forEach((m, i) => m.style.setProperty('--retraso', `${(-i * 0.33).toFixed(2)}s`));
 	let geo = {};
 	let destinos = [];
 
@@ -36,36 +36,28 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		medirMarcas(wrap);
 	}
 
-	// Final resting places: rows centred in the free band between the headline and the cup.
+	// Final resting places: a balanced grid of equal cells, centred between the headline and the cup.
 	function medirMarcas(wrap) {
 		if (!marcas.length) return;
-		const arriba = texto ? texto.offsetTop + texto.offsetHeight + 18 : escena.offsetHeight * 0.4;
-		const abajo = wrap.offsetTop - 10;
-		const ancho = Math.min(geo.W * 0.94, 1100);
-		const gap = geo.W <= 760 ? 10 : 28;
-		const filas = [];
-		let fila = [];
-		let usado = 0;
-		marcas.forEach((m) => {
-			const w = m.offsetWidth;
-			if (fila.length && usado + gap + w > ancho) { filas.push({ fila, usado }); fila = []; usado = 0; }
-			usado += (fila.length ? gap : 0) + w;
-			fila.push(m);
-		});
-		if (fila.length) filas.push({ fila, usado });
-		const alto = Math.max(...marcas.map((m) => m.offsetHeight));
-		const banda = Math.max(alto, abajo - arriba);
-		// Never squeeze rows tighter than the logo height: overlapping badges read as clutter.
-		const paso = Math.max(alto + 6, Math.min(alto + 12, banda / filas.length));
-		const y0 = arriba + (banda - paso * filas.length) / 2;
-		destinos = [];
-		filas.forEach(({ fila: f, usado: u }, r) => {
-			let x = (geo.W - u) / 2;
-			f.forEach((m, c) => {
-				// A slight zigzag keeps the rows from reading as a rigid grid.
-				destinos[marcas.indexOf(m)] = { x, y: y0 + r * paso + (c % 2 ? 5 : -5), w: m.offsetWidth, h: m.offsetHeight };
-				x += m.offsetWidth + gap;
-			});
+		const arriba = texto ? texto.offsetTop + texto.offsetHeight + 16 : escena.offsetHeight * 0.4;
+		const abajo = wrap.offsetTop - 8;
+		const celdaW = marcas[0].offsetWidth;
+		const celdaH = marcas[0].offsetHeight;
+		const gapX = geo.W <= 760 ? 8 : 20;
+		const gapY = geo.W <= 760 ? 8 : 14;
+		const ancho = Math.min(geo.W - 32, 1100);
+		const maxCols = Math.max(1, Math.floor((ancho + gapX) / (celdaW + gapX)));
+		// Same number of logos per row (the last row differs by at most one), never one orphan.
+		const filas = Math.ceil(marcas.length / maxCols);
+		const cols = Math.ceil(marcas.length / filas);
+		const altoTotal = filas * celdaH + (filas - 1) * gapY;
+		const y0 = arriba + Math.max(0, (abajo - arriba - altoTotal) / 2);
+		destinos = marcas.map((m, i) => {
+			const r = Math.floor(i / cols);
+			const enFila = Math.min(cols, marcas.length - r * cols);
+			const c = i - r * cols;
+			const x0 = (geo.W - (enFila * celdaW + (enFila - 1) * gapX)) / 2;
+			return { x: x0 + c * (celdaW + gapX), y: y0 + r * (celdaH + gapY), w: celdaW, h: celdaH };
 		});
 	}
 	medir();

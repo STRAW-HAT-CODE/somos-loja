@@ -135,11 +135,17 @@ import { marcas } from '../data/somos-loja';
 		pointer-events: none;
 	}
 
+	/* Every logo sits in the same cell so mixed badges and wordmarks line up on one grid. */
+	.cascada__marca {
+		display: block;
+		width: var(--celda-w, 112px);
+		height: var(--celda-h, 56px);
+	}
+
 	.cascada__marca img {
 		display: block;
-		height: clamp(30px, 5.2vh, 54px);
-		width: auto;
-		max-width: clamp(80px, 11vw, 150px);
+		width: var(--celda-w, 112px);
+		height: var(--celda-h, 56px);
 		object-fit: contain;
 		filter: drop-shadow(0 5px 7px rgb(90 51 28 / 0.18));
 		animation: marca-flotar 4.6s ease-in-out var(--retraso, 0s) infinite;
@@ -147,7 +153,7 @@ import { marcas } from '../data/somos-loja';
 
 	@keyframes marca-flotar {
 		0%, 100% { transform: translateY(0); }
-		50% { transform: translateY(-6px); }
+		50% { transform: translateY(-4px); }
 	}
 
 	/* Animated mode: the script places every logo; they start hidden inside the bean. */
@@ -211,7 +217,7 @@ import { marcas } from '../data/somos-loja';
 	}
 
 	@media (max-width: 760px) {
-		.cascada__marca img { height: 28px; max-width: 64px; }
+		.cascada__marca { --celda-w: 58px; --celda-h: 34px; }
 
 		.cascada--animada {
 			height: 200vh;
