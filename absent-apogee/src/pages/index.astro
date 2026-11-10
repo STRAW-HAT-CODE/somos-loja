@@ -79,6 +79,7 @@ const cinta = [...productos, ...productos];
 		</section>
 
 		<Cascada />
+		<CintaMarcas />
 
 		<section id="evento" class="cincuenta">
 			<div class="cincuenta__fijo">
@@ -153,13 +154,12 @@ const cinta = [...productos, ...productos];
 				<ul class="carrusel__pista">
 					{cinta.map((p, i) => (
 						<li class="producto" aria-hidden={i >= productos.length ? 'true' : undefined}>
-							<img src={p.src} srcset={`${p.src.replace('.webp', '-400.webp')} 400w, ${p.src} 800w`} sizes="200px" alt={i >= productos.length ? '' : p.alt} width="800" height="1067" loading="lazy" decoding="async" />
+							<img src={p.src} srcset={`${p.src.replace('.webp', '-400.webp')} 400w, ${p.src} 800w`} sizes="200px" alt={i >= productos.length ? '' : p.alt} width="800" height="1067" loading="eager" fetchpriority="low" decoding="async" />
 							<h3>{p.titulo}</h3>
 						</li>
 					))}
 				</ul>
 			</div>
-			<CintaMarcas />
 		</section>
 	</main>
 
