@@ -274,7 +274,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .hero-ticket__regla { margin: 2px 0; }
   .apertura { --seguir-bajo: 10px; }
   .cuerpo { font-size: 1rem; line-height: 1.5rem; }
-  .proceso { padding: 24px 16px 20px; gap: 40px; }
+  .proceso { padding: 8px 16px 20px; gap: 40px; }
   .capitulo, .capitulo--der { grid-template-columns: 1fr; gap: 8px; }
   .capitulo--der .capitulo__marco { order: 0; }
   .capitulo__texto { padding: 16px; }
@@ -319,6 +319,8 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   /* Phones: the stage is as tall as the screen with the address bar hidden, so hiding the bar
      never opens a gap under the cathedral; the scroll cue stays clear of the bar when it shows. */
   .apertura__fijo { height: 100lvh; }
+  /* The fall plays by time, so a short pin lets the first chapter arrive right after it. */
+  .apertura { height: 125lvh; }
   .apertura { --seguir-bajo: calc(100lvh - 100svh + max(18px, env(safe-area-inset-bottom) + 12px)); }
 }
 
