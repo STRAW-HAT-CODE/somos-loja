@@ -129,7 +129,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 
 /* The coffee path unfolds vertically across three illustrated chapters. */
 .proceso { position: relative; max-width: 1280px; margin: 0 auto; padding: 48px 48px 96px; display: grid; gap: 64px; }
-.cinta { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.cinta { position: absolute; left: 0; right: 0; top: -9vh; width: 100%; height: calc(100% + 9vh); pointer-events: none; }
 .cinta path { fill: none; stroke-linecap: round; }
 .cinta__ancha { stroke: var(--cafe); stroke-width: 16; }
 .cinta__fina { stroke: var(--ocre); stroke-width: 5; }
@@ -296,8 +296,6 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .mapa__selector button { flex: 1; }
   .tienda__rejilla .foto--letrero img { aspect-ratio: 4 / 3; border-radius: 22px; box-shadow: 0 24px 40px -24px rgb(0 0 0 / 0.45); }
   .cinta__ancha { stroke-width: 10; }
-  /* The ribbon starts in the gap under the hero headline, so it reads as a line, not a dot. */
-  .cinta { top: -9vh; height: calc(100% + 9vh); }
   .tienda { padding: 64px 0 72px; }
   .tienda__rejilla { grid-template-columns: 1fr; padding: 0 16px; gap: 24px; }
   .tienda__texto, .tienda__rejilla .foto--letrero { grid-row: auto; grid-column: auto; }
