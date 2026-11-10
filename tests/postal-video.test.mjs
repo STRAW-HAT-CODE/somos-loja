@@ -295,3 +295,12 @@ test('reduced motion skips the opening screen too', async () => {
   await p.flush();
   assert.equal(p.fase(), 'postal');
 });
+
+test('postal offers a WhatsApp redeem link with a per-device code, plus store and map links', () => {
+  const html = read();
+  assert.match(html, /id="canjear"[^>]*href="https:\/\/wa\.me\/593962947777/);
+  assert.match(html, /id="codigo-postal"/);
+  assert.match(html, /'LOJA-'/);
+  assert.match(html, /href="\.\.\/\.\.\/#tienda"/);
+  assert.match(html, />Mapa del evento/);
+});

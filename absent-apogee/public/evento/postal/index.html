@@ -116,6 +116,9 @@ html[data-fase="postal"] .postal { opacity: 1; }
 .beneficio__marca { font: 700 0.75rem/1.3 var(--texto); letter-spacing: 0.18em; text-transform: uppercase; color: var(--cafe); }
 .beneficio__texto { margin-top: 4px; font: 600 1.35rem/1.15 var(--display); color: var(--tinta); }
 .beneficio__demo { margin-top: 4px; font-size: 0.78rem; color: var(--tinta-suave); }
+.beneficio__codigo { margin-top: 6px; font: 600 0.85rem/1.3 var(--texto); color: var(--tinta); letter-spacing: 0.04em; }
+.beneficio__codigo strong { font-family: ui-monospace, Menlo, monospace; font-size: 1.05rem; letter-spacing: 0.12em; padding: 2px 8px; border: 1px dashed var(--cafe); border-radius: 4px; }
+.boton--canjear { margin-top: 10px; width: 100%; background: #25d366; color: #fff; font-weight: 700; }
 .postal__pie { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
 @media (orientation: portrait), (max-width: 640px) {
@@ -222,14 +225,18 @@ html[data-fase="postal"] .postal { opacity: 1; }
           <span class="matasellos" aria-hidden="true">LOJA<br>· NOV ·<br>2026</span>
         </figure>
         <div class="beneficio">
-          <p class="beneficio__marca">Beneficio de muestra</p>
+          <p class="beneficio__marca">Tu sello de la postal</p>
           <p class="beneficio__texto">Una degustación por persona.</p>
-          <p class="beneficio__demo">Prototipo: esta postal todavía no sirve para canjear.</p>
+          <p class="beneficio__codigo">Código <strong id="codigo-postal">LOJA-····</strong></p>
+          <a class="boton boton--canjear" id="canjear" href="https://wa.me/593962947777" target="_blank" rel="noopener">Canjear por WhatsApp</a>
+          <p class="beneficio__demo">Muestra este código en la tienda o el día del evento.</p>
         </div>
       </div>
     </div>
     <div class="postal__pie">
       <a class="boton boton--tinta" href="../../" target="_top">Ver la página del evento →</a>
+      <a class="boton boton--linea" href="../../#tienda" target="_top">Tienda Somos Loja</a>
+      <a class="boton boton--linea" href="https://www.google.com/maps/search/?api=1&amp;query=Parque+Central+Loja+Ecuador" target="_blank" rel="noopener noreferrer">Mapa del evento ↗</a>
       <button class="boton boton--linea" id="repetir" type="button">Ver de nuevo</button>
     </div>
   </article>
@@ -436,5 +443,25 @@ html[data-fase="postal"] .postal { opacity: 1; }
   else irA('inicio');
 })();
 </script>
+    <script>
+      // Each postcard keeps one short code per device; "Canjear" opens WhatsApp with it pre-filled.
+      // No server validation: staff checks the code by hand.
+      (function () {
+        var KEY = 'somosloja-postal-codigo';
+        var ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+        var codigo = null;
+        try { codigo = localStorage.getItem(KEY); } catch (e) {}
+        if (!codigo || !/^LOJA-[A-Z0-9]{4}$/.test(codigo)) {
+          var r = new Uint32Array(4);
+          (window.crypto || window.msCrypto).getRandomValues(r);
+          codigo = 'LOJA-' + Array.prototype.map.call(r, function (n) { return ABC[n % ABC.length]; }).join('');
+          try { localStorage.setItem(KEY, codigo); } catch (e) {}
+        }
+        document.getElementById('codigo-postal').textContent = codigo;
+        var texto = 'Hola Somos Loja, soy ____. Escaneé el QR y recibí la postal de Alforjita. ' +
+          'Quiero canjear mi degustación con el código ' + codigo + '.';
+        document.getElementById('canjear').href = 'https://wa.me/593962947777?text=' + encodeURIComponent(texto);
+      })();
+    </script>
 </body>
 </html>
