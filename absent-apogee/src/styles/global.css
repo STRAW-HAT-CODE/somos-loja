@@ -112,15 +112,17 @@ section[id] { scroll-margin-top: 0; }
 .hero-ticket--evento .hero-ticket__titulo { margin-top: 8px; font-size: clamp(2.6rem, 3.3vw, 4rem); }
 .hero-ticket--evento .hero-ticket__titulo strong { font-size: 1.35em; font-weight: 600; }
 .hero-ticket__sello { position: absolute; top: -12px; right: 18px; display: grid; place-items: center; width: 84px; height: 84px; border: 3px double var(--cafe); border-radius: 50%; color: var(--cafe); font: 700 0.85rem/0.85 'Cormorant', Georgia, serif; letter-spacing: 0.1em; text-transform: uppercase; rotate: -15deg; }
-.apertura__seguir { position: absolute; left: 50%; bottom: 12px; z-index: 5; display: grid; justify-items: center; gap: 4px; translate: -50% 0; color: var(--tinta); font: 600 0.875rem/1.2 'Cormorant', Georgia, serif; letter-spacing: 0.3em; text-decoration: none; text-transform: uppercase; }
-.apertura__seguir span { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border: 2px solid var(--durazno); border-radius: 50%; background: var(--papel); font: 400 2rem/1 'Cormorant', Georgia, serif; letter-spacing: 0; }
+/* Scroll cue: a compact petrol pill pinned to the bottom edge; the headline always sits above it. */
+.apertura { --seguir-bajo: 16px; }
+.apertura__seguir { position: absolute; left: 50%; bottom: var(--seguir-bajo); z-index: 5; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 18px 6px 8px; translate: -50% 0; border-radius: 9999px; background: var(--tinta); color: var(--papel); box-shadow: 0 10px 24px -12px rgb(24 82 105 / 0.7); font: 600 0.75rem/1 'Manrope', system-ui, sans-serif; letter-spacing: 0.22em; text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+.apertura__seguir span { position: relative; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--durazno); color: var(--tinta); font: 700 1rem/1 'Manrope', system-ui, sans-serif; letter-spacing: 0; }
 .animado .apertura__seguir span { animation: seguir-rebote 1.8s var(--curva) infinite; }
 .animado .apertura__seguir span::after { content: ''; position: absolute; inset: -2px; border: 2px solid var(--durazno); border-radius: 50%; opacity: 0; animation: seguir-halo 1.8s var(--curva) infinite; pointer-events: none; }
-@keyframes seguir-rebote { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(7px); } 55% { transform: translateY(3px); } 70% { transform: translateY(6px); } }
+@keyframes seguir-rebote { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(4px); } 55% { transform: translateY(1px); } 70% { transform: translateY(3px); } }
 @keyframes seguir-halo { 0%, 15% { opacity: 0.5; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.5); } }
 .apertura__rama { position: absolute; top: -10px; left: -30px; width: clamp(150px, 19vw, 300px); z-index: 2; }
 .apertura__grano { position: absolute; top: 50%; left: 50%; width: min(52vh, 68vw); margin: calc(min(52vh, 68vw) / -2) 0 0 calc(min(52vh, 68vw) / -2); z-index: 6; }
-.apertura__frase { position: absolute; bottom: 5vh; left: 0; right: 0; padding: 0 24px; text-align: center; z-index: 4; }
+.apertura__frase { position: absolute; bottom: calc(var(--seguir-bajo) + 44px + clamp(20px, 4vh, 40px)); left: 0; right: 0; padding: 0 24px; text-align: center; z-index: 4; }
 html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { display: none; }
 .animado .apertura__grano, .animado .apertura__frase { will-change: transform; }
 
@@ -269,7 +271,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .hero-ticket__sello { display: none; }
   .hero-ticket__etiqueta { font-size: 0.75rem; }
   .hero-ticket__regla { margin: 2px 0; }
-  .apertura__seguir { bottom: 6px; }
+  .apertura { --seguir-bajo: 10px; }
   .cuerpo { font-size: 1rem; line-height: 1.5rem; }
   .proceso { padding: 24px 16px 20px; gap: 40px; }
   .capitulo, .capitulo--der { grid-template-columns: 1fr; gap: 8px; }
@@ -309,14 +311,14 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .hero-ticket--evento .hero-ticket__titulo strong { font-size: 1.2em; }
   .hero-ticket__regla { margin: 4px 0; }
   .hero-ticket__accion { justify-content: center; gap: 6px; font-size: 0.75rem; letter-spacing: 0; }
-  .apertura__seguir { left: 50%; bottom: max(18px, env(safe-area-inset-bottom) + 12px); translate: -50% 0; }
+  .apertura { --seguir-bajo: max(18px, env(safe-area-inset-bottom) + 12px); }
 }
 
 @media (max-width: 860px) {
   /* Phones: the stage is as tall as the screen with the address bar hidden, so hiding the bar
      never opens a gap under the cathedral; the scroll cue stays clear of the bar when it shows. */
   .apertura__fijo { height: 100lvh; }
-  .apertura__seguir { bottom: calc(100lvh - 100svh + max(18px, env(safe-area-inset-bottom) + 12px)); }
+  .apertura { --seguir-bajo: calc(100lvh - 100svh + max(18px, env(safe-area-inset-bottom) + 12px)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
