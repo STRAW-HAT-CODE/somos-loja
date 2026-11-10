@@ -25,3 +25,5 @@ pnpm-debug.log*
 
 # Heavy source media, kept locally only
 assets-originales/
+.vercel
+.env*

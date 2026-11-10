@@ -2,10 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import Pendiente from '../components/Pendiente.astro';
 import Flecha from '../components/Flecha.astro';
-import EventoFlotante from '../components/EventoFlotante.astro';
-import Eventos from '../components/Eventos.astro';
-import Invitacion from '../components/Invitacion.astro';
-import { capitulos, cifras, enlaces, ilustraciones, interior, letrero, logo, pendiente, productos, sabores, sello } from '../data/somos-loja';
+import Redes from '../components/Redes.astro';
+import Cascada from '../components/Cascada.astro';
+import { capitulos, cifras, enlaces, evento, ilustraciones, letrero, logo, pendiente, recorrido, productos, sello } from '../data/somos-loja';
 const cinta = [...productos, ...productos];
 ---
 <Layout>
@@ -16,7 +15,6 @@ const cinta = [...productos, ...productos];
 			<a href="#inicio" aria-current="page">Inicio</a>
 			<a href="#tienda">Tienda</a>
 			<a href="#evento">Evento</a>
-			<a href="#nosotros">Nosotros</a>
 		</nav>
 		<a class="boton boton--tinta cabecera__lugar" href="#tienda"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg><span>Dónde estamos</span></a>
 	</header>
@@ -24,29 +22,30 @@ const cinta = [...productos, ...productos];
 	<main>
 		<section id="inicio" class="apertura">
 			<div class="apertura__fijo">
-				<img class="apertura__rama" src={ilustraciones.rama} alt="" width="800" height="800" fetchpriority="high" />
+				<img class="apertura__rama" src={ilustraciones.rama} alt="" width="800" height="800" />
 				<div class="escenario">
-					<img class="escenario__img" src={ilustraciones.fachada} alt="Ilustración de la Catedral de Loja con su torre del reloj, palmeras y el Parque Central" width="1672" height="941" fetchpriority="high" />
+					<img class="escenario__img" src={ilustraciones.fachada} srcset={`${ilustraciones.fachadaChica} 900w, ${ilustraciones.fachada} 1672w`} sizes="(max-width: 860px) 100vw, 92vw" alt="Ilustración de la Catedral de Loja con su torre del reloj, palmeras y el Parque Central" width="1672" height="941" fetchpriority="high" />
 					<video class="escenario__video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
 					<div class="titulo">
 						<div class="titulo__nombre" aria-label="Somos Loja">
 							<p class="firma titulo__somos"><span>Somos</span></p>
 							<p class="firma titulo__loja"><span>Loja</span></p>
 						</div>
-						<h1 class="titulo__lema">El sabor de Loja, a pasos de la Catedral</h1>
-						<div class="titulo__adorno" aria-hidden="true"><span>✻</span></div>
+						<h1 class="titulo__lema">El sabor de nuestra tierra, el arte de nuestra gente.</h1>
+						<div class="titulo__regla" aria-hidden="true"></div>
 					</div>
 					<a class="hero-ticket hero-ticket--tienda" href="#tienda">
 						<svg class="hero-ticket__icono" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M8 16h32l-2 26H10L8 16Z M17 19v-8a7 7 0 0 1 14 0v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 						<span class="hero-ticket__titulo">Tienda</span>
 						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
-						<span class="hero-ticket__accion">Conoce la tienda <span class="hero-ticket__flecha" aria-hidden="true">→</span></span>
+						<span class="hero-ticket__accion">Conoce la tienda</span>
 					</a>
 					<a class="hero-ticket hero-ticket--evento" href="#evento">
 						<span class="hero-ticket__sello" aria-hidden="true">Loja<br />✦<br />Café</span>
 						<span class="hero-ticket__etiqueta">Evento</span>
 						<span class="hero-ticket__titulo"><strong>50</strong> marcas<br />de café</span>
 						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
+						<span class="hero-ticket__accion">Ver evento</span>
 					</a>
 				</div>
 				<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
@@ -61,8 +60,14 @@ const cinta = [...productos, ...productos];
 				<path class="cinta__fina" d="M520 0C860 240 930 540 640 780S150 1060 270 1330 890 1580 800 1890 450 2240 520 2400" />
 			</svg>
 			{capitulos.map((c, i) => (
-				<article class={`capitulo capitulo--${i % 2 ? 'der' : 'izq'}`}>
-					<img class="capitulo__img" src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />
+				<article class={`capitulo capitulo--${i % 2 ? 'der' : 'izq'}${c.img ? '' : ' capitulo--solo-fotos'}`}>
+					<figure class="capitulo__marco">
+						{c.img && <img class="capitulo__img" src={c.img} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />}
+						{c.fotos.map((foto, k) => (
+							<img class={`capitulo__foto capitulo__foto--${k + 1}`} src={foto.src} srcset={`${foto.src.replace('.webp', '-600.webp')} 600w, ${foto.src} ${foto.ancho}w`} sizes="(max-width: 860px) 70vw, 34vw" alt={foto.alt} width={foto.ancho} height={foto.alto} loading="lazy" decoding="async" />
+						))}
+						<span class="capitulo__sello" aria-hidden="true"><b>N.º {i + 1}</b>Foto real</span>
+					</figure>
 					<div class="capitulo__texto">
 						<h2 class="titular">{c.titulo}</h2>
 						<p class="cuerpo">{c.texto}</p>
@@ -71,70 +76,82 @@ const cinta = [...productos, ...productos];
 			))}
 		</section>
 
+		<Cascada />
+
 		<section id="evento" class="cincuenta">
 			<div class="cincuenta__fijo">
 				<canvas id="granos" aria-hidden="true"></canvas>
 				<p class="cincuenta__respaldo" aria-hidden="true">50</p>
+			</div>
+			<div class="cincuenta__capa">
 				<div class="cincuenta__texto">
-					<h2 class="titular">marcas y fincas de café</h2>
-					<p class="cuerpo">En Loja 100 % Café Especial, un campeonato interno elige el top 10 de especialidad. Son 10 días de filtrados, V60 y concurso de chuspas.</p>
-					<p class="cincuenta__evento"><img src={sello} alt="Sello Loja 100 % Café Especial" width="56" height="56" loading="lazy" /><span class="versal versal--chica">Tercera edición</span> {pendiente.fecha ?? <Pendiente dato="fecha" />}</p>
+					<h2 class="titular"><span class="sr-only">Unas 50 </span>marcas y fincas de café</h2>
+					<p class="cuerpo">Te invitamos a Loja 100 % Café Especial: un campeonato interno elige el top 10 de especialidad. Son 10 días de filtrados, V60 y concurso de chuspas.</p>
+					<div class="cincuenta__ficha">
+						<img class="cincuenta__sello" src={sello} alt="Sello 100 % Café Especial, Somos Loja Coopser, tercera edición" width="640" height="610" loading="lazy" decoding="async" />
+						<dl>
+							<div><dt>Cuándo</dt><dd>{evento.fechas}</dd></div>
+							<div><dt>Dónde</dt><dd>{evento.lugar}<span>{evento.esquina}</span></dd></div>
+							{evento.hora && <div><dt>Hora</dt><dd>{evento.hora}</dd></div>}
+						</dl>
+					</div>
+					<div class="cincuenta__acciones">
+						<a class="boton boton--tinta" href={evento.postal}>Abrir la invitación<Flecha /></a>
+						<a class="boton boton--linea" href={evento.mapa} target="_blank" rel="noopener">Cómo llegar al parque</a>
+					</div>
 				</div>
 			</div>
 		</section>
-
-		<Eventos />
-
-		<section id="nosotros" class="sabores" aria-labelledby="titulo-sabores">
-			<div class="sabores__cabeza">
-				<p class="firma firma--media">Sabe a Loja</p>
-				<h2 id="titulo-sabores" class="titular titular--media">Lo que hacemos aquí, para que te lo lleves</h2>
-				<img class="sabores__guitarra" src={ilustraciones.guitarra} alt="Ilustración de una guitarra antigua con hojas de café" width="800" height="800" loading="lazy" decoding="async" />
-				<p class="cuerpo">Loja es café, música, arte y cultura. Todo eso cabe en una bolsa de la tienda.</p>
-			</div>
-			<ul class="sabores__lista">
-				{sabores.map((s) => (
-					<li class="sabor">
-						<img src={s.img} alt={s.alt} width="700" height="700" loading="lazy" decoding="async" />
-						<h3 class="titular titular--chica">{s.titulo}</h3>
-						<p class="nota">{s.texto}</p>
-					</li>
-				))}
-			</ul>
-		</section>
-
-		<Invitacion />
 
 		<section id="tienda" class="tienda">
 			<div class="tienda__rejilla">
 				<div class="tienda__texto">
 					<p class="firma firma--clara">Aquí estamos</p>
 					<h2 class="titular">A pasos de la Catedral de Loja</h2>
-					<p class="cuerpo">Somos Loja es la cooperativa que reúne el trabajo de emprendedores y productores lojanos, en el centro de la ciudad.</p>
-					<p class="cuerpo">{pendiente.direccion ?? <Pendiente dato="direccion" />} {pendiente.horario ?? <Pendiente dato="horario" />}</p>
-					<ul class="cifras">
-						{cifras.map(([n, d]) => <li><strong>{n}</strong><span>{d}</span></li>)}
+					<p class="tienda__resumen">La cooperativa reúne a <strong>{cifras[0][0]}</strong> {cifras[0][1]} lojanos: unas <strong>{cifras[1][0]}</strong> marcas y fincas de café y <strong>{cifras[2][0]}</strong> {cifras[2][1]}.</p>
+					<ul class="tienda__datos">
+						<li>
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.4" /></svg>
+							<span>{pendiente.direccion ?? <Pendiente dato="direccion" />}</span>
+						</li>
+						<li>
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h3l1.4 4.2-2 1.3a12 12 0 0 0 6 6l1.3-2 4.2 1.4v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z" /></svg>
+							<span><a class="tienda__tel" href={`tel:${enlaces.telefono}`}>{enlaces.telefonoVisible}</a> {pendiente.horario ?? <Pendiente dato="horario" />}</span>
+						</li>
 					</ul>
 					<div class="tienda__acciones">
 						<a class="boton boton--ocre" href={enlaces.mapa} target="_blank" rel="noopener">Cómo llegar a la tienda<Flecha /></a>
-						<a class="boton boton--clara" href={enlaces.instagram} target="_blank" rel="noopener">Instagram</a>
-						{pendiente.facebook ?? <Pendiente dato="facebook" />}
-						{pendiente.tiktok ?? <Pendiente dato="tiktok" />}
+						<Redes />
 					</div>
 				</div>
-				<figure class="mapa">
-					<img src={ilustraciones.plaza} alt="Ilustración del Parque Central de Loja con la Catedral, palmeras y tejados" width="1400" height="788" loading="lazy" decoding="async" />
-					<span class="mapa__marca mapa__marca--catedral"><i></i>Catedral</span>
-					<figcaption class="nota">Vista ilustrada del Parque Central. No indica la ubicación exacta.</figcaption>
+				<figure class="mapa" data-vista="mapa">
+					<div class="mapa__vista">
+					<iframe
+						class="mapa__lienzo"
+						src="https://www.google.com/maps?q=TIENDA%20SOMOS%20LOJA%2C%20Loja%2C%20Ecuador&z=17&hl=es&output=embed"
+						title="Ubicación de Tienda Somos Loja en el mapa"
+						loading="lazy"
+						referrerpolicy="no-referrer-when-downgrade"
+						allowfullscreen
+					></iframe>
+					<div class="mapa__recorrido" aria-hidden="true">
+						<video aria-label="Recorrido a pie desde la Catedral hasta la tienda" muted playsinline preload="none" poster={recorrido.poster} data-tramo={recorrido.tramo} data-completo={recorrido.src} width="1120" height="700"></video>
+						<p class="mapa__ubicacion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" /><circle cx="12" cy="10" r="2.6" /></svg>Frente al Parque Central</p>
+						<button type="button" class="mapa__completo">Ver todo el recorrido</button>
+					</div>
+					</div>
+					<div class="mapa__selector" role="group" aria-label="Ver la ubicación">
+						<button type="button" data-ver="mapa" aria-pressed="true">Mapa</button>
+						<button type="button" data-ver="recorrido" aria-pressed="false">Cómo se llega</button>
+					</div>
 				</figure>
-				<figure class="foto foto--interior"><img src={interior} alt="Interior de la tienda Somos Loja con una vitrina llena de productos" width="1200" height="1600" loading="lazy" decoding="async" /></figure>
 				<figure class="foto foto--letrero"><img src={letrero} alt="Letrero de Somos Loja sobre los estantes de la tienda" width="1024" height="576" loading="lazy" decoding="async" /></figure>
 			</div>
 			<div class="carrusel" tabindex="0" aria-label="Algunos productos de la tienda">
 				<ul class="carrusel__pista">
 					{cinta.map((p, i) => (
 						<li class="producto" aria-hidden={i >= productos.length ? 'true' : undefined}>
-							<img src={p.src} alt={i >= productos.length ? '' : p.alt} width="800" height="1067" loading="lazy" decoding="async" />
+							<img src={p.src} srcset={`${p.src.replace('.webp', '-400.webp')} 400w, ${p.src} 800w`} sizes="200px" alt={i >= productos.length ? '' : p.alt} width="800" height="1067" loading="lazy" decoding="async" />
 							<h3>{p.titulo}</h3>
 						</li>
 					))}
@@ -146,20 +163,23 @@ const cinta = [...productos, ...productos];
 	<footer class="pie">
 		<img src={logo} alt="Somos Loja Tienda" width="56" height="56" loading="lazy" />
 		<p>Somos Loja, Coopser. Productos de emprendedores y productores locales.</p>
-		<Pendiente dato="enlaces legales" />
+		<p class="pie__credito">© 2026 · Desarrollado por <a href="https://strawhatcode.com" target="_blank" rel="noopener">Straw Hat Code <span aria-hidden="true">👒</span></a></p>
 	</footer>
-	<EventoFlotante />
 </Layout>
 
 <script>
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import Lenis from 'lenis';
+	import { iniciarCascada } from '../scripts/cascada-taza.js';
+	import { iniciarMapa } from '../scripts/mapa-rotacion.js';
 
 	const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
 	const ahorro = (navigator as any).connection?.saveData;
 	const movil = innerWidth <= 860;
 	gsap.registerPlugin(ScrollTrigger);
+	// The address bar showing or hiding must not re-measure every scene mid-scroll.
+	ScrollTrigger.config({ ignoreMobileResize: true });
 
 	if (!reducir) {
 		document.documentElement.classList.add('animado');
@@ -171,12 +191,20 @@ const cinta = [...productos, ...productos];
 		gsap.ticker.lagSmoothing(0);
 		document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
 			e.preventDefault();
-			lenis.scrollTo(a.getAttribute('href')!, { duration: 1.6 });
+			const destino = document.querySelector<HTMLElement>(a.getAttribute('href')!);
+			if (!destino) return;
+			// Keyboard focus follows the smooth scroll, as a native anchor jump would.
+			lenis.scrollTo(destino, { duration: 1.6, onComplete: () => {
+				if (!destino.hasAttribute('tabindex')) destino.setAttribute('tabindex', '-1');
+				destino.focus({ preventScroll: true });
+				history.replaceState(null, '', a.getAttribute('href'));
+			} });
 		}));
 
 		// Opening: the name is written by hand, then the rest settles in.
 		gsap.timeline({ defaults: { ease: 'power2.out' } })
-			.from('.escenario__img', { autoAlpha: 0, scale: 1.03, duration: 1.2 }, 0)
+			// Scale only: the illustration is the LCP and must paint before the JS runs.
+			.from('.escenario__img', { scale: 1.03, duration: 1.2 }, 0)
 			.fromTo('.titulo__somos span', { clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% -5% -20% 0)', duration: 0.9, ease: 'power1.inOut' }, 0.2)
 			.fromTo('.titulo__loja span', { clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% -5% -20% 0)', duration: 0.7, ease: 'power1.inOut' }, 1)
 			.from('.titulo__lema', { autoAlpha: 0, y: 16, duration: 0.6 }, 1.5)
@@ -198,8 +226,9 @@ const cinta = [...productos, ...productos];
 			.to('.titulo', { y: -90, autoAlpha: 0, duration: 0.18 }, 0.7)
 			.to('.apertura__seguir', { autoAlpha: 0, duration: 0.15 }, 0)
 			.to('.apertura__rama', { x: -120, y: -120, autoAlpha: 0, duration: 0.2 }, 0.7)
-			.to('.escenario', { scale: 1.08, y: 80, duration: 0.7, transformOrigin: '50% 45%' }, 0.05)
-			.to('.escenario', { autoAlpha: 0, duration: 0.2 }, 0.72)
+			// The cathedral zooms in from its base (no gap opens below it), then fades as the bean lands.
+			.to('.escenario', { scale: 1.18, duration: 0.6, transformOrigin: '50% 100%' }, 0)
+			.to('.escenario', { autoAlpha: 0, scale: 1.26, duration: 0.25 }, 0.5)
 			.fromTo('.apertura__grano', { yPercent: -180, rotate: -50, scale: 0.55 }, { yPercent: 0, rotate: 18, scale: 1, duration: 0.65 }, 0)
 			.fromTo('.apertura__frase', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 0.55)
 			.to('.apertura__grano', { rotate: 40, duration: 0.3 }, 0.65);
@@ -210,16 +239,36 @@ const cinta = [...productos, ...productos];
 			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top 60%', end: 'bottom 70%', scrub: true } });
 		});
 		gsap.utils.toArray<HTMLElement>('.capitulo').forEach((c) => {
-			gsap.from(c.querySelector('.capitulo__img'), { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
+			const dibujo = c.querySelector('.capitulo__img');
+			if (dibujo) gsap.from(dibujo, { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
 			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 68%' } });
+			// "Del dibujo a la foto": the real print develops from the paper while scrolling.
+			const revelado = gsap.timeline({ scrollTrigger: { trigger: c, start: 'top 65%', end: 'center 50%', scrub: 0.6 } });
+			c.querySelectorAll('.capitulo__foto').forEach((foto, k) => {
+				revelado.fromTo(foto, { clipPath: 'inset(100% 0% 0% 0%)', y: 64, scale: 1.05 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, scale: 1, ease: 'none', duration: 1 }, k * 0.4);
+			});
+			if (dibujo) revelado.to(dibujo, { opacity: 0.62, scale: 0.97, ease: 'none', duration: 1 }, 0);
+			revelado.fromTo(c.querySelector('.capitulo__sello'), { autoAlpha: 0, scale: 1.8 }, { autoAlpha: 1, scale: 1, ease: 'back.out(2.2)', duration: 0.35 }, '>-0.1');
 		});
+
+		// Cascade: the bean falls and the cup fills.
+		iniciarCascada(gsap, ScrollTrigger);
 
 		// The 50: scroll drives real 3D beans.
 		const etapa = document.querySelector<HTMLElement>('.cincuenta')!;
 		const canvas = document.getElementById('granos') as HTMLCanvasElement | null;
+		// Mobile: once the section arrives, the 50 finishes forming on its own in 1.6 s, so it never
+		// freezes half built when the visitor stops scrolling; scrolling back above it resets it.
+		const formacion = { v: 0 };
+		let lanzada = false;
 		function progreso() {
 			const r = etapa.getBoundingClientRect();
-			return Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / ((r.height - innerHeight) * 0.7 + innerHeight * 0.6)));
+			const recorrido = movil ? innerHeight : (r.height - innerHeight) * 0.7 + innerHeight * 0.6;
+			const p = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / recorrido));
+			if (!movil) return p;
+			if (p > 0.05 && !lanzada) { lanzada = true; gsap.to(formacion, { v: 1, duration: 1.6, ease: 'none' }); }
+			else if (p === 0 && lanzada) { lanzada = false; gsap.killTweensOf(formacion); formacion.v = 0; }
+			return formacion.v;
 		}
 		if (canvas && !ahorro) {
 			const vigia = new IntersectionObserver(([e]) => {
@@ -233,30 +282,37 @@ const cinta = [...productos, ...productos];
 			}, { rootMargin: '120% 0px' });
 			vigia.observe(etapa);
 		}
-		gsap.fromTo('.cincuenta__texto', { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, ease: 'none', scrollTrigger: { trigger: etapa, start: () => 'top+=' + etapa.offsetHeight * 0.14 + ' top', end: () => 'top+=' + etapa.offsetHeight * 0.34 + ' top', scrub: true } });
-
-		// Flavours: each illustration tilts toward the pointer like an object in hand.
-		gsap.from('.sabores__cabeza > *', { autoAlpha: 0, y: 28, duration: 0.7, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.sabores', start: 'top 72%' } });
-		gsap.from('.sabor', { autoAlpha: 0, y: 48, scale: 0.94, duration: 0.8, stagger: 0.07, ease: 'power3.out', scrollTrigger: { trigger: '.sabores__lista', start: 'top 78%' } });
-		if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-			document.querySelectorAll<HTMLElement>('.sabor').forEach((s) => {
-				const img = s.querySelector('img')!;
-				const rx = gsap.quickTo(img, 'rotationX', { duration: 0.5, ease: 'power3.out' });
-				const ry = gsap.quickTo(img, 'rotationY', { duration: 0.5, ease: 'power3.out' });
-				const sc = gsap.quickTo(img, 'scale', { duration: 0.5, ease: 'power3.out' });
-				s.addEventListener('pointermove', (e) => {
-					const r = s.getBoundingClientRect();
-					ry(((e.clientX - r.left) / r.width - 0.5) * 22);
-					rx(((e.clientY - r.top) / r.height - 0.5) * -22);
-					sc(1.07);
-				});
-				s.addEventListener('pointerleave', () => { rx(0); ry(0); sc(1); });
-			});
-		}
+		// The text is read while the 50 forms: each block arrives in turn and the last
+		// one lands exactly when progreso() reaches 1, the moment the beans settle.
+		// Driven by hand from the trigger progress: a staggered scrub timeline leaves the
+		// blocks that have not started yet visible after ScrollTrigger.refresh().
+		const bloques = gsap.utils.toArray<HTMLElement>('.cincuenta__texto > *');
+		const paso = 0.75;
+		const total = 1 + paso * (bloques.length - 1);
+		const leer = (avance: number) => bloques.forEach((b, i) => {
+			const k = gsap.utils.clamp(0, 1, avance * total - i * paso);
+			gsap.set(b, { autoAlpha: k, y: 32 * (1 - k) });
+		});
+		// Desktop only: on mobile the text is a sheet that scrolls over the finished 50.
+		if (!movil) leer(0);
+		if (!movil) ScrollTrigger.create({ trigger: etapa, start: 'top 30%', end: () => 'top+=' + (etapa.offsetHeight - innerHeight) * 0.7 + ' top', invalidateOnRefresh: true, onUpdate: (self) => leer(self.progress), onRefresh: (self) => leer(self.progress) });
 
 		// Store.
 		gsap.from('.tienda__texto > *', { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.tienda', start: 'top 68%' } });
 		gsap.from('.mapa, .foto', { autoAlpha: 0, y: 48, duration: 0.9, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.tienda__rejilla', start: 'top 70%' } });
 		addEventListener('load', () => ScrollTrigger.refresh());
 	}
+
+	// Header turns petrol while the store section sits under it.
+	const cabecera = document.querySelector<HTMLElement>('.cabecera');
+	const tienda = document.querySelector<HTMLElement>('.tienda');
+	if (cabecera && tienda) {
+		new IntersectionObserver(([e]) => cabecera.classList.toggle('cabecera--oscura', e.isIntersecting), {
+			rootMargin: `0px 0px -${Math.max(0, innerHeight - 64)}px 0px`,
+		}).observe(tienda);
+	}
+
+	// Store location: map and walk clip take turns (src/scripts/mapa-rotacion.js).
+	const marco = document.querySelector<HTMLElement>('.mapa');
+	if (marco) iniciarMapa(marco, { reducir, ahorro });
 </script>

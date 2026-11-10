@@ -2,4 +2,4 @@
 // Marks missing client data. Visible only in development, never in the production build.
 const { dato } = Astro.props;
 ---
-{import.meta.env.DEV && <span class="pendiente caption-4">{`{{${dato}}}`}</span>}
+{import.meta.env.DEV && <span class="pendiente">{`{{${dato}}}`}</span>}
