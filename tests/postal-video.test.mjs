@@ -38,7 +38,7 @@ test('postcard keeps the QR stamp contract with the live coffee QR', () => {
   const html = read();
   assert.match(html, /class="[^"]*sello-qr/);
   assert.match(html, /src="recursos\/qr-cafe\.webp"/, 'the stamp uses the coffee-plant QR');
-  assert.match(html, /<figcaption>Escanéame<\/figcaption>/);
+  assert.match(html, /<figcaption><a href="https:\/\/strawhatcode\.com\/r\/nPXZOXf\?c=q"[^>]*>Escanéame o haz clic aquí<\/a><\/figcaption>/, 'the QR caption is also a link to the QR destination');
   assert.ok(existsSync(join(pageDir, 'recursos/qr-cafe.webp')), 'missing recursos/qr-cafe.webp');
   assert.match(html, /loading="eager" fetchpriority="high"/);
   assert.match(html, /Una degustación por persona/);
@@ -235,13 +235,15 @@ test('only the visible phase can take keyboard focus', async () => {
   assert.match(html, /<article class="postal"[^>]*\binert\b/, 'postcard starts inert before the script runs');
 });
 
-test('postcard shows the event dates, place and map at Parque Central', () => {
+test('postcard shows the event dates and places the event in the store, not in the park', () => {
   const html = read();
   assert.ok(html.includes('<dd>Del 13 al 22 de noviembre</dd>'), 'postcard must show the event dates');
   assert.ok(html.includes('<dd>Por confirmar</dd>'), 'the time stays marked as pending');
-  assert.ok(html.includes('<dd>Parque Central</dd>'), 'postcard must name the venue');
-  assert.ok(html.includes('<dd>José Antonio Eguiguren y Bernardo Valdivieso, esquina</dd>'), 'postcard must show the venue corner');
-  assert.match(html, /href="https:\/\/www\.google\.com\/maps\/search\/\?api=1&amp;query=Parque\+Central\+Loja\+Ecuador"/, 'map must point at Parque Central');
+  assert.ok(html.includes('<dd>Tienda Somos Loja</dd>'), 'the event happens in the store');
+  assert.ok(!html.includes('query=Parque+Central'), 'no map link may point at the park');
+  assert.ok(html.includes('unas 25 marcas de café'), 'the event has about 25 brands, never the 50 of the store');
+  assert.ok(html.includes('<dd>José Antonio Eguiguren y Bernardo Valdivieso, frente al Parque Central</dd>'), 'postcard must show the store address');
+  assert.match(html, /href="https:\/\/www\.google\.com\/maps\/search\/\?api=1&amp;query=TIENDA\+SOMOS\+LOJA\+2Q3X%2BGC\+Loja"/, 'map must point at the store');
 });
 
 test('an opening tap unlocks sound, which can be muted and remembered', () => {
@@ -303,4 +305,13 @@ test('postal offers a WhatsApp redeem link with a per-device code, plus store an
   assert.match(html, /'LOJA-'/);
   assert.match(html, /href="\.\.\/\.\.\/#tienda"/);
   assert.match(html, />Mapa del evento/);
+});
+
+test('the postcard ends with the store social links', () => {
+  const html = read();
+  const redes = html.slice(html.indexOf('class="postal__redes"'));
+  for (const url of ['https://www.instagram.com/tiendasomosloja/', 'https://www.facebook.com/share/1E2P1Ln8Uq/', 'https://www.tiktok.com/@tiendasomosloja']) {
+    assert.ok(redes.includes(`href="${url}"`), `missing social link ${url}`);
+  }
+  assert.ok(html.indexOf('class="postal__redes"') > html.indexOf('class="postal__pie"'), 'social links sit below the invitation buttons');
 });
