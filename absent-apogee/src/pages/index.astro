@@ -44,7 +44,7 @@ const cinta = [...productos, ...productos];
 					<a class="hero-ticket hero-ticket--evento" href="#evento">
 						<span class="hero-ticket__sello" aria-hidden="true">Loja<br />✦<br />Café</span>
 						<span class="hero-ticket__etiqueta">Evento</span>
-						<span class="hero-ticket__titulo"><strong>50</strong> marcas<br />de café</span>
+						<span class="hero-ticket__titulo"><strong>{cifras.marcasEvento}</strong> marcas<br />de café</span>
 						<span class="hero-ticket__regla" aria-hidden="true">✻</span>
 						<span class="hero-ticket__accion">Ver evento</span>
 					</a>
@@ -85,10 +85,10 @@ const cinta = [...productos, ...productos];
 			</div>
 			<div class="cincuenta__capa">
 				<div class="cincuenta__texto">
-					<h2 class="titular">Más de 50 marcas de café, un solo parque</h2>
-					<p class="cuerpo">Diez días para probar el café de Loja: filtrados, V60 y concurso de chuspas. Las marcas compiten y eligen su top 10 de especialidad.</p>
+					<h2 class="titular">{evento.nombre}: diez días en la tienda</h2>
+					<p class="cuerpo">Unas {cifras.marcasEvento} marcas participan: filtrados, V60 y concurso de chuspas. Las marcas compiten y eligen su top 10 de especialidad. Y todo el año, la tienda reúne {cifras.marcasTienda} marcas de café.</p>
 					<div class="cincuenta__ficha">
-						<img class="cincuenta__sello" src={sello} alt="Sello 100 % Café Especial, Somos Loja Coopser, tercera edición" width="640" height="610" loading="lazy" decoding="async" />
+						<img class="cincuenta__sello" src={sello} alt="Sello del evento, Somos Loja Coopser, tercera edición" width="640" height="610" loading="lazy" decoding="async" />
 						<dl>
 							<div><dt>Cuándo</dt><dd>{evento.fechas}</dd></div>
 							<div><dt>Dónde</dt><dd>{evento.lugar}<span>{evento.esquina}</span></dd></div>
@@ -97,7 +97,7 @@ const cinta = [...productos, ...productos];
 					</div>
 					<div class="cincuenta__acciones">
 						<a class="boton boton--tinta" href={evento.postal}>Abrir la invitación<Flecha /></a>
-						<a class="boton boton--linea" href={evento.mapa} target="_blank" rel="noopener">Cómo llegar al parque</a>
+						<a class="boton boton--linea" href={evento.mapa} target="_blank" rel="noopener">Cómo llegar a la tienda</a>
 						<a class="enlace-wa" href={whatsapp.evento} target="_blank" rel="noopener">Pregúntanos por el evento</a>
 					</div>
 				</div>
@@ -108,7 +108,7 @@ const cinta = [...productos, ...productos];
 			<div class="tienda__rejilla">
 				<div class="tienda__texto">
 					<h2 class="titular">A pasos de la Catedral de Loja</h2>
-					<p class="tienda__resumen">La cooperativa reúne a <strong>{cifras[0][0]}</strong> {cifras[0][1]} lojanos: unas <strong>{cifras[1][0]}</strong> marcas y fincas de café y <strong>{cifras[2][0]}</strong> {cifras[2][1]}.</p>
+					<p class="tienda__resumen">La cooperativa reúne a <strong>{cifras.socios}</strong> emprendedores lojanos y productores de la EPS. Contamos con <strong>{cifras.marcasTienda}</strong> marcas de café y una amplia oferta de productos de agroindustria, textiles, artesanías, licores, salud y belleza.</p>
 					<ul class="tienda__datos">
 						<li>
 							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.4" /></svg>

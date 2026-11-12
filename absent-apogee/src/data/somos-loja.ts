@@ -23,38 +23,52 @@ export const enlaces = {
 
 // WhatsApp deep links with a pre-filled message.
 const wa = (texto: string) => `https://wa.me/${enlaces.telefono.replace(/\D/g, '')}?text=${encodeURIComponent(texto)}`;
-// Partner brand logos for the infinite strip (public/carpeta-a-usar-web/marcas).
-const m = `${base}/marcas`;
+// Partner brand logos, third edition (public/carpeta-a-usar-web/marcas-edicion-3).
+// New folder name busts the week-long asset cache. The first half lines up on the cup's left wing,
+// the second on the right; dark cards and light marks alternate so neither wing looks heavy.
+const m = `${base}/marcas-edicion-3`;
 export const marcas: { nombre: string; src: string }[] = [
-  ['Café Abraham', 'cafe-abraham'],
+  ['Café Abrahám', 'cafe-abraham'],
+  ['Juan Antonio Café Gourmet', 'cafe-juan-antonio'],
+  ['Café Don Rey', 'cafe-don-rey'],
+  ['Sapikuna Raíces', 'sapikuna'],
   ['Tierras del Sur', 'tierras-del-sur'],
-  ['Sapikuna Café', 'sapikuna'],
-  ['Yaraz’s', 'yarazs'],
-  ['Café del Abuelo', 'cafe-del-abuelo'],
   ['Café El Viajero', 'cafe-el-viajero'],
-  ['Café Juan Antonio', 'cafe-juan-antonio'],
-  ['Café Yunguilla Cariamanga', 'cafe-yunguilla-cariamanga'],
+  ['Café Johann', 'cafe-johann'],
   ['Granadillo Coffee', 'granadillo-coffee'],
-  ['Guambona Coffee Estate', 'guambona-coffee-estate'],
+  ['Hacienda La Florida', 'hacienda-la-florida'],
+  ['Yaraz’s Café Amazónico', 'yarazs'],
   ['Lojanías', 'lojanias'],
+  ['Mamá Lolita', 'mama-lolita'],
   ['Los Ceibos', 'los-ceibos'],
-  ['Lojanísimos', 'productos-mn-lojanisimos'],
+  ['Café del Abuelo', 'cafe-del-abuelo'],
+  ['Productos MN Lojanísimos', 'productos-mn-lojanisimos'],
+  ['La Papaya Café', 'la-papaya'],
+  ['Café Yunguilla Cariamanga', 'cafe-yunguilla-cariamanga'],
+  ['Héctor Carrión, un señor café', 'hector-carrion'],
   ['Vida Campestre', 'vida-campestre'],
+  ['Vallicoffee', 'vallicoffee'],
+  ['Kanta Munani Coffee Roasters', 'kanta-munani'],
+  ['Valle Andino', 'valle-andino'],
+  ['Rottwy Herederos del Café', 'rottwy'],
+  ['Don Roberto Café', 'don-roberto'],
 ].map(([nombre, slug]) => ({ nombre, src: `${m}/${slug}.webp` }));
 
 export const whatsapp = {
   general: wa('Hola Somos Loja, vengo de la página web y quiero más información.'),
-  evento: wa('Hola Somos Loja, vi la página web y quiero saber más del evento Loja 100 % Café Especial.'),
+  evento: wa('Hola Somos Loja, vi la página web y quiero saber más del evento 100% Café de Especialidad.'),
   tienda: wa('Hola Somos Loja, vi la página web y quiero preguntar por los productos de la tienda.'),
 };
 
-// Loja 100 % Café Especial, third edition: the event the home page invites to.
+// "100% Café de Especialidad": the ten-day event the home page invites to. It happens in the store
+// (not in the park) with about 25 brands; the store itself carries more than 50. Never mix the two.
 export const evento = {
+  nombre: '100% Café de Especialidad',
   fechas: 'Del 13 al 22 de noviembre',
-  lugar: 'Parque Central de Loja',
-  esquina: 'Eguiguren y Bernardo Valdivieso',
+  lugar: 'Tienda Somos Loja',
+  esquina: 'Eguiguren y Bernardo Valdivieso, frente al Parque Central',
   hora: null as string | null,
-  mapa: 'https://www.google.com/maps/search/?api=1&query=Parque+Central+Loja+Ecuador',
+  mapa: enlaces.mapa,
   postal: '/evento/postal/index.html',
 };
 
@@ -83,22 +97,22 @@ const f = `${base}/fotos`;
 
 // Each step is told twice: the illustration (memory) and the real photo developed over it.
 export const capitulos = [
-  { img: null, ancho: 0, alto: 0, titulo: 'Nace en la finca', texto: 'Familias productoras cuidan cada planta en las laderas de Loja.', alt: '',
+  { img: null, ancho: 0, alto: 0, titulo: 'La historia nace en la finca', texto: 'Las familias productoras cuidan cada planta.', alt: '',
     fotos: [
       { src: `${f}/15-recorrido.webp`, ancho: 1200, alto: 800, alt: 'Foto real: caficultores recorren el cafetal y revisan las plantas' },
       { src: `${f}/14-cosecha.webp`, ancho: 900, alto: 1200, alt: 'Foto real: un caficultor cosecha cerezas rojas entre las ramas' },
     ] },
-  { img: null, ancho: 0, alto: 0, titulo: 'Se lava y se escoge a mano', texto: 'Cada cereza pasa por manos lojanas antes de secarse.', alt: '',
+  { img: null, ancho: 0, alto: 0, titulo: 'El beneficio del café', texto: 'Manos expertas escogen cada cereza. Luego el beneficio (lavado, fermentación u otro proceso) le da a cada café su carácter.', alt: '',
     fotos: [
       { src: `${f}/05-lavado.webp`, ancho: 1200, alto: 800, alt: 'Foto real: lavado de cerezas rojas de café en un balde' },
       { src: `${f}/06-seleccion-1.webp`, ancho: 900, alto: 1200, alt: 'Foto real: personas escogiendo a mano cerezas de café sobre una mesa' },
     ] },
-  { img: null, ancho: 0, alto: 0, titulo: 'Se seca al sol', texto: 'Se despulpa y el grano descansa al aire libre.', alt: '',
+  { img: null, ancho: 0, alto: 0, titulo: 'Se cuida el secado', texto: 'En marquesinas, aprovechando el calor y el sol de nuestra tierra.', alt: '',
     fotos: [
       { src: `${f}/08-marquesina.webp`, ancho: 1200, alto: 799, alt: 'Foto real: camas de secado de café bajo una marquesina' },
       { src: `${f}/04-secado-montana.webp`, ancho: 900, alto: 1200, alt: 'Foto real: café secándose al sol con las montañas detrás' },
     ] },
-  { img: null, ancho: 0, alto: 0, titulo: 'Llega a tu taza', texto: 'Se tuesta, se sirve y cuenta de dónde viene.', alt: '',
+  { img: null, ancho: 0, alto: 0, titulo: 'Llega a tu taza', texto: 'Se tuesta cuidadosamente para conservar y expresar sus aromas.', alt: '',
     fotos: [
       { src: `${f}/13-barista.webp`, ancho: 1200, alto: 799, alt: 'Foto real: barista sirviendo café de filtro en una barra de madera' },
       { src: `${f}/11-granos-taza.webp`, ancho: 799, alto: 1200, alt: 'Foto real: granos de café tostado cayendo sobre una taza' },
@@ -106,11 +120,12 @@ export const capitulos = [
 ];
 
 
-export const cifras = [
-  ['300', 'emprendedores y productores'],
-  ['50', 'marcas y fincas de café, aprox.'],
-  ['14', 'marcas de vinos y licores'],
-];
+// Store figures. "más de 300" is the suggested wording; the client still has to confirm it against "alrededor de 300".
+export const cifras = {
+  socios: 'más de 300',
+  marcasTienda: 'más de 50',
+  marcasEvento: '25',
+};
 
 
 

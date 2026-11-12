@@ -1,6 +1,10 @@
 ---
 // Partner logos are born from the bean: they burst out of it and settle floating between the headline and the cup.
 import { marcas } from '../data/somos-loja';
+// Phone strips: first half of the brands runs left, second half runs right. Each strip holds two
+// copies so the loop is seamless; the script flies every logo onto its piece before the strip moves.
+const mitad = Math.ceil(marcas.length / 2);
+const filas = [marcas.slice(0, mitad), marcas.slice(mitad)];
 ---
 
 <section id="taza" class="cascada" aria-label="Un grano de café cae y se junta en una taza">
@@ -20,9 +24,21 @@ import { marcas } from '../data/somos-loja';
 
 		<ul class="cascada__marcas" aria-label="Marcas que encuentras en Somos Loja">
 			{marcas.map((m) => (
-				<li class="cascada__marca"><img src={m.src} alt={m.nombre} height="160" loading="eager" decoding="async" draggable="false" /></li>
+				<li class="cascada__marca"><img src={m.src} alt={m.nombre} height="160" loading="lazy" decoding="async" draggable="false" /></li>
 			))}
 		</ul>
+
+		<div class="cascada__cinta" aria-hidden="true">
+			{filas.map((fila, r) => (
+				<div class={`cascada__fila cascada__fila--${r === 0 ? 'izq' : 'der'}`}>
+					<div class="cascada__pista">
+						{[...fila, ...fila].map((m) => (
+							<span class="cascada__pieza"><img src={m.src} alt="" height="160" loading="lazy" decoding="async" draggable="false" /></span>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
 
 		<div class="cascada__texto">
 			<h2 class="titular titular--media">El grano llega a la taza</h2>
@@ -90,10 +106,11 @@ import { marcas } from '../data/somos-loja';
 	.cascada__taza-wrap {
 		position: absolute;
 		left: 50%;
-		bottom: 9vh;
+		/* Clears the "Explora Loja" pill that stays fixed at the bottom of the screen. */
+		bottom: max(9vh, 92px);
 		z-index: 3;
-		width: min(50vh, 60vw);
-		margin-left: calc(min(50vh, 60vw) / -2);
+		width: min(48vh, 58vw);
+		margin-left: calc(min(48vh, 58vw) / -2);
 	}
 
 	.cascada__taza {
@@ -138,7 +155,7 @@ import { marcas } from '../data/somos-loja';
 	/* Every logo sits in the same cell so mixed badges and wordmarks line up on one grid. */
 	.cascada__marca {
 		--celda-w: clamp(96px, 7.6vw, 150px);
-		--celda-h: calc(var(--celda-w) * 0.5);
+		--celda-h: calc(var(--celda-w) * 0.6);
 		display: block;
 		width: var(--celda-w);
 		height: var(--celda-h);
@@ -175,6 +192,11 @@ import { marcas } from '../data/somos-loja';
 		opacity: 0;
 		will-change: transform, opacity;
 	}
+
+	.cascada__cinta { display: none; }
+
+	@keyframes cinta-izq { to { transform: translateX(-50%); } }
+	@keyframes cinta-der { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 
 	@media (prefers-reduced-motion: reduce) {
 		.cascada__marca img { animation: none; }
@@ -219,11 +241,72 @@ import { marcas } from '../data/somos-loja';
 	}
 
 	@media (max-width: 760px) {
-		.cascada__marca { --celda-w: 60px; --celda-h: 34px; }
+		/* Same size as a strip piece, so the landing hands over without a jump. */
+		.cascada__marca { --celda-w: 108px; --celda-h: 64px; }
+
+		/* One soft card behind every logo: light marks and dark badges read as one even set. */
+		.cascada__marca,
+		.cascada__pieza {
+			box-sizing: border-box;
+			padding: 9px 11px;
+			border: 1px solid rgb(90 51 28 / 0.08);
+			border-radius: 12px;
+			background: #fffaf0;
+			box-shadow: 0 6px 14px rgb(90 51 28 / 0.1);
+		}
+
+		/* No bobbing in flight: it would make the hand-over to the strip twitch. */
+		.cascada__marca img,
+		.cascada__pieza img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			filter: none;
+			animation: none;
+		}
+
+		/* Two strips running in opposite directions, faded at the screen edges. */
+		.cascada--animada .cascada__cinta {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 45%;
+			z-index: 5;
+			display: grid;
+			gap: 14px;
+			/* Room for the card shadows inside the fade mask. */
+			padding: 10px 0 16px;
+			visibility: hidden;
+			pointer-events: none;
+			-webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+			mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+		}
+
+		.cascada__cinta--viva { visibility: visible !important; }
+		.cascada--cinta .cascada__marca { visibility: hidden; }
+
+		.cascada__fila { overflow: visible; }
+
+		.cascada__pista {
+			display: flex;
+			width: max-content;
+			animation: cinta-izq 62s linear infinite paused;
+		}
+
+		.cascada__fila--der .cascada__pista { animation-name: cinta-der; animation-duration: 70s; }
+		.cascada__cinta--viva .cascada__pista { animation-play-state: running; }
 
 		/* The scene plays by time on touch screens, so a shorter pin is enough. */
 		.cascada--animada {
 			height: 165vh;
+		}
+
+		.cascada__pieza {
+			flex: none;
+			width: 108px;
+			height: 64px;
+			margin-right: 14px;
 		}
 
 		.cascada__escena {
@@ -236,7 +319,7 @@ import { marcas } from '../data/somos-loja';
 		}
 
 		.cascada__taza-wrap {
-			bottom: 7svh;
+			bottom: max(7svh, 88px);
 			width: min(40vh, 72vw);
 			margin-left: calc(min(40vh, 72vw) / -2);
 		}

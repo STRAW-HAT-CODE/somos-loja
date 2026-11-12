@@ -16,8 +16,20 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	}
 
 	const granos = gsap.utils.toArray('.cascada__granito');
-	const marcas = gsap.utils.toArray('.cascada__marca');
+	// Every visit deals the brands into new seats, so no brand is always the one at the bottom.
+	const marcasDom = gsap.utils.toArray('.cascada__marca');
+	const marcas = [...marcasDom];
+	for (let i = marcas.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[marcas[i], marcas[j]] = [marcas[j], marcas[i]];
+	}
+	// Each logo's place in the markup, which is the order the phone strips are built in.
+	const orden = marcas.map((m) => marcasDom.indexOf(m));
 	const texto = seccion.querySelector('.cascada__texto');
+	// Phones: once the logos land they hand over to two looping strips (a carousel) instead of a dense grid.
+	const cinta = seccion.querySelector('.cascada__cinta');
+	const filasCinta = cinta?.querySelectorAll ? [...cinta.querySelectorAll('.cascada__pista')] : [];
+	let usaCinta = false;
 	// A slow left-to-right wave: the logos bob in sequence once they have settled (CSS).
 	marcas.forEach((m, i) => m.style.setProperty('--retraso', `${(-i * 0.33).toFixed(2)}s`));
 	let geo = {};
@@ -40,32 +52,65 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	// the headline or the rim. Narrow screens: a balanced grid in the free band above the cup.
 	function medirMarcas(wrap) {
 		if (!marcas.length) return;
+		// Start from the CSS cell size; the wide layout may shrink it to fit every brand.
+		marcas.forEach((m) => m.style.removeProperty('--celda-w'));
 		const arriba = texto ? texto.offsetTop + texto.offsetHeight + 24 : escena.offsetHeight * 0.4;
-		const celdaW = marcas[0].offsetWidth;
-		const celdaH = marcas[0].offsetHeight;
+		let celdaW = marcas[0].offsetWidth;
+		let celdaH = marcas[0].offsetHeight;
 		const cupL = wrap.offsetLeft;
 		const cupR = cupL + wrap.offsetWidth;
 		const cupBottom = wrap.offsetTop + wrap.offsetHeight;
 		const hueco = Math.max(28, celdaW * 0.3);
 		const lado = cupL;
-		if (lado >= 2 * celdaW + hueco * 2 + 24) {
+		const anchoAla = (cols) => hueco + cols * celdaW + (cols - 1) * hueco * 0.6 + 24;
+		const cols = [3, 2].find((c) => lado >= anchoAla(c));
+		if (cols) {
 			const mitad = Math.ceil(marcas.length / 2);
 			const disponible = cupBottom - arriba;
-			const filas = Math.ceil(mitad / 2);
-			const paso = Math.min(celdaH * 2.1, (disponible - celdaH) / Math.max(1, filas - 0.5));
-			const y0 = arriba + Math.max(0, (disponible - (paso * (filas - 0.5) + celdaH)) / 2);
+			const filas = Math.ceil(mitad / cols);
+			const tramos = filas - 1 + 0.5;
+			// Too many rows for the band: shrink the cells so neighbours never overlap.
+			const minimo = celdaH * (1.22 * tramos + 1);
+			if (disponible < minimo) {
+				const k = Math.max(0.72, disponible / minimo);
+				celdaW *= k;
+				celdaH *= k;
+				marcas.forEach((m) => m.style.setProperty('--celda-w', `${celdaW}px`));
+			}
+			const paso = Math.min(celdaH * 2.1, (disponible - celdaH) / Math.max(1, tramos));
+			const y0 = arriba + Math.max(0, (disponible - (paso * tramos + celdaH)) / 2);
 			destinos = marcas.map((m, i) => {
 				const derecha = i >= mitad;
 				const k = derecha ? i - mitad : i;
-				const exterior = k % 2 === 1;
-				const fila = Math.floor(k / 2) + (exterior ? 0.5 : 0);
-				const desde = hueco + (exterior ? celdaW + hueco * 0.6 : 0);
+				const col = k % cols;
+				// Honeycomb: every other column drops half a row.
+				const fila = Math.floor(k / cols) + (col % 2 === 1 ? 0.5 : 0);
+				const desde = hueco + col * (celdaW + hueco * 0.6);
 				const x = derecha ? cupR + desde : cupL - desde - celdaW;
 				return { x, y: y0 + fila * paso, w: celdaW, h: celdaH };
 			});
 			return;
 		}
 		const abajo = wrap.offsetTop + wrap.offsetHeight * 0.18;
+		usaCinta = filasCinta.length === 2 && geo.W <= 760;
+		if (usaCinta) {
+			// Each logo flies to its own piece in the strip, measured at the strip's starting frame.
+			ponerCinta(false);
+			const alto = cinta.offsetHeight;
+			cinta.style.top = `${Math.round(arriba + Math.max(0, (abajo - arriba - alto) / 2))}px`;
+			const caja = escena.getBoundingClientRect();
+			const mitad = Math.ceil(marcas.length / 2);
+			destinos = marcas.map((m, i) => {
+				const k = orden[i];
+				const fila = k < mitad ? 0 : 1;
+				const piezas = filasCinta[fila].children;
+				// The first strip starts on its first copy; the second runs the other way and starts on its second copy.
+				const pieza = piezas[fila === 0 ? k : k - mitad + piezas.length / 2];
+				const r = pieza.getBoundingClientRect();
+				return { x: r.left - caja.left, y: r.top - caja.top, w: r.width, h: r.height };
+			});
+			return;
+		}
 		const gapX = geo.W <= 760 ? 10 : 20;
 		const gapY = geo.W <= 760 ? 14 : 18;
 		const ancho = Math.min(geo.W - 32, 1100);
@@ -87,6 +132,17 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 			}
 		});
 	}
+	// Swaps the landed logos for the moving strips (and back when the scene rewinds).
+	let cintaViva = false;
+	function ponerCinta(viva) {
+		if (!cinta?.classList || viva === cintaViva) return;
+		cintaViva = viva;
+		cinta.classList.toggle('cascada__cinta--viva', viva);
+		seccion.classList.toggle('cascada--cinta', viva);
+		// Back to the starting frame, so the next landing lines up with the pieces again.
+		if (!viva) filasCinta.forEach((p) => { p.style.animation = 'none'; void p.offsetWidth; p.style.animation = ''; });
+	}
+
 	medir();
 
 	const chispas = marcas.map(() => ({
@@ -125,6 +181,7 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	const reiniciar = () => {
 		detener();
 		tl.pause(0);
+		ponerCinta(false);
 	};
 	const activador = {
 		trigger: seccion,
@@ -231,6 +288,10 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		}, 0.35 + i * (0.08 / Math.max(1, marcas.length)));
 	});
 
+	// Phones: the strips take over the moment the last logo lands.
+	const ATERRIZAJE = 0.35 + 0.08 + 0.24;
+	tl.eventCallback('onUpdate', () => ponerCinta(usaCinta && tl.time() >= ATERRIZAJE));
+
 	/* 4. The gathered beans resolve into the filled cup, then brewed coffee. */
 	tl.fromTo('.cascada__taza-granos', { opacity: 0 }, { opacity: 1, duration: 0.13 }, 0.58);
 	tl.fromTo('.cascada__taza-cafe', { opacity: 0 }, { opacity: 1, duration: 0.16 }, 0.75);
@@ -264,7 +325,9 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	// Mobile browsers fire resize when the address bar hides; only a width change needs new geometry.
 	let ancho = innerWidth;
 	addEventListener('resize', () => { if (innerWidth !== ancho) { ancho = innerWidth; refreshGeometry(); } }, { passive: true });
+	// Logos sit in fixed cells, so only the scene's own artwork can move the layout when it loads.
 	seccion.querySelectorAll('img').forEach((image) => {
+		if (image.closest?.('.cascada__marca, .cascada__cinta')) return;
 		if (!image.complete) image.addEventListener('load', refreshGeometry, { once: true });
 	});
 }
