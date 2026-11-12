@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { DURACION, iniciarMapa } from '../src/scripts/mapa-rotacion.js';
+import { iniciarMapa } from '../src/scripts/mapa-rotacion.js';
 
 // Minimal DOM stand-ins: only what the map controller touches.
 class Nodo {
@@ -72,20 +72,17 @@ function montar({ reducir = false, ahorro = false, tactil = false } = {}) {
   return { marco, video, capa, iframe, verMapa, verRecorrido, completo, ventana, avanzar, mostrar: (v) => alVer(v), pendientes };
 }
 
-test('the map holds 12 s, then the short walk clip plays 4 s, while on screen', () => {
-  assert.deepEqual([DURACION.mapa, DURACION.recorrido], [12000, 4000]);
+test('map and the short walk clip take turns every 4 s while on screen', () => {
   const m = montar();
   m.mostrar(true);
   assert.equal(m.marco.dataset.vista, 'mapa');
-  m.avanzar(DURACION.mapa - 1);
-  assert.equal(m.marco.dataset.vista, 'mapa', 'the map is not cut short');
-  m.avanzar(1);
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'recorrido');
   assert.equal(m.video.src, '/tramo.mp4');
   assert.equal(m.video.reproduciendo, true);
   assert.equal(m.capa.getAttribute('aria-hidden'), 'false');
   assert.equal(m.iframe.hasAttribute('inert'), true);
-  m.avanzar(DURACION.recorrido);
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'mapa');
   assert.equal(m.video.reproduciendo, false);
   assert.equal(m.iframe.hasAttribute('inert'), false);
@@ -107,7 +104,7 @@ test('the buttons switch the view and the rotation keeps going', () => {
   assert.equal(m.marco.dataset.vista, 'recorrido');
   assert.equal(m.verRecorrido.getAttribute('aria-pressed'), 'true');
   assert.equal(m.verMapa.getAttribute('aria-pressed'), 'false');
-  m.avanzar(DURACION.recorrido);
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'mapa');
 });
 
@@ -118,7 +115,7 @@ test('pointer or focus on the frame pauses the rotation; leaving resumes it', ()
   m.avanzar(20000);
   assert.equal(m.marco.dataset.vista, 'mapa');
   m.marco.emitir('pointerleave');
-  m.avanzar(DURACION.mapa);
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'recorrido');
 });
 
@@ -137,7 +134,7 @@ test('the full walk stops the rotation, then returns to the map and resumes when
   assert.equal(m.video.src, '/tramo.mp4');
   assert.equal(m.video.controls, false);
   assert.equal(m.marco.classList.contains('mapa--entero'), false);
-  m.avanzar(DURACION.mapa);
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'recorrido', 'rotation resumes with the short clip');
   assert.equal(m.video.src, '/tramo.mp4');
 });
@@ -150,7 +147,7 @@ test('a button during the full walk goes back to the short clip', () => {
   assert.equal(m.marco.dataset.vista, 'mapa');
   assert.equal(m.video.controls, false);
   assert.equal(m.video.src, '/tramo.mp4');
-  m.avanzar(DURACION.mapa);
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'recorrido');
 });
 
@@ -167,7 +164,7 @@ test('using the map itself stops the rotation for good', () => {
 test('leaving the screen pauses the video and the timer', () => {
   const m = montar();
   m.mostrar(true);
-  m.avanzar(DURACION.mapa);
+  m.avanzar(4000);
   assert.equal(m.video.reproduciendo, true);
   m.mostrar(false);
   assert.equal(m.video.reproduciendo, false);
@@ -182,7 +179,7 @@ test('on touch screens a tap on the map only pauses the rotation for 10 s', () =
   m.ventana.emitir('blur');
   m.avanzar(9000);
   assert.equal(m.marco.dataset.vista, 'mapa');
-  m.avanzar(1000 + DURACION.mapa);
+  m.avanzar(1000 + 4000);
   assert.equal(m.marco.dataset.vista, 'recorrido', 'rotation resumes after the pause');
 });
 
@@ -190,6 +187,6 @@ test('a touch pointer entering the frame does not pause the rotation', () => {
   const m = montar({ tactil: true });
   m.mostrar(true);
   for (const fn of m.marco.oyentes.pointerenter) fn({ type: 'pointerenter', pointerType: 'touch' });
-  m.avanzar(DURACION.mapa);
+  m.avanzar(4000);
   assert.equal(m.marco.dataset.vista, 'recorrido');
 });

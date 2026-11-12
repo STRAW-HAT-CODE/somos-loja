@@ -1,11 +1,11 @@
-// Store location: the map stays 12 s, then a 4 s clip of the walk from the Cathedral plays.
+// Store location: the map and a 4 s clip of the walk from the Cathedral take turns.
 // The rotation only runs on screen, keeps going after a button pick, pauses while
 // the pointer or focus is on the frame, and stops once the visitor uses the map
 // itself or opens the full walk. On touch screens a tap on the map (often just a scroll
 // that landed on it) only pauses the rotation for a while. Reduced motion and data saver
 // get the buttons only.
 // Timers, the window and the visibility observer are injectable for tests.
-export const DURACION = { mapa: 12000, recorrido: 4000, pausaTactil: 10000 };
+export const DURACION = { mapa: 4000, recorrido: 4000, pausaTactil: 10000 };
 
 export function iniciarMapa(marco, {
   reducir = false,
