@@ -272,30 +272,39 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		tl.to(grano, { scale: 0, opacity: 0, duration: 0.05 }, start + dur);
 	});
 
-	/* 3b. The bean bursts into the brands: they fly out of the crack, then settle between headline and cup. */
+	/* 3b. The bean bursts into the brands: they spray out of the crack, hang for a beat, then drift
+	   down like falling cards and land in their seats in reading order (top row first, left to right),
+	   each with a small settle, so the grid visibly builds itself instead of snapping into place. */
+	const n = Math.max(1, marcas.length);
+	const porAsiento = marcas.map((_, i) => i).sort((a, b) => {
+		const da = destinos[a] ?? { x: 0, y: 0 };
+		const db = destinos[b] ?? { x: 0, y: 0 };
+		return Math.abs(da.y - db.y) > 4 ? da.y - db.y : da.x - db.x;
+	});
+	const turno = [];
+	porAsiento.forEach((i, r) => { turno[i] = r; });
+	const CAIDA = 0.2;
+	const TRAMO = 0.24;
 	marcas.forEach((m, i) => {
 		const ch = chispas[i];
-		const inicio = 0.165 + i * (0.06 / Math.max(1, marcas.length));
-		tl.to(m, {
-			opacity: 1,
-			scale: 0.85,
-			x: () => enGrano(i).x + Math.cos(ch.ang) * ch.rad * geo.W * 0.6,
-			y: () => enGrano(i).y + Math.sin(ch.ang) * ch.rad * escena.offsetHeight * 0.5,
-			duration: 0.12,
-			ease: 'power3.out'
-		}, inicio);
-		tl.to(m, {
-			scale: 1,
-			rotate: 0,
-			x: () => destinos[i]?.x ?? 0,
-			y: () => destinos[i]?.y ?? 0,
-			duration: 0.24,
-			ease: 'power2.inOut'
-		}, 0.35 + i * (0.08 / Math.max(1, marcas.length)));
+		const inicio = 0.165 + i * (0.05 / n);
+		const estallido = () => ({
+			x: enGrano(i).x + Math.cos(ch.ang) * ch.rad * geo.W * 0.55,
+			y: enGrano(i).y + Math.sin(ch.ang) * ch.rad * escena.offsetHeight * 0.45
+		});
+		tl.to(m, { opacity: 1, scale: 0.8, x: () => estallido().x, y: () => estallido().y, duration: 0.1, ease: 'expo.out' }, inicio);
+		// A slow hang at the top of the burst, still turning, before gravity takes over.
+		tl.to(m, { y: () => estallido().y - 18, rotate: ch.rot * 1.4, duration: 0.07, ease: 'sine.out' }, inicio + 0.1);
+		const cae = 0.3 + turno[i] * (TRAMO / n);
+		tl.to(m, { x: () => destinos[i]?.x ?? 0, duration: CAIDA, ease: 'sine.inOut' }, cae);
+		tl.to(m, { y: () => destinos[i]?.y ?? 0, duration: CAIDA, ease: 'back.out(1.25)' }, cae);
+		// It sways once on the way down and lands square.
+		tl.to(m, { rotate: -ch.rot * 0.5, scale: 0.92, duration: CAIDA * 0.55, ease: 'sine.inOut' }, cae);
+		tl.to(m, { rotate: 0, scale: 1, duration: CAIDA * 0.45, ease: 'back.out(2)' }, cae + CAIDA * 0.55);
 	});
 
 	// Phones: the strips take over the moment the last logo lands.
-	const ATERRIZAJE = 0.35 + 0.08 + 0.24;
+	const ATERRIZAJE = 0.3 + TRAMO + CAIDA;
 	tl.eventCallback('onUpdate', () => ponerCinta(usaCinta && tl.time() >= ATERRIZAJE));
 
 	/* 4. The gathered beans resolve into the filled cup, then brewed coffee. */
@@ -311,6 +320,8 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	   section (the forming 50) follows it up instead of meeting an empty band. */
 	if (!porTiempo) {
 		tl.fromTo(escena, { y: 0 }, { y: () => -geo.subida, duration: 0.4, ease: 'sine.inOut' }, 0.38);
+		// The finished scene rests on screen for a stretch of scroll before the 50 takes over.
+		tl.to({}, { duration: 0.35 }, 0.92);
 	}
 
 	if (porTiempo) {
