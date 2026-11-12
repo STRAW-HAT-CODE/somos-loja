@@ -49,10 +49,8 @@ const cinta = [...productos, ...productos];
 						<span class="hero-ticket__accion">Ver evento</span>
 					</a>
 				</div>
-				<div class="apertura__centro">
-					<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
-					<h2 class="titular apertura__frase">En Loja, cada grano<br />tiene una historia</h2>
-				</div>
+				<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
+				<h2 class="titular apertura__frase">En Loja, cada grano<br />tiene una historia</h2>
 			</div>
 		</section>
 
@@ -251,9 +249,18 @@ const cinta = [...productos, ...productos];
 		};
 		ScrollTrigger.create({
 			trigger: '.apertura', start: 'top -2%', end: 'bottom bottom',
-			onEnter: () => {
-				if (!navegando && caida.progress() < 1) bloqueo.bloquear(900);
+			onEnter: (self) => {
 				caidaHacia(1, 1.6);
+				if (navegando || caida.progress() >= 1) return;
+				// Short lock against a double flick, but the page still glides on during the fall,
+				// so the next section's photos start rising into view as the bean lands.
+				const apertura = self.trigger as HTMLElement;
+				const destino = apertura.offsetTop + apertura.offsetHeight - innerHeight * 0.85;
+				bloqueo.bloquear(2200);
+				lenis.scrollTo(destino, {
+					force: true, duration: 1.6, easing: (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2),
+					onComplete: () => bloqueo.liberar()
+				});
 			},
 			onLeaveBack: () => caidaHacia(0, 1),
 			onRefresh: (self) => { if (self.scroll() > self.start) { caidaTween?.kill(); caida.progress(1); } }
@@ -312,6 +319,25 @@ const cinta = [...productos, ...productos];
 			else if (p === 0 && lanzada) { lanzada = false; gsap.killTweensOf(formacion); formacion.v = 0; }
 			return formacion.v;
 		}
+		// Leaving the finished cup downwards: a short hold glides the page to the 50, fully built.
+		ScrollTrigger.create({
+			trigger: '.cascada', start: 'top top', end: 'bottom bottom',
+			onLeave: (self) => {
+				const caja = etapa.getBoundingClientRect();
+				// Only a real scroll from the cup; a reload further down or a menu trip is left alone.
+				if (navegando || self.getVelocity() <= 0 || caja.top <= 0 || caja.top > innerHeight * 1.2) return;
+				const destino = scrollY + caja.top + (movil ? 0 : (etapa.offsetHeight - innerHeight) * 0.7);
+				const segundos = movil ? 1 : 1.8;
+				// Phones: the 50 then finishes forming by itself, so the hold lasts until it is done.
+				bloqueo.bloquear((segundos + (movil ? 1.6 : 0.3)) * 1000);
+				lenis.scrollTo(destino, {
+					duration: segundos, force: true,
+					easing: (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
+					// A beat on the finished 50 before the page is free again.
+					onComplete: () => { if (!movil) setTimeout(() => bloqueo.liberar(), 400); }
+				});
+			}
+		});
 		if (canvas && !ahorro) {
 			const vigia = new IntersectionObserver(([e]) => {
 				if (!e.isIntersecting) return;

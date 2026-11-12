@@ -227,11 +227,12 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 		{ yPercent: 0, rotate: 12, scale: 1, autoAlpha: 1, duration: 0.16 }, 0);
 
 	/* 2. se rompe: fade + polvo */
-	tl.to('.cascada__grano-grande', { scale: 1.2, autoAlpha: 0, duration: 0.05 }, 0.16);
+	// The burst holds a moment on screen, so the explosion reads even on a quick scroll.
+	tl.to('.cascada__grano-grande', { scale: 1.35, autoAlpha: 0, duration: 0.08, ease: 'power2.out' }, 0.16);
 	tl.fromTo('.cascada__polvo',
 		{ autoAlpha: 0, scale: 0.45 },
-		{ autoAlpha: 0.95, scale: 1.05, duration: 0.06 }, 0.16);
-	tl.to('.cascada__polvo', { autoAlpha: 0, scale: 1.55, duration: 0.15 }, 0.23);
+		{ autoAlpha: 1, scale: 1.2, duration: 0.07, ease: 'power2.out' }, 0.16);
+	tl.to('.cascada__polvo', { autoAlpha: 0, scale: 1.7, duration: 0.2 }, 0.26);
 
 	/* 3. lluvia de granitos hacia la taza */
 	granos.forEach((grano, i) => {
