@@ -351,7 +351,7 @@ const cinta = [...productos, ...productos];
 		});
 		// Desktop only: on mobile the text is a sheet that scrolls over the finished 50.
 		if (!movil) leer(0);
-		if (!movil) ScrollTrigger.create({ trigger: etapa, start: 'top 30%', end: () => 'top+=' + (etapa.offsetHeight - innerHeight) * 0.7 + ' top', invalidateOnRefresh: true, onUpdate: (self) => leer(self.progress), onRefresh: (self) => leer(self.progress) });
+		if (!movil) ScrollTrigger.create({ trigger: etapa, start: 'top 60%', end: () => 'top+=' + (etapa.offsetHeight - innerHeight) * 0.7 + ' top', invalidateOnRefresh: true, onUpdate: (self) => leer(self.progress), onRefresh: (self) => leer(self.progress) });
 
 		// Store.
 		gsap.from('.tienda__texto > *', { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.tienda', start: 'top 68%' } });

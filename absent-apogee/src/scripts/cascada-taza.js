@@ -45,6 +45,11 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 			rimY: wrap.offsetTop + taza.offsetTop + taza.offsetHeight * 0.225
 		};
 		geo.W = escena.offsetWidth;
+		// How far the finished composition (headline to cup foot) sits below the centre of the
+		// screen, header band excluded; the scene rises by that much while the logos settle.
+		const arribaTexto = texto ? texto.offsetTop : geo.crackY;
+		const abajo = wrap.offsetTop + wrap.offsetHeight;
+		geo.subida = Math.max(0, (arribaTexto + abajo) / 2 - (escena.offsetHeight / 2 + 36));
 		medirMarcas(wrap);
 	}
 
@@ -301,6 +306,12 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	tl.fromTo('.cascada__texto',
 		{ autoAlpha: 0, y: 38 },
 		{ autoAlpha: 1, y: 0, duration: 0.14 }, 0.6);
+
+	/* 6. Wide screens: while the logos settle, the whole scene rises to sit centred, so the next
+	   section (the forming 50) follows it up instead of meeting an empty band. */
+	if (!porTiempo) {
+		tl.fromTo(escena, { y: 0 }, { y: () => -geo.subida, duration: 0.4, ease: 'sine.inOut' }, 0.38);
+	}
 
 	if (porTiempo) {
 		ScrollTrigger.create({
