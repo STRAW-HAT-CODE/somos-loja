@@ -191,7 +191,11 @@ const cinta = [...productos, ...productos];
 
 	if (!reducir) {
 		document.documentElement.classList.add('animado');
-		const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.85 });
+		// A hard wheel flick is capped per event, so one shove cannot fly past several scenes.
+		const lenis = new Lenis({
+			lerp: 0.085, wheelMultiplier: 0.85,
+			virtualScroll: (d) => { if (d.event.type === 'wheel') d.deltaY = Math.max(-140, Math.min(140, d.deltaY)); return true; }
+		});
 		window.addEventListener('evento:abrir', () => lenis.stop());
 		window.addEventListener('evento:cerrar', () => lenis.start());
 		lenis.on('scroll', ScrollTrigger.update);
@@ -249,18 +253,13 @@ const cinta = [...productos, ...productos];
 		};
 		ScrollTrigger.create({
 			trigger: '.apertura', start: 'top -2%', end: 'bottom bottom',
-			onEnter: (self) => {
+			onEnter: () => caidaHacia(1, 1.6),
+			// No hold: a fast flick only hurries the fall, so the bean always lands before the hero leaves.
+			onUpdate: (self) => {
+				if (self.direction < 0 || self.progress <= caida.progress() + 0.02) return;
+				caidaTween?.kill();
+				caida.progress(Math.min(1, self.progress));
 				caidaHacia(1, 1.6);
-				if (navegando || caida.progress() >= 1) return;
-				// Short lock against a double flick, but the page still glides on during the fall,
-				// so the next section's photos start rising into view as the bean lands.
-				const apertura = self.trigger as HTMLElement;
-				const destino = apertura.offsetTop + apertura.offsetHeight - innerHeight * 0.85;
-				bloqueo.bloquear(2200);
-				lenis.scrollTo(destino, {
-					force: true, duration: 1.6, easing: (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2),
-					onComplete: () => bloqueo.liberar()
-				});
 			},
 			onLeaveBack: () => caidaHacia(0, 1),
 			onRefresh: (self) => { if (self.scroll() > self.start) { caidaTween?.kill(); caida.progress(1); } }

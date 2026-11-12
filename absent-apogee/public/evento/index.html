@@ -85,7 +85,7 @@
 
       .scene {
         z-index: -2;
-        background: #1a2e3b url("./recursos/plaza.webp") center center / cover no-repeat;
+        background: #1a2e3b url("./recursos/tienda.webp") center center / cover no-repeat;
       }
 
       .scene video {
@@ -550,7 +550,7 @@
   <body>
     <main class="canvas">
       <div class="scene" aria-hidden="true">
-        <video id="plaza-video" autoplay muted loop playsinline poster="./recursos/plaza.webp"></video>
+        <video id="plaza-video" autoplay muted loop playsinline poster="./recursos/tienda.webp"></video>
       </div>
 
       <section class="intro" aria-label="Identidad Somos Loja Tienda y 100% Café de Especialidad Somos Loja Coopser">
@@ -642,7 +642,7 @@
         }
 
         video.classList.remove("is-unavailable");
-        if (!video.hasAttribute("src")) video.src = "./recursos/plaza.mp4";
+        if (!video.hasAttribute("src")) video.src = "./recursos/tienda.mp4";
         video.play().catch(() => video.classList.add("is-unavailable"));
       }
 
