@@ -169,14 +169,15 @@ export function iniciarCascada(gsap, ScrollTrigger) {
 	// Touch screens play the whole scene by time once it arrives: a single swipe must not leave it half built.
 	const porTiempo = typeof matchMedia === 'function'
 		&& matchMedia('(max-width: 760px), (pointer: coarse)').matches;
-	const DURACION_TACTIL = 2.8;
+	// Long enough that the burst, the falling logos and the cup read calmly on a phone.
+	const DURACION_TACTIL = 4.6;
 
 	let tl;
 	let avance;
 	let guardado = 0;
 	const reproducir = () => {
 		if (tl.progress() >= 1 || avance?.isActive()) return;
-		avance = tl.tweenTo(tl.duration(), { duration: DURACION_TACTIL * (1 - tl.progress()), ease: 'power1.inOut' });
+		avance = tl.tweenTo(tl.duration(), { duration: DURACION_TACTIL * (1 - tl.progress()), ease: 'none' });
 	};
 	const detener = () => {
 		// A killed tween reports itself active, so drop the reference too.

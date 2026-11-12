@@ -45,7 +45,7 @@ test('on touch screens the cascade plays to its final frame on its own and repla
       trigger.onEnter();
       const tween = playback();
       assert(tween, `entering starts a timed playback on pass ${pass}`);
-      assert(tween.duration() >= 2 && tween.duration() <= 4, `playback lasts a readable 2–4 s, got ${tween.duration()}`);
+      assert(tween.duration() >= 4 && tween.duration() <= 5.5, `playback lasts a calm 4–5.5 s, got ${tween.duration()}`);
       tween.progress(1);
       assert.equal(proxy.progress(), 1, 'one swipe reaches the final frame');
       assert(target('.cascada__taza-cafe').opacity > 0.99, 'brewed coffee is served');
