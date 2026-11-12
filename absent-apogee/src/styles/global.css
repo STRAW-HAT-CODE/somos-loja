@@ -121,8 +121,10 @@ section[id] { scroll-margin-top: 0; }
 @keyframes seguir-rebote { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(4px); } 55% { transform: translateY(1px); } 70% { transform: translateY(3px); } }
 @keyframes seguir-halo { 0%, 15% { opacity: 0.5; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.5); } }
 .apertura__rama { position: absolute; top: -10px; left: -30px; width: clamp(150px, 19vw, 300px); z-index: 2; }
-.apertura__grano { position: absolute; top: 50%; left: 50%; width: min(52vh, 68vw); margin: calc(min(52vh, 68vw) / -2) 0 0 calc(min(52vh, 68vw) / -2); z-index: 6; }
-.apertura__frase { position: absolute; bottom: calc(var(--seguir-bajo) + 44px + clamp(20px, 4vh, 40px)); left: 0; right: 0; padding: 0 24px; text-align: center; z-index: 4; }
+/* Bean and headline share one centred column, so the bean always sits above the words, never on them. */
+.apertura__centro { position: absolute; inset: 0; z-index: 6; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(8px, 2.5vh, 28px); padding: clamp(72px, 12vh, 140px) 24px calc(var(--seguir-bajo) + 44px + 16px); pointer-events: none; }
+.apertura__grano { flex: none; width: min(40vh, 62vw); }
+.apertura__frase { margin: 0; text-align: center; }
 html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { display: none; }
 .animado .apertura__grano, .animado .apertura__frase { will-change: transform; }
 

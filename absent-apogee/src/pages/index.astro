@@ -49,8 +49,10 @@ const cinta = [...productos, ...productos];
 						<span class="hero-ticket__accion">Ver evento</span>
 					</a>
 				</div>
-				<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
-				<h2 class="titular apertura__frase">En Loja, cada grano<br />tiene una historia</h2>
+				<div class="apertura__centro">
+					<img class="apertura__grano" src={ilustraciones.grano} alt="" width="900" height="900" />
+					<h2 class="titular apertura__frase">En Loja, cada grano<br />tiene una historia</h2>
+				</div>
 			</div>
 		</section>
 
@@ -179,6 +181,7 @@ const cinta = [...productos, ...productos];
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import Lenis from 'lenis';
 	import { iniciarCascada } from '../scripts/cascada-taza.js';
+	import { crearBloqueo } from '../scripts/bloqueo-scroll.js';
 	import { iniciarMapa } from '../scripts/mapa-rotacion.js';
 
 	const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -196,12 +199,20 @@ const cinta = [...productos, ...productos];
 		lenis.on('scroll', ScrollTrigger.update);
 		gsap.ticker.add((s) => lenis.raf(s * 1000));
 		gsap.ticker.lagSmoothing(0);
+		// A short hold while the hero bean falls, so a quick double scroll cannot skip it.
+		const bloqueo = crearBloqueo(lenis);
+		let navegando = false;
 		document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
 			e.preventDefault();
 			const destino = document.querySelector<HTMLElement>(a.getAttribute('href')!);
 			if (!destino) return;
+			// A menu trip is never held back by the hero hold.
+			bloqueo.liberar();
+			navegando = true;
+			setTimeout(() => { navegando = false; }, 2200);
 			// Keyboard focus follows the smooth scroll, as a native anchor jump would.
 			lenis.scrollTo(destino, { duration: 1.6, onComplete: () => {
+				navegando = false;
 				if (!destino.hasAttribute('tabindex')) destino.setAttribute('tabindex', '-1');
 				destino.focus({ preventScroll: true });
 				history.replaceState(null, '', a.getAttribute('href'));
@@ -240,7 +251,10 @@ const cinta = [...productos, ...productos];
 		};
 		ScrollTrigger.create({
 			trigger: '.apertura', start: 'top -2%', end: 'bottom bottom',
-			onEnter: () => caidaHacia(1, 1.6),
+			onEnter: () => {
+				if (!navegando && caida.progress() < 1) bloqueo.bloquear(900);
+				caidaHacia(1, 1.6);
+			},
 			onLeaveBack: () => caidaHacia(0, 1),
 			onRefresh: (self) => { if (self.scroll() > self.start) { caidaTween?.kill(); caida.progress(1); } }
 		});
