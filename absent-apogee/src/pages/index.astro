@@ -237,28 +237,15 @@ const cinta = [...productos, ...productos];
 			new IntersectionObserver(([e]) => { if (e.isIntersecting) video.play().catch(() => {}); else video.pause(); }).observe(video);
 		}
 
-		// Scroll: the square gives way to one large bean. A small scroll plays the whole fall by
-		// time, so the bean never hangs halfway over the cathedral; scrolling back to the top rewinds it.
-		const caida = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
-		let caidaTween: gsap.core.Tween | null = null;
-		const caidaHacia = (fin: number, segundos: number) => {
-			caidaTween?.kill();
-			const resto = Math.abs(fin - caida.progress());
-			if (resto < 0.001) return;
-			caidaTween = caida.tweenTo(fin * caida.duration(), { duration: segundos * resto, ease: 'power2.inOut' });
-		};
-		ScrollTrigger.create({
-			trigger: '.apertura', start: 'top -2%', end: 'bottom bottom',
-			onEnter: () => caidaHacia(1, 1.6),
-			onLeaveBack: () => caidaHacia(0, 1),
-			onRefresh: (self) => { if (self.scroll() > self.start) { caidaTween?.kill(); caida.progress(1); } }
-		});
-		caida
+		// Scroll: the square gives way to one large bean. The fall is scrubbed by the scroll over a
+		// tall pinned stage, so the bean drops behind the cathedral at the visitor's own pace while
+		// the stage fades away, the same on desktop and on phones.
+		gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.apertura', start: 'top top', end: 'bottom bottom', scrub: true } })
 			.to('.titulo', { y: -90, autoAlpha: 0, duration: 0.18 }, 0.7)
 			.to('.apertura__rama', { x: -120, y: -120, autoAlpha: 0, duration: 0.2 }, 0.7)
-			// The cathedral zooms in from its base (no gap opens below it), then fades as the bean lands.
-			.to('.escenario', { scale: 1.18, duration: 0.6, transformOrigin: '50% 100%' }, 0)
-			.to('.escenario', { autoAlpha: 0, scale: 1.26, duration: 0.25 }, 0.5)
+			// Phones zoom the cathedral from its base so no gap opens below it.
+			.to('.escenario', movil ? { scale: 1.12, duration: 0.7, transformOrigin: '50% 100%' } : { scale: 1.08, y: 80, duration: 0.7, transformOrigin: '50% 45%' }, 0.05)
+			.to('.escenario', { autoAlpha: 0, duration: 0.2 }, 0.72)
 			.fromTo('.apertura__grano', { yPercent: -180, rotate: -50, scale: 0.55 }, { yPercent: 0, rotate: 18, scale: 1, duration: 0.65 }, 0)
 			// The headline's CSS bottom already clears the "Explora Loja" pill that stays on screen.
 			.fromTo('.apertura__frase', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 0.55)
@@ -267,22 +254,16 @@ const cinta = [...productos, ...productos];
 		// The coffee ribbon draws itself through three alternating chapters.
 		gsap.utils.toArray<SVGPathElement>('.cinta path').forEach((p) => {
 			const largo = p.getTotalLength();
-			// The ribbon is already flowing when the chapters arrive (a visible lead-in, not a dot)
-				// and keeps drawing from the moment the section enters the screen.
-				gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo * 0.84 }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top bottom', end: movil ? 'bottom 85%' : 'bottom 75%', scrub: true } });
+			gsap.fromTo(p, { strokeDasharray: largo, strokeDashoffset: largo }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.proceso', start: 'top 60%', end: 'bottom 70%', scrub: true } });
 		});
 		gsap.utils.toArray<HTMLElement>('.capitulo').forEach((c) => {
 			const dibujo = c.querySelector('.capitulo__img');
 			if (dibujo) gsap.from(dibujo, { autoAlpha: 0, scale: 0.94, y: 48, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 72%' } });
-			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: movil ? 'top 88%' : 'top 85%' } });
+			gsap.from(c.querySelector('.capitulo__texto'), { autoAlpha: 0, y: 32, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 68%' } });
 			// "Del dibujo a la foto": the real print develops from the paper while scrolling.
-			// Mobile: the print develops by itself as soon as the chapter peeks in, so the visitor never
-				// scrolls through an empty frame waiting for a scrubbed reveal.
-				const revelado = gsap.timeline(movil
-					? { scrollTrigger: { trigger: c, start: 'top 92%', toggleActions: 'play none none reverse' }, defaults: { duration: 0.8 } }
-					: { scrollTrigger: { trigger: c, start: 'top 95%', end: 'top 30%', scrub: 0.6 } });
+			const revelado = gsap.timeline({ scrollTrigger: { trigger: c, start: 'top 65%', end: 'center 50%', scrub: 0.6 } });
 			c.querySelectorAll('.capitulo__foto').forEach((foto, k) => {
-				revelado.fromTo(foto, { clipPath: 'inset(100% 0% 0% 0%)', y: 64, scale: 1.05 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, scale: 1, ease: movil ? 'power3.out' : 'none', duration: movil ? 0.9 : 1 }, k * (movil ? 0.25 : 0.4));
+				revelado.fromTo(foto, { clipPath: 'inset(100% 0% 0% 0%)', y: 64, scale: 1.05 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, scale: 1, ease: 'none', duration: 1 }, k * 0.4);
 			});
 			if (dibujo) revelado.to(dibujo, { opacity: 0.62, scale: 0.97, ease: 'none', duration: 1 }, 0);
 			revelado.fromTo(c.querySelector('.capitulo__sello'), { autoAlpha: 0, scale: 1.8 }, { autoAlpha: 1, scale: 1, ease: 'back.out(2.2)', duration: 0.35 }, '>-0.1');

@@ -84,7 +84,7 @@ section[id] { scroll-margin-top: 0; }
 .pendiente { padding: 2px 8px; border-radius: 4px; background: #ffe9a8; color: #5c4400; }
 
 /* The illustrated cathedral, hand-lettered name, and paper tickets share one stage. */
-.apertura { height: 170vh; }
+.apertura { height: 300vh; }
 .apertura__fijo { position: sticky; top: 0; height: 100dvh; overflow: hidden; background: var(--papel); }
 .escenario { position: absolute; inset: 0; overflow: hidden; }
 .escenario::before { content: ''; position: absolute; inset: 0; background: url('/carpeta-a-usar-web/vintage/fachada.webp') center bottom / cover no-repeat; opacity: 0.8; -webkit-mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 75%, #000); mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 75%, #000); }
@@ -128,7 +128,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 
 /* The coffee path unfolds vertically across three illustrated chapters. */
 .proceso { position: relative; max-width: 1280px; margin: 0 auto; padding: 48px 48px 96px; display: grid; gap: 64px; }
-.cinta { position: absolute; left: 0; right: 0; top: -9vh; width: 100%; height: calc(100% + 9vh); pointer-events: none; }
+.cinta { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .cinta path { fill: none; stroke-linecap: round; }
 .cinta__ancha { stroke: var(--cafe); stroke-width: 16; }
 .cinta__fina { stroke: var(--ocre); stroke-width: 5; }
@@ -273,7 +273,7 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   .hero-ticket__regla { margin: 2px 0; }
   .apertura { --seguir-bajo: 10px; }
   .cuerpo { font-size: 1rem; line-height: 1.5rem; }
-  .proceso { padding: 8px 16px 20px; gap: 40px; }
+  .proceso { padding: 24px 16px 20px; gap: 40px; }
   .capitulo, .capitulo--der { grid-template-columns: 1fr; gap: 8px; }
   .capitulo--der .capitulo__marco { order: 0; }
   .capitulo__texto { padding: 16px; }
@@ -318,8 +318,8 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   /* Phones: the stage is as tall as the screen with the address bar hidden, so hiding the bar
      never opens a gap under the cathedral; the scroll cue stays clear of the bar when it shows. */
   .apertura__fijo { height: 100lvh; }
-  /* The fall plays by time, so a short pin lets the first chapter arrive right after it. */
-  .apertura { height: 125lvh; }
+  /* The fall is scrubbed like on desktop: a tall pin gives it the same rhythm. */
+  .apertura { height: 300lvh; }
   .apertura { --seguir-bajo: calc(100lvh - 100svh + max(18px, env(safe-area-inset-bottom) + 12px)); }
 }
 
