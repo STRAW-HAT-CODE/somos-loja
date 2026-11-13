@@ -84,7 +84,7 @@ section[id] { scroll-margin-top: 0; }
 .pendiente { padding: 2px 8px; border-radius: 4px; background: #ffe9a8; color: #5c4400; }
 
 /* The illustrated cathedral, hand-lettered name, and paper tickets share one stage. */
-.apertura { height: 300vh; }
+.apertura { height: 200vh; }
 .apertura__fijo { position: sticky; top: 0; height: 100dvh; overflow: hidden; background: var(--papel); }
 .escenario { position: absolute; inset: 0; overflow: hidden; }
 .escenario::before { content: ''; position: absolute; inset: 0; background: url('/carpeta-a-usar-web/vintage/fachada.webp') center bottom / cover no-repeat; opacity: 0.8; -webkit-mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 75%, #000); mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 75%, #000); }
@@ -318,8 +318,8 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
   /* Phones: the stage is as tall as the screen with the address bar hidden, so hiding the bar
      never opens a gap under the cathedral; the scroll cue stays clear of the bar when it shows. */
   .apertura__fijo { height: 100lvh; }
-  /* The fall is scrubbed like on desktop: a tall pin gives it the same rhythm. */
-  .apertura { height: 300lvh; }
+  /* The fall is scrubbed like on desktop: one screen of pin, so two swipes reach the next section. */
+  .apertura { height: 200lvh; }
   .apertura { --seguir-bajo: calc(100lvh - 100svh + max(18px, env(safe-area-inset-bottom) + 12px)); }
 }
 
@@ -352,7 +352,8 @@ html:not(.animado) .apertura__grano, html:not(.animado) .apertura__frase { displ
 /* Keep the floating WhatsApp button clear of the footer credit. */
 .pie { padding-bottom: 96px; }
 
-/* Mobile: the 50 starts forming right under the cup as the cascade scene leaves. */
-@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
-  .cincuenta { margin-top: -24svh; }
+/* Mobile: the text sheet already sits right under the 50, so the glide lands on one finished
+   view (the 50 on top, the title below) with no empty half screen and no second move. */
+@media (max-width: 860px) and (prefers-reduced-motion: no-preference) {
+  .cincuenta__capa { margin-top: -52svh; }
 }
