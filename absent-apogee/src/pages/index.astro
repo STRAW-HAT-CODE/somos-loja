@@ -297,13 +297,21 @@ const cinta = [...productos, ...productos];
 				if (navegando || self.getVelocity() <= 0 || caja.top <= 0 || caja.top > innerHeight * 1.2) return;
 				const destino = scrollY + caja.top + (movil ? 0 : (etapa.offsetHeight - innerHeight) * 0.7);
 				const segundos = movil ? 1 : 1.8;
-				// Phones: the 50 then finishes forming by itself, so the hold lasts until it is done.
-				bloqueo.bloquear((segundos + (movil ? 1.6 : 0.3)) * 1000);
+				const suave = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+				// Phones: the hold covers the glide, the 50 forming, a beat on it and the sheet rising.
+				bloqueo.bloquear((movil ? 5 : segundos + 0.3) * 1000);
 				lenis.scrollTo(destino, {
-					duration: segundos, force: true,
-					easing: (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
-					// A beat on the finished 50 before the page is free again.
-					onComplete: () => { if (!movil) setTimeout(() => bloqueo.liberar(), 400); }
+					duration: segundos, force: true, easing: suave,
+					onComplete: () => {
+						// Desktop: a beat on the finished 50 before the page is free again.
+						if (!movil) { setTimeout(() => bloqueo.liberar(), 400); return; }
+						// Phones: once the 50 is built, the text sheet rises over its lower half on its
+						// own, so a fast swipe can never skip the 50 or throw the sheet past.
+						const espera = (1 - formacion.v) * 1.6 + 0.5;
+						gsap.delayedCall(espera, () => lenis.scrollTo(destino + innerHeight * 0.45, {
+							duration: 1.2, force: true, easing: suave, onComplete: () => bloqueo.liberar()
+						}));
+					}
 				});
 			}
 		});
