@@ -18,11 +18,11 @@ test('postal page exists with the four phases driven by one function', () => {
   assert.match(html, /dataset\.fase\s*=/);
 });
 
-test('video plays inline with a poster and a skip control, and waits for the opening tap', () => {
+test('video plays inline with a poster and a skip control, started by the page script', () => {
   const html = read();
   const video = html.match(/<video[^>]*>/)?.[0] ?? '';
   for (const attr of ['muted', 'playsinline', 'poster=']) assert.ok(video.includes(attr), `video needs ${attr}`);
-  assert.ok(!video.includes('autoplay'), 'the video must wait for the opening tap so it can play with sound');
+  assert.ok(!video.includes('autoplay'), 'the script starts the video so it can try sound first');
   assert.match(html, /id="saltar"/);
   assert.match(html, /Te llegó una postal/);
 });
@@ -38,7 +38,7 @@ test('postcard keeps the QR stamp contract with the live coffee QR', () => {
   const html = read();
   assert.match(html, /class="[^"]*sello-qr/);
   assert.match(html, /src="recursos\/qr-cafe\.webp"/, 'the stamp uses the coffee-plant QR');
-  assert.match(html, /<figcaption><a href="https:\/\/strawhatcode\.com\/r\/nPXZOXf\?c=q"[^>]*>Escanéame o haz clic aquí<\/a><\/figcaption>/, 'the QR caption is also a link to the QR destination');
+  assert.match(html, /<figcaption><a id="canjear-qr" href="https:\/\/wa\.me\/593962947777"[^>]*>Escanéame o haz clic aquí<\/a><\/figcaption>/, 'clicking under the QR opens the WhatsApp redeem message');
   assert.ok(existsSync(join(pageDir, 'recursos/qr-cafe.webp')), 'missing recursos/qr-cafe.webp');
   assert.match(html, /loading="eager" fetchpriority="high"/);
   assert.match(html, /Una degustación por persona/);
@@ -106,7 +106,7 @@ test('envelope opens after the hint in any orientation and the postcard adapts t
 
 // Behaviour harness: runs the page script against a minimal fake DOM with a manual clock,
 // so the phase machine is exercised instead of only matched as text.
-function montar({ autoplay = true, reducido = false, abrir = true } = {}) {
+function montar({ autoplay = true, reducido = false, sonidoBloqueado = false } = {}) {
   const html = read();
   const code = html.match(/<script>([\s\S]*?)<\/script>/)[1];
   let ahora = 0, sig = 1;
@@ -130,7 +130,10 @@ function montar({ autoplay = true, reducido = false, abrir = true } = {}) {
   const sel = { '.escena': el(), '.girar': el(), '.inicio': el() };
   const video = Object.assign(ids.video, {
     paused: true, currentTime: 0,
-    play() { if (!autoplay) return Promise.reject(new Error('blocked')); this.paused = false; return Promise.resolve(); },
+    play() {
+      if (!autoplay || (sonidoBloqueado && !this.muted)) return Promise.reject(new Error('blocked'));
+      this.paused = false; return Promise.resolve();
+    },
     pause() { this.paused = true; },
   });
   const raiz = { dataset: {} };
@@ -139,6 +142,7 @@ function montar({ autoplay = true, reducido = false, abrir = true } = {}) {
     documentElement: raiz, hidden: false,
     getElementById: (id) => ids[id], querySelector: (s) => sel[s],
     addEventListener: (t, f) => ((docL[t] ||= []).push(f)),
+    removeEventListener: (t, f) => { docL[t] = (docL[t] || []).filter((g) => g !== f); },
   };
   const ctx = {
     document,
@@ -148,8 +152,6 @@ function montar({ autoplay = true, reducido = false, abrir = true } = {}) {
     requestAnimationFrame: () => 0, cancelAnimationFrame() {},
   };
   vm.runInNewContext(code, ctx);
-  // The page waits for the opening tap; most tests start right after it.
-  if (abrir) ids['abrir-postal'].emit('click');
   const flush = () => new Promise((r) => setImmediate(r));
   return {
     raiz, ids, sel, video, document,
@@ -163,6 +165,7 @@ function montar({ autoplay = true, reducido = false, abrir = true } = {}) {
       }
       ahora = fin; await flush();
     },
+    tocar() { (docL.pointerdown || []).slice().forEach((f) => f({ target: {} })); },
     async ocultar(oculto) { document.hidden = oculto; (docL.visibilitychange || []).forEach((f) => f()); await flush(); },
     flush,
   };
@@ -238,7 +241,7 @@ test('only the visible phase can take keyboard focus', async () => {
 test('postcard shows the event dates and places the event in the store, not in the park', () => {
   const html = read();
   assert.ok(html.includes('<dd>Del 13 al 22 de noviembre</dd>'), 'postcard must show the event dates');
-  assert.ok(html.includes('<dd>Por confirmar</dd>'), 'the time stays marked as pending');
+  assert.ok(!html.includes('<dt>Hora</dt>'), 'the pending time row is gone');
   assert.ok(html.includes('<dd>Tienda Somos Loja</dd>'), 'the event happens in the store');
   assert.ok(!html.includes('query=Parque+Central'), 'no map link may point at the park');
   assert.ok(html.includes('unas 25 marcas de café'), 'the event has about 25 brands, never the 50 of the store');
@@ -246,12 +249,10 @@ test('postcard shows the event dates and places the event in the store, not in t
   assert.match(html, /href="https:\/\/www\.google\.com\/maps\/search\/\?api=1&amp;query=TIENDA\+SOMOS\+LOJA\+2Q3X%2BGC\+Loja"/, 'map must point at the store');
 });
 
-test('an opening tap unlocks sound, which can be muted and remembered', () => {
+test('the postcard opens by itself; sound can be muted and remembered', () => {
   const html = read();
-  assert.match(html, /irA\('inicio'/, 'there must be an opening phase');
-  assert.match(html, /id="abrir-postal"/);
-  assert.match(html, /Toca para abrirla/);
-  assert.match(html, /video\.muted = !sonidoActivo/, 'the sound preference decides whether the video is muted');
+  assert.doesNotMatch(html, /id="abrir-postal"|Toca para abrirla/, 'no opening button to press');
+  assert.match(html, /else arrancar\(\);/, 'the page starts the postcard on load');
   assert.match(html, /id="sonido"[^>]*aria-pressed/, 'a mute toggle must expose its state');
   assert.match(html, /localStorage/, 'the mute choice must be remembered');
 });
@@ -265,20 +266,33 @@ test('opening sounds exist and the rotate hint shows over the frozen last frame'
   assert.ok(fin >= 9, 'the rotate hint must wait until Alforjita finishes speaking and her animation ends');
 });
 
-test('the page waits on the opening screen and the tap starts the video with sound', async () => {
-  const p = montar({ abrir: false });
-  await p.flush();
-  assert.equal(p.fase(), 'inicio');
-  assert.equal(p.video.paused, true, 'nothing plays before the tap');
-  assert.equal(p.sel['.inicio'].inert, false, 'the tap button can take focus');
-  assert.equal(p.ids.sonido.hidden, undefined, 'the mute toggle stays as authored until the tap');
-  p.ids['abrir-postal'].emit('click');
+test('the video starts on its own with sound when the browser allows it', async () => {
+  const p = montar();
   await p.flush();
   assert.equal(p.fase(), 'video');
   assert.equal(p.video.paused, false);
-  assert.equal(p.video.muted, false, 'the tap unlocks the soundtrack');
+  assert.equal(p.video.muted, false);
   assert.equal(p.ids.sonido.hidden, false);
-  assert.equal(p.sel['.inicio'].inert, true);
+});
+
+test('when the browser blocks sound, the video plays muted and the first touch brings sound back', async () => {
+  const p = montar({ sonidoBloqueado: true });
+  await p.flush();
+  assert.equal(p.fase(), 'video');
+  assert.equal(p.video.paused, false, 'the video keeps playing muted');
+  assert.equal(p.video.muted, true);
+  assert.equal(p.ids.sonido['aria-pressed'], 'false');
+  p.tocar();
+  assert.equal(p.video.muted, false, 'a touch anywhere unmutes');
+  assert.equal(p.ids.sonido['aria-pressed'], 'true');
+});
+
+test('when the browser blocks sound, the mute toggle turns sound on instead of off', async () => {
+  const p = montar({ sonidoBloqueado: true });
+  await p.flush();
+  p.ids.sonido.emit('click');
+  assert.equal(p.video.muted, false);
+  assert.equal(p.ids.sonido['aria-pressed'], 'true');
 });
 
 test('the mute toggle silences the video and exposes its state', async () => {
@@ -293,7 +307,7 @@ test('the mute toggle silences the video and exposes its state', async () => {
 });
 
 test('reduced motion skips the opening screen too', async () => {
-  const p = montar({ reducido: true, abrir: false });
+  const p = montar({ reducido: true });
   await p.flush();
   assert.equal(p.fase(), 'postal');
 });
@@ -301,6 +315,8 @@ test('reduced motion skips the opening screen too', async () => {
 test('postal offers a WhatsApp redeem link with a per-device code, plus store and map links', () => {
   const html = read();
   assert.match(html, /id="canjear"[^>]*href="https:\/\/wa\.me\/593962947777/);
+  assert.match(html, /id="canjear-qr"[^>]*href="https:\/\/wa\.me\/593962947777/, 'the link under the QR redeems too');
+  assert.match(html, /getElementById\('canjear-qr'\)\.href = enlace/, 'both links carry the same pre-filled code message');
   assert.match(html, /id="codigo-postal"/);
   assert.match(html, /'LOJA-'/);
   assert.match(html, /href="\.\.\/\.\.\/#tienda"/);
