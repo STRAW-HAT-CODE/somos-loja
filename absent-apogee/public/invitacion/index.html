@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="es" data-audio="off" data-audio-disparos="0" data-audio-fuentes="0">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b2f6b">
+<link rel="icon" href="data:,">
+<title>Estás invitado a Loja 100 % Café Especial | Somos Loja</title>
+<meta name="description" content="Una invitación desde Loja para descubrir su café, conocer a quienes lo hacen y compartir su historia.">
+<script>document.documentElement.classList.add('js', 'intro');</script>
+<style>
+:root {
+  --papel: #f6eedd; --tinta: #185269; --tinta-suave: #306d7c; --ocre: #fc9e6e; --cafe: #5a331c;
+  --pendiente: #ffe9a8; --pendiente-tinta: #5c4400;
+  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+  --display: Georgia, serif; --texto: system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { background: var(--tinta); -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body { margin: 0; color: var(--tinta); font: 400 1rem/1.5 var(--texto); overflow-x: clip; }
+h1, h2, p, dl, dd { margin: 0; }
+h1, h2 { font-family: var(--display); font-weight: 600; text-wrap: balance; }
+p { text-wrap: pretty; }
+:focus-visible { outline: 2px solid var(--cafe); outline-offset: 3px; }
+::selection { background: var(--ocre); color: var(--tinta); }
+html.intro, html.intro body { height: 100%; overflow: hidden; }
+
+.fondo { position: fixed; inset: 0; background: radial-gradient(ellipse 80% 62% at 50% 64%, var(--tinta-suave), var(--tinta) 74%); }
+#scene, .respaldo { position: fixed; inset: 0; width: 100%; height: 100%; }
+#scene { z-index: 12; }
+.respaldo { display: grid; place-items: center; padding: 16px; }
+.respaldo[hidden], #scene[hidden] { display: none; }
+.respaldo svg { width: min(100%, 720px); height: 100%; }
+
+.frase { position: fixed; top: max(32px, env(safe-area-inset-top)); left: 16px; right: 16px; z-index: 15; text-align: center; color: var(--papel); pointer-events: none; }
+.frase__marca { font-weight: 600; font-size: 0.875rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.frase__texto { margin-top: 4px; font: 600 clamp(1.75rem, 5vw, 3rem)/1.1 var(--display); }
+
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 12px 24px; border: 0; border-radius: 9999px; font: 600 1rem/1.25 var(--texto); cursor: pointer; touch-action: manipulation; transition: transform 160ms var(--curva), background-color 180ms var(--curva); }
+.boton:active { transform: scale(0.97); }
+.controles { position: fixed; left: 16px; right: 16px; bottom: max(24px, env(safe-area-inset-bottom)); z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; pointer-events: none; }
+.controles .boton { pointer-events: auto; background: var(--papel); color: var(--tinta); box-shadow: 0 8px 24px rgb(27 47 107 / 0.3); }
+.controles .boton--silenciar { padding-inline: 16px; }
+.controles .boton[hidden] { display: none; }
+@media (max-width: 600px) { .controles .boton--sonido { flex-basis: 100%; } }
+.postal__pie { display: flex; flex-wrap: wrap; gap: 12px; }
+.boton--saltar:focus-visible { outline-color: var(--ocre); }
+.boton--linea { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 1px var(--tinta); }
+@media (hover: hover) and (pointer: fine) { .boton--linea:hover { background: rgb(27 47 107 / 0.08); } .controles .boton:hover { background: #fffaf0; } }
+.boton[hidden] { display: none; }
+
+/* Flashes of the coffee world, behind the card. */
+.montaje { position: fixed; inset: 0; z-index: 10; pointer-events: none; perspective: 900px; }
+.fragmento { position: absolute; margin: 0; width: var(--t); aspect-ratio: 4 / 5; overflow: hidden; opacity: 0; visibility: hidden; background: var(--tinta-suave); will-change: transform, opacity; }
+.fragmento img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.fragmento figcaption { position: absolute; left: 8px; bottom: 8px; padding: 0 8px; border-radius: 4px; background: rgb(27 47 107 / 0.86); color: var(--papel); font-size: 0.75rem; line-height: 1.25rem; }
+.fragmento--papel { background: var(--papel); }
+.fragmento--papel img { object-position: 78% 50%; }
+.f1 { --t: 40vw; left: 4vw; top: 8svh; border-radius: 9999px 9999px 8px 8px; }
+.f2 { --t: 38vw; right: 5vw; top: 13svh; border-radius: 8px; }
+.f3 { --t: 38vw; left: 6vw; bottom: 12svh; border-radius: 8px; }
+.f4 { --t: 42vw; right: 4vw; bottom: 8svh; border-radius: 9999px 9999px 8px 8px; }
+.f5 { --t: 34vw; left: 33vw; top: 3svh; border-radius: 8px; }
+@media (min-width: 861px) {
+  .f1 { --t: 15vw; left: 8vw; top: 10svh; }
+  .f2 { --t: 17vw; right: 7vw; top: 8svh; }
+  .f3 { --t: 16vw; left: 15vw; bottom: 7svh; }
+  .f4 { --t: 15vw; right: 15vw; bottom: 6svh; }
+  .f5 { --t: 12vw; left: 3vw; top: 42svh; }
+}
+
+/* The postcard: real HTML from the first moment, not a picture of it. */
+.lienzo { position: relative; min-height: 100svh; display: grid; place-items: center; padding: 72px 16px 40px; }
+.postal { position: relative; z-index: 30; width: min(100%, 860px); padding: 32px 24px 24px; background: var(--papel); box-shadow: 0 24px 56px rgb(10 18 45 / 0.42); transform-origin: 0 0; }
+html.js.intro .postal { opacity: 0; }
+.postal__cabeza { display: grid; grid-template-columns: 1fr 72px; gap: 16px; align-items: start; }
+.postal__marca { font-size: 0.875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tinta-suave); }
+.estampilla { width: 72px; height: auto; display: block; }
+.postal h1 { margin-top: 8px; font-size: clamp(2rem, 5.2vw, 3rem); line-height: 1.08; }
+.postal__apoyo { margin-top: 16px; font-size: 1.125rem; line-height: 1.625rem; color: var(--tinta-suave); }
+.postal__cuerpo { margin-top: 24px; display: grid; gap: 24px; }
+.datos { display: grid; gap: 8px; }
+.datos div { display: grid; grid-template-columns: 88px 1fr; gap: 12px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgb(27 47 107 / 0.18); }
+.datos dt { font-size: 0.875rem; font-weight: 600; color: var(--tinta-suave); }
+.datos dd { justify-self: start; padding: 2px 8px; border-radius: 4px; background: var(--pendiente); color: var(--pendiente-tinta); font-size: 0.875rem; font-weight: 600; }
+.beneficio__texto { font: 600 1.5rem/1.2 var(--display); color: var(--cafe); }
+.beneficio__demo { margin-top: 8px; font-size: 0.875rem; line-height: 1.25rem; color: var(--tinta-suave); }
+.postal__pie { margin-top: 24px; display: flex; justify-content: flex-start; }
+@media (min-width: 861px) {
+  .postal { padding: 48px; }
+  .postal__cabeza { grid-template-columns: 1fr 96px; }
+  .estampilla { width: 96px; }
+  .postal__cuerpo { grid-template-columns: 1fr 1fr; gap: 48px; }
+}
+@media (prefers-reduced-motion: reduce) { .boton { transition: none; } }
+.orientation-note {margin-top:20px;font-size:.8rem;color:var(--tinta-suave)}
+@media(min-width:861px){.orientation-note{display:none}}
+</style>
+</head>
+<body>
+<div class="fondo" aria-hidden="true"></div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="respaldo" id="respaldo" aria-hidden="true" hidden>
+<svg viewBox="0 0 800 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Alforjita entrega la postal frente a la entrada de Somos Loja, ilustración de respaldo.">
+<ellipse cx="400" cy="626" rx="340" ry="54" fill="#e0e0d5"/>
+<path d="M365 230h350v370H365z" fill="#e0e0d5"/><path d="M410 310h260v290H410z" fill="#185269"/><path d="M450 365h170v235H450z" fill="#5a331c"/>
+<path d="M385 235h20v365h-20zM680 235h20v365h-20z" fill="#fffaf2"/>
+<path d="M400 230v-22m140 22v-22m140 22v-22" stroke="#185269" stroke-width="5"/><text x="540" y="202" text-anchor="middle" fill="#fffaf2" stroke="#185269" stroke-width=".6" font-size="33" font-family="sans-serif" font-weight="bold">SOMOS LOJA</text>
+<g transform="translate(105 210)"><path d="M58 167Q15 244 40 352h177q17-89-50-188z" fill="#a7ce16"/><path d="M75 176l16 176h48l-10-178zM175 184l-1 168h43q18-94-42-168" fill="#c70080"/><ellipse cx="128" cy="126" rx="78" ry="87" fill="#f5ad9a"/>
+<path d="M50 65Q-30-112 90-120q177 0 107 187" fill="#a7ce16"/><path d="M55-113q38 53 43 163h40q-1-110-35-169zM149-102q34 62 23 158l25 11q48-111-48-169" fill="#c70080"/>
+<ellipse cx="125" cy="50" rx="95" ry="25" fill="#147bb8"/><path d="M40 64h171l-15 18H57z" fill="#26202c"/><path d="M138 37l16 5-4 18-12 5-12-10V42z" fill="#ffca36"/>
+<ellipse cx="100" cy="112" rx="21" ry="31" fill="white"/><ellipse cx="160" cy="112" rx="20" ry="29" fill="white"/><ellipse cx="105" cy="116" rx="11" ry="20"/><ellipse cx="164" cy="116" rx="10" ry="19"/>
+<path d="M80 156q45 70 95-2-47 32-95 2" fill="#26202c"/><path d="M90 163q34 15 70-1" stroke="white" stroke-width="10" fill="none"/>
+<path d="M45 220l148 68-24 69-147-58z" fill="#9e653c"/><path d="M47 227l160-29" stroke="#5a331c" stroke-width="14"/><path d="M204 207l85-28" stroke="#a7ce16" stroke-width="23"/><path d="M252 142h100v72H252z" fill="#fffaf2" stroke="#185269" stroke-width="3"/><path d="M252 142l50 39 50-39" fill="none" stroke="#185269" stroke-width="3"/>
+</g></svg></div>
+<div class="frase" id="frase">
+  <p class="frase__marca">Somos Loja</p>
+  <p class="frase__texto">Una invitación desde Loja.</p>
+</div>
+
+<div class="montaje" id="montaje" aria-hidden="true">
+  <figure class="fragmento fragmento--papel f1"><img src="recursos/finca.webp" alt="" width="1100" height="825"><figcaption>Ilustración</figcaption></figure>
+  <figure class="fragmento f2"><img src="recursos/cereza-roja.webp" alt="" width="720" height="960"></figure>
+  <figure class="fragmento f3"><img src="recursos/grano-cayendo.webp" alt="" width="720" height="480"></figure>
+  <figure class="fragmento fragmento--papel f4"><img src="recursos/taza.webp" alt="" width="1400" height="788"><figcaption>Ilustración</figcaption></figure>
+  <figure class="fragmento f5"><img src="recursos/olla-negra.webp" alt="" width="800" height="1067"></figure>
+</div>
+
+
+<div class="controles">
+  <button class="boton boton--sonido" id="sonido" type="button" hidden>Vivir la invitación con sonido</button>
+  <button class="boton boton--silenciar" id="silenciar" type="button" aria-pressed="false" hidden>Silenciar</button>
+  <button class="boton boton--saltar" id="saltar" type="button">Ver invitación</button>
+</div>
+
+<main class="lienzo">
+  <article class="postal" id="postal" aria-labelledby="titulo">
+    <div class="postal__cabeza">
+      <div>
+        <p class="postal__marca">Somos Loja</p>
+        <h1 id="titulo" tabindex="-1">Estás invitado a Loja 100&nbsp;% Café Especial.</h1>
+      </div>
+      <svg class="estampilla" viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estampilla de una taza de café">
+            <path fill="#f6eedd" d="M0 0h120v150H0z"/>
+            <path fill="none" stroke="#1b2f6b" stroke-width="6" stroke-dasharray="2 8" stroke-linecap="round" d="M3 3h114v144H3z"/>
+            <path fill="#1b2f6b" d="M12 12h96v126H12z"/>
+            <path fill="#e0a93b" d="M34 66h44v26a18 18 0 0 1-18 18h-8a18 18 0 0 1-18-18z"/>
+            <path fill="none" stroke="#e0a93b" stroke-width="6" d="M78 72h6a9 9 0 0 1 0 18h-8"/>
+            <path fill="none" stroke="#f6eedd" stroke-width="4" stroke-linecap="round" d="M48 56c-6-8 6-12 0-22M62 56c-6-8 6-12 0-22"/>
+            <text x="60" y="130" fill="#f6eedd" font-family="Georgia, serif" font-size="13" text-anchor="middle">Loja</text>
+          </svg>
+    </div>
+    <p class="postal__apoyo">Un encuentro para descubrir el café de Loja, conocer a quienes lo hacen y compartir su historia.</p>
+    <div class="postal__cuerpo">
+      <dl class="datos">
+        <div><dt>Fecha</dt><dd>Por confirmar</dd></div>
+        <div><dt>Horario</dt><dd>Por confirmar</dd></div>
+        <div><dt>Lugar</dt><dd>Por confirmar</dd></div>
+        <div><dt>Dirección</dt><dd>Por confirmar</dd></div>
+        <div><dt>Mapa</dt><dd>Por confirmar</dd></div>
+      </dl>
+      <div class="beneficio">
+        <p class="beneficio__texto">Beneficio por confirmar.</p>
+        <p class="beneficio__demo">Prototipo de demostración: esta invitación no sirve para canjear nada.</p>
+      </div>
+    </div>
+    <div class="postal__pie"><button class="boton boton--linea" id="repetir" type="button" hidden>Repetir experiencia</button></div>
+  <p class="orientation-note">Para verla como una postal, puedes girar el teléfono. También puedes leerla en vertical.</p></article>
+</main>
+
+<script type="x-shader/x-vertex" id="vertex-shader">
+attribute vec3 aPos;
+attribute vec3 aNormal;
+uniform mat4 uViewProj, uRigid;
+uniform vec3 uScale;
+// Shared with the fragment shader, so the precision has to match for the program to link.
+uniform mediump vec3 uLight;
+uniform mediump float uShadow;
+varying vec3 vNormal;
+void main() {
+  vec4 world = uRigid * vec4(aPos * uScale, 1.0);
+  // The hierarchy is rigid and scale applies last, so this is the exact normal transform.
+  vNormal = (uRigid * vec4(aNormal / uScale, 0.0)).xyz;
+  if (uShadow > 0.5) {
+    world.xz -= uLight.xz / uLight.y * world.y;
+    world.y = 0.03;
+  }
+  gl_Position = uViewProj * world;
+}
+</script>
+<script type="x-shader/x-fragment" id="fragment-shader">
+precision mediump float;
+uniform vec3 uColor, uLight;
+uniform float uShadow, uFunde, uPlano;
+varying vec3 vNormal;
+void main() {
+  if (uShadow > 0.5) { gl_FragColor = vec4(0.106, 0.184, 0.42, 0.34 * (1.0 - uFunde)); return; }
+  // Printed paper is shown flat, so it matches the HTML postcard it turns into.
+  if (uPlano > 0.5) { gl_FragColor = vec4(uColor, 1.0); return; }
+  vec3 n = normalize(vNormal);
+  float sun = max(dot(n, uLight), 0.0);
+  float sky = 0.5 + 0.5 * n.y;
+  vec3 ambient = mix(vec3(0.42, 0.44, 0.62), vec3(1.0, 0.97, 0.9), sky) * 0.66;
+  vec3 color = uColor * (ambient + vec3(1.0, 0.92, 0.76) * sun * 0.56);
+  // Faint print grain, so flat faces read as paper rather than plastic.
+  float grain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+  // The stage melts into the night-blue background when the camera is close to the letter.
+  gl_FragColor = vec4(mix(color + (grain - 0.5) * 0.016, vec3(0.106, 0.184, 0.42), uFunde), 1.0);
+}
+</script>
+
+<script id="delivery-timing">
+// One narrative clock for feet, sound, camera, hand gesture and postcard reveal.
+const DELIVERY_TIMING=(()=>{
+  const walk=2.2,turn=.55,raise=.8,hand=walk+turn+raise;
+  const zoom=hand+.55,zoomEnd=zoom+1.35;
+  const open=zoomEnd-.18,openEnd=open+.65,cardOut=open+.48,cardOutEnd=cardOut+.65;
+  const grow=cardOutEnd+.45,growEnd=grow+1.05,finish=growEnd+.3;
+  const startX=-1.4,endX=.5,startZ=.35,endZ=1.65,stride=.88;
+  const distance=Math.hypot(endX-startX,endZ-startZ);
+  const walkProgress=time=>{
+    const v=Math.max(0,Math.min(1,time/walk));
+    return v*v*(3-2*v)*.35+v*.65;
+  };
+  const stepTime=number=>{
+    let low=0,high=walk;
+    for(let i=0;i<36;i++) {
+      const mid=(low+high)/2;
+      if(walkProgress(mid)*distance<number*stride/2) low=mid;else high=mid;
+    }
+    return (low+high)/2;
+  };
+  const letterRelease=index=>index===0?walk*.32:index===1?walk*.68:Infinity;
+  const paperMotion=(index,time,originY)=>{
+    const elapsed=time-letterRelease(index);
+    if(elapsed<0) return {phase:'in-bag'};
+    const floor=.075,gravity=4.8,lift=.85;
+    const duration=(lift+Math.sqrt(lift*lift+2*gravity*Math.max(0,originY-floor)))/gravity;
+    const t=Math.min(elapsed,duration);
+    return {phase:elapsed>=duration?'landed':'falling',elapsed:t,progress:t/duration,
+      y:Math.max(floor,originY+lift*t-.5*gravity*t*t)};
+  };
+  return Object.freeze({walk,turn,raise,hand,zoom,zoomEnd,open,openEnd,cardOut,cardOutEnd,grow,growEnd,finish,
+    fallback:grow+.05,startX,endX,startZ,endZ,stride,distance,walkProgress,stepTime,letterRelease,paperMotion,
+    images:[cardOut+.16,cardOut+.34,cardOut+.52,cardOut+.70,cardOut+.88]});
+})();
+</script>
+
+<script id="miniature">
+// Compact raw WebGL scene: one shared buffer of unit primitives, a small matrix stack,
+// flat-shaded faces and planar shadows. It draws on demand and stops when nothing moves.
+function createMiniature(canvas, { onLost }) {
+  const gl = canvas.getContext('webgl', { alpha: true, antialias: true, stencil: true, powerPreference: 'low-power' });
+  if (!gl) return null;
+
+  function shader(type, id) {
+    const handle = gl.createShader(type);
+    gl.shaderSource(handle, document.getElementById(id).textContent);
+    gl.compileShader(handle);
+    return gl.getShaderParameter(handle, gl.COMPILE_STATUS) ? handle : null;
+  }
+  const vertex = shader(gl.VERTEX_SHADER, 'vertex-shader');
+  const fragment = shader(gl.FRAGMENT_SHADER, 'fragment-shader');
+  if (!vertex || !fragment) return null;
+  const program = gl.createProgram();
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+  gl.useProgram(program);
+  const uniform = {};
+  for (const name of ['uViewProj', 'uRigid', 'uScale', 'uLight', 'uShadow', 'uColor', 'uFunde', 'uPlano']) uniform[name] = gl.getUniformLocation(program, name);
+
+  // Colors are the design tokens, or mixes of them for skin tone.
+  const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const mixColor = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+  const PAPEL = rgb('#f6eedd'), TINTA = rgb('#1b2f6b'), SUAVE = rgb('#3c4c80'), OCRE = rgb('#e0a93b'), CAFE = rgb('#5a331c');
+  const SKIN = rgb('#f5ad9a');
+  const AIRMAIL_RED = rgb('#c7354e'), METAL_PLATE = rgb('#b3acb6'), LEATHER = rgb('#ae7347');
+  const ROSE = rgb('#eb7294'), LIME = rgb('#a7ce16'), FUCHSIA = rgb('#922788'), FLOWER_PINK = rgb('#d30088'), GOLD = rgb('#ffca36'), BLUE = rgb('#147bb8'), INK = rgb('#26202c'), WHITE = rgb('#fffaf2'), TEAL = rgb('#185269');
+  const TILE = mixColor(PAPEL, CAFE, 0.26);
+  const HILL = mixColor(SUAVE, PAPEL, 0.16);
+
+  // --- Geometry: every primitive is convex around the origin, which orients faces automatically.
+  const data = [];
+  function tri(a, b, c) {
+    const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+    let n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const len = Math.hypot(n[0], n[1], n[2]) || 1;
+    n = n.map((x) => x / len);
+    const center = [a[0] + b[0] + c[0], a[1] + b[1] + c[1], a[2] + b[2] + c[2]];
+    const outward = n[0] * center[0] + n[1] * center[1] + n[2] * center[2] >= 0;
+    if (!outward) n = n.map((x) => -x);
+    for (const p of outward ? [a, b, c] : [a, c, b]) data.push(p[0], p[1], p[2], n[0], n[1], n[2]);
+  }
+  const quad = (a, b, c, d) => { tri(a, b, c); tri(a, c, d); };
+  function primitive(build) {
+    const first = data.length / 6;
+    build();
+    return { first, count: data.length / 6 - first };
+  }
+  const BOX = primitive(() => {
+    const p = (x, y, z) => [x / 2, y / 2, z / 2];
+    quad(p(-1, -1, 1), p(1, -1, 1), p(1, 1, 1), p(-1, 1, 1));
+    quad(p(-1, -1, -1), p(1, -1, -1), p(1, 1, -1), p(-1, 1, -1));
+    quad(p(-1, 1, -1), p(1, 1, -1), p(1, 1, 1), p(-1, 1, 1));
+    quad(p(-1, -1, -1), p(1, -1, -1), p(1, -1, 1), p(-1, -1, 1));
+    quad(p(1, -1, -1), p(1, 1, -1), p(1, 1, 1), p(1, -1, 1));
+    quad(p(-1, -1, -1), p(-1, 1, -1), p(-1, 1, 1), p(-1, -1, 1));
+  });
+  const prism = (sides, top) => primitive(() => {
+    const at = (i, r, y) => { const a = (i / sides) * Math.PI * 2; return [Math.cos(a) * r, y, Math.sin(a) * r]; };
+    for (let i = 0; i < sides; i++) {
+      if (top > 0) { quad(at(i, 1, -0.5), at(i + 1, 1, -0.5), at(i + 1, top, 0.5), at(i, top, 0.5)); tri([0, 0.5, 0], at(i, top, 0.5), at(i + 1, top, 0.5)); }
+      else tri(at(i, 1, -0.5), at(i + 1, 1, -0.5), [0, 0.5, 0]);
+      tri([0, -0.5, 0], at(i, 1, -0.5), at(i + 1, 1, -0.5));
+    }
+  });
+  const CYL = prism(10, 1), DISC = prism(28, 1), TAPER = prism(9, 0.74), CONE = prism(6, 0), WEDGE = prism(3, 1);
+  const BALL = primitive(() => {
+    const t = (1 + Math.sqrt(5)) / 2, unit = (p) => { const l = Math.hypot(p[0], p[1], p[2]); return p.map((x) => x / l); };
+    const v = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]].map(unit);
+    const faces = [[0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]];
+    for (const [a, b, c] of faces) {
+      const mid = (p, q) => unit([p[0] + q[0], p[1] + q[1], p[2] + q[2]]);
+      const ab = mid(v[a], v[b]), bc = mid(v[b], v[c]), ca = mid(v[c], v[a]);
+      tri(v[a], ab, ca); tri(v[b], bc, ab); tri(v[c], ca, bc); tri(ab, bc, ca);
+    }
+  });
+  const TRIANGULO = primitive(() => {
+    const a = (z) => [-0.5, 0.5, z], b = (z) => [0.5, 0.5, z], c = (z) => [0, -0.5, z];
+    tri(a(0.5), b(0.5), c(0.5)); tri(a(-0.5), b(-0.5), c(-0.5));
+    quad(a(-0.5), b(-0.5), b(0.5), a(0.5)); quad(b(-0.5), c(-0.5), c(0.5), b(0.5)); quad(c(-0.5), a(-0.5), a(0.5), c(0.5));
+  });
+
+  // Smooth parametric surfaces: winding follows their derivatives, not an
+  // origin heuristic (which cannot handle the concave bend of the fabric cap).
+  function smoothSurface(point, columns, rows, include = () => true) {
+    return primitive(() => {
+      const sample=(u,v)=>{
+        const t=Math.max(.0001,Math.min(.9999,v)),e=.00005,p=point(u,v);
+        const a=point(u+e,t),b=point(u-e,t),c=point(u,t+e),d=point(u,t-e);
+        const du=a.map((x,i)=>x-b[i]),dv=c.map((x,i)=>x-d[i]);
+        const n=[dv[1]*du[2]-dv[2]*du[1],dv[2]*du[0]-dv[0]*du[2],dv[0]*du[1]-dv[1]*du[0]];
+        const length=Math.hypot(...n)||1;
+        return [...p,...n.map(x=>x/length)];
+      };
+      const emit=(a,b,c)=>{
+        const u=b.slice(0,3).map((x,i)=>x-a[i]),v=c.slice(0,3).map((x,i)=>x-a[i]);
+        const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+        const facing=n.reduce((sum,x,i)=>sum+x*(a[i+3]+b[i+3]+c[i+3]),0);
+        for(const vertex of facing>=0?[a,b,c]:[a,c,b]) data.push(...vertex);
+      };
+      for(let y=0;y<rows;y++) for(let x=0;x<columns;x++) {
+        if(!include((x+.5)/columns,(y+.5)/rows)) continue;
+        const a=sample(x/columns,y/rows),b=sample((x+1)/columns,y/rows);
+        const c=sample((x+1)/columns,(y+1)/rows),d=sample(x/columns,(y+1)/rows);
+        emit(a,b,c);emit(a,c,d);
+      }
+    });
+  }
+  const MODEL_SPHERE=smoothSurface((u,v)=>{
+    const a=u*Math.PI*2,b=v*Math.PI;
+    return [Math.cos(a)*Math.sin(b),-Math.cos(b),Math.sin(a)*Math.sin(b)];
+  },32,18);
+  const MODEL_CYLINDER=smoothSurface((u,v)=>[Math.cos(u*Math.PI*2),v-.5,Math.sin(u*Math.PI*2)],24,2);
+  const SATCHEL_BODY=smoothSurface((u,v)=>{
+    const a=u*Math.PI*2,r=.68+.3*Math.sin(Math.min(1,v*2.8)*Math.PI/2),c=Math.cos(a),t=Math.sin(a);
+    return [Math.sign(c)*Math.pow(Math.abs(c),.45)*r,v-.5,Math.sign(t)*Math.pow(Math.abs(t),.6)*r];
+  },40,18);
+  const robePoint=(u,v)=>{
+    const angle=u*Math.PI*2+.18*Math.sin(v*Math.PI*1.7);
+    const r=.58+.4*Math.sin(Math.PI*v)-.05*v;
+    return [Math.cos(angle)*r,v-.5,Math.sin(angle)*r];
+  };
+  const ROBE_LIME=smoothSurface(robePoint,48,24,u=>Math.floor(u*8)%2===0);
+  const ROBE_FUCHSIA=smoothSurface(robePoint,48,24,u=>Math.floor(u*8)%2===1);
+  const hatPoint=(u,v)=>{
+    const x=-.96*Math.pow(v,2),y=1.05*(1-Math.pow(1-v,2)),r=.36*Math.pow(1-Math.pow(v,3),.7)+.025;
+    const dx=-1.92*v,dy=2.1*(1-v),length=Math.hypot(dx,dy),a=u*Math.PI*2+.52*Math.sin(v*4);
+    return [x+dy/length*r*Math.cos(a),y-dx/length*r*Math.cos(a),-.04+r*.86*Math.sin(a)];
+  };
+  const hatRegion=u=>u>.22&&u<.25?2:u>.25&&u<.28?3:Math.floor(u*8)%2;
+  const HAT_LIME=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===0);
+  const HAT_PURPLE=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===1);
+  const HAT_GOLD=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===2);
+  const HAT_CORAL=smoothSurface(hatPoint,48,28,u=>hatRegion(u)===3);
+  function facialRibbon(top,bottom) {
+    return primitive(()=>{
+      for(let i=0;i<28;i++) {
+        const x=-1+2*i/28,nx=-1+2*(i+1)/28;
+        for(const vertex of [[x,top(x),0],[x,bottom(x),0],[nx,bottom(nx),0],[x,top(x),0],[nx,bottom(nx),0],[nx,top(nx),0]]) data.push(...vertex,0,0,1);
+      }
+    });
+  }
+  const SMILE=facialRibbon(x=>.12*(1-x*x),x=>-.9*Math.sqrt(Math.max(0,1-x*x)));
+  const TEETH=facialRibbon(x=>.12*(1-x*x),x=>-.12+.24*x*x);
+  const EYEBROW=facialRibbon(x=>.3*(1-x*x)+.07,x=>.3*(1-x*x)-.07);
+  const strapPoint=(width)=>(u,v)=>{
+    const t=v,a=1-t;
+    const x=a*a*.3+2*a*t*.11+t*t*(-.1);
+    const y=a*a*.86+2*a*t*.47+t*t*.16;
+    const z=a*a*.24+2*a*t*.58+t*t*.34;
+    return [x+(u-.5)*width,y,z];
+  };
+  const STRAP_EDGE=smoothSurface(strapPoint(.065),2,24);
+  const STRAP_CENTER=smoothSurface(strapPoint(.038),2,24);
+  // Contiguous extruded block letters, assembled once in the shared buffer.
+  function extrudeSignCell(x,y,width,height,depth) {
+    const x1=x+width,y1=y+height,z=depth/2;
+    const faces=[
+      [[0,0,1],[[x,y,z],[x1,y,z],[x1,y1,z],[x,y1,z]]],
+      [[0,0,-1],[[x1,y,-z],[x,y,-z],[x,y1,-z],[x1,y1,-z]]],
+      [[1,0,0],[[x1,y,z],[x1,y,-z],[x1,y1,-z],[x1,y1,z]]],
+      [[-1,0,0],[[x,y,-z],[x,y,z],[x,y1,z],[x,y1,-z]]],
+      [[0,1,0],[[x,y1,z],[x1,y1,z],[x1,y1,-z],[x,y1,-z]]],
+      [[0,-1,0],[[x,y,-z],[x1,y,-z],[x1,y,z],[x,y,z]]]
+    ];
+    for(const [normal,corners] of faces) for(const i of [0,1,2,0,2,3]) data.push(...corners[i],...normal);
+  }
+  const glyphs={
+    S:['01111','11000','11000','01110','00011','00011','11110'],
+    O:['01110','11011','11011','11011','11011','11011','01110'],
+    M:['11011','11111','11111','11011','11011','11011','11011'],
+    L:['11000','11000','11000','11000','11000','11000','11111'],
+    J:['00111','00011','00011','00011','11011','11011','01110'],
+    A:['01110','11011','11011','11111','11011','11011','11011']
+  };
+  const SHOP_LETTERS=primitive(()=>{
+    const cell=.056;let cursor=-1.56;
+    for(const letter of 'SOMOS LOJA') {
+      const rows=glyphs[letter];
+      if(!rows){cursor+=.15;continue;}
+      rows.forEach((row,y)=>[...row].forEach((pixel,x)=>{
+        if(pixel==='1') extrudeSignCell(cursor+x*cell,(6-y)*.072,cell,.072,.09);
+      }));
+      cursor+=6*cell;
+    }
+  });
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(program, 'aPos'), aNormal = gl.getAttribLocation(program, 'aNormal');
+  gl.enableVertexAttribArray(aPos);
+  gl.enableVertexAttribArray(aNormal);
+  gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 24, 0);
+  gl.vertexAttribPointer(aNormal, 3, gl.FLOAT, false, 24, 12);
+
+  // --- Matrix stack: rigid transforms only, scale is applied per primitive in the shader.
+  const stack = Array.from({ length: 12 }, () => new Float32Array(16));
+  stack[0].set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+  let depth = 0, top = stack[0];
+  const push = () => { stack[depth + 1].set(top); top = stack[++depth]; };
+  const pop = () => { top = stack[--depth]; };
+  function move(x, y, z) {
+    for (let i = 0; i < 4; i++) top[12 + i] += top[i] * x + top[4 + i] * y + top[8 + i] * z;
+  }
+  function turn(columnA, columnB, angle) {
+    const c = Math.cos(angle), s = Math.sin(angle), a = columnA * 4, b = columnB * 4;
+    for (let i = 0; i < 4; i++) {
+      const p = top[a + i], q = top[b + i];
+      top[a + i] = c * p + s * q;
+      top[b + i] = c * q - s * p;
+    }
+  }
+  const rotX = (angle) => turn(1, 2, angle), rotY = (angle) => turn(2, 0, angle), rotZ = (angle) => turn(0, 1, angle);
+  function draw(shape, color, sx, sy, sz) {
+    gl.uniformMatrix4fv(uniform.uRigid, false, top);
+    gl.uniform3f(uniform.uScale, sx, sy, sz);
+    gl.uniform3fv(uniform.uColor, color);
+    gl.drawArrays(gl.TRIANGLES, shape.first, shape.count);
+  }
+  function at(shape, color, x, y, z, sx, sy = sx, sz = sx) {
+    push(); move(x, y, z); draw(shape, color, sx, sy, sz); pop();
+  }
+
+  // --- Static stage
+  const PATH = [-2.5, -1.86, -1.22, -0.58, 0.06, 0.7, 1.34];
+  function drawPlinth() {
+    at(DISC, SUAVE, 0, -0.86, 0, 3.46, 0.24, 3.46);
+    at(DISC, OCRE, 0, -0.68, 0, 3.3, 0.1, 3.3);
+    at(DISC, CAFE, 0, -0.34, 0, 3.2, 0.58, 3.2);
+    gl.enable(gl.STENCIL_TEST);
+    gl.stencilFunc(gl.ALWAYS, 1, 255);
+    gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+    at(DISC, PAPEL, 0, -0.03, 0, 3.12, 0.06, 3.12);
+    gl.disable(gl.STENCIL_TEST);
+    for (let i = 0; i < PATH.length; i++) {
+      push(); move(PATH[i], 0.012, 1.1 + (i % 2) * 0.05); rotY(i % 2 ? 0.1 : -0.08); draw(BOX, TILE, 0.54, 0.024, 0.74); pop();
+    }
+    for (let i = 0; i < 2; i++) at(BOX, TILE, 1.18, 0.012, 0.38 - i * 0.44, 0.62, 0.024, 0.34);
+  }
+  function drawShrub(x, z, r) {
+    at(BALL, SUAVE, x, r * 0.8, z, r);
+    at(BALL, OCRE, x + r * 0.5, r * 1.2, z + r * 0.62, 0.05);
+    at(BALL, OCRE, x - r * 0.44, r * 1.02, z + r * 0.8, 0.05);
+    at(BALL, OCRE, x + r * 0.06, r * 1.62, z + r * 0.42, 0.05);
+  }
+  const ROOF_SIGN_BASE=2.98;
+  function drawRoofSign() {
+    // Teal faces with a warm extruded edge stay legible against the pale sky;
+    // no billboard panel and no lettering across the facade.
+    for(const x of [-1.3,0,1.3]) at(BOX,TEAL,x,2.76,.73,.035,.44,.035);
+    at(BOX,TEAL,0,ROOF_SIGN_BASE-.015,.73,3.15,.035,.06);
+    push();move(-.12,ROOF_SIGN_BASE-.02,.67);draw(SHOP_LETTERS,GOLD,.88,1.18,1);pop();
+    push();move(-.12,ROOF_SIGN_BASE,.76);draw(SHOP_LETTERS,TEAL,.8,1.05,1);pop();
+  }
+  function drawShop() {
+    push(); move(1.1,0,-1.05);
+    // Flat-front entrance observed in the supplied video: columns, folding gates,
+    // an open warm interior and a broad Somos Loja sign, not a chalet roof.
+    at(BOX,PAPEL,0,1.2,0,3.1,2.4,1.6);
+    at(BOX,TEAL,0,1.18,.82,2.6,2.24,.06);
+    at(BOX,CAFE,0,.95,.87,1.94,1.9,.06);
+    at(BOX,INK,0,.86,.91,1.45,1.65,.02);
+    at(BOX,LIME,0,1.61,.93,1.43,.12,.02);
+    at(BOX,GOLD,0,1.5,.95,.08,.08,.04);
+    for(const side of [-1,1]) {
+      at(CYL,PAPEL,side*1.32,1.15,.92,.13,2.3,.13);
+      at(BOX,PAPEL,side*1.32,2.29,.92,.38,.15,.36);
+      at(BOX,PAPEL,side*1.32,.12,.92,.36,.24,.34);
+      for(let i=0;i<4;i++) at(BOX,TEAL,side*(.87+i*.065),.93,.98,.035,1.8,.055);
+      at(BOX,TEAL,side*1.05,.1,1.28,.48,.18,.4);
+    }
+    at(BOX,TEAL,0,2.46,.2,3.2,.18,1.8);
+    drawRoofSign();
+    at(BOX,TILE,0,.045,1.15,2.7,.09,.55);
+    for(let x=-.5;x<=.5;x+=.5) {
+      at(BOX,PAPEL,x,.25,.95,.32,.45,.04);
+      at(BALL,FUCHSIA,x,.29,.985,.055,.055,.015);
+    }
+    pop();
+    drawShrub(-1.5,-1.5,.4); drawShrub(-2.26,-.72,.3);
+  }
+  function drawHills() {
+    at(CONE, HILL, -1.1, 1.1, -2.0, 0.72, 2.2, 0.72);
+    at(CONE, SUAVE, -1.85, 0.76, -1.5, 0.64, 1.52, 0.64);
+  }
+
+  const enManoMatriz = new Float32Array(16);
+
+  // --- The courier: an original geometric figure, built from named joints.
+  function drawEnvelope(scale) {
+    at(BOX, PAPEL, 0, 0, 0, 0.62 * scale, 0.42 * scale, 0.04 * scale);
+    push();
+    move(0, 0.13 * scale, 0.026 * scale);
+    rotZ(-Math.PI / 2);
+    rotX(Math.PI / 2);
+    draw(WEDGE, OCRE, 0.16 * scale, 0.012 * scale, 0.358 * scale);
+    pop();
+    at(BALL, CAFE, 0, 0.03 * scale, 0.04 * scale, 0.05 * scale);
+  }
+  function drawAlforjitaFlower(x,y,z,size) {
+    push(); move(x,y,z);
+    for(let i=0;i<8;i++) {
+      push(); rotZ(i*Math.PI/4); at(MODEL_SPHERE,FLOWER_PINK,0,size*.66,0,size*.28,size*.66,size*.2); pop();
+    }
+    at(MODEL_SPHERE,GOLD,0,0,.025,size*.35,size*.35,size*.23); pop();
+  }
+  function drawAlforjitaHat() {
+    push(); move(0,.3,-.06); rotZ(pose.fabric);
+    draw(HAT_LIME,LIME,1,1,1); draw(HAT_PURPLE,FUCHSIA,1,1,1);
+    draw(HAT_GOLD,GOLD,1,1,1); draw(HAT_CORAL,ROSE,1,1,1);
+    drawAlforjitaFlower(-1.0,1.06,-.035,.22);
+    push();move(.35,-.03,0);rotZ(-.7+pose.fabric*.7);
+    at(MODEL_SPHERE,FUCHSIA,.08,0,0,.16,.025,.025);
+    drawAlforjitaFlower(.21,0,.02,.12);pop();
+    pop();
+  }
+  function drawLeg(side,swing,knee) {
+    push(); move(side*.2,.52,0); rotX(swing*.65);
+    at(MODEL_SPHERE,LIME,0,-.12,0,.115,.19,.11);
+    move(0,-.22,0);rotX(knee*.65);
+    at(MODEL_SPHERE,FUCHSIA,0,-.08,.01,.115,.13,.105);
+    at(MODEL_SPHERE,LIME,0,-.19,.085,.16,.11,.22);
+    at(MODEL_SPHERE,FUCHSIA,0,-.18,.235,.13,.08,.11);pop();
+  }
+  function drawArm(side,forward,out,elbow,carry) {
+    push(); move(side*.34,.64,0); rotZ(side*out); rotX(forward);
+    at(MODEL_SPHERE,LIME,0,0,0,.115);
+    at(MODEL_CYLINDER,FUCHSIA,0,-.11,0,.085,.18,.085);
+    at(MODEL_CYLINDER,LIME,0,-.22,0,.08,.1,.08);
+    move(0,-.27,0); rotX(elbow);
+    at(MODEL_CYLINDER,FUCHSIA,0,-.07,0,.075,.15,.075);
+    at(MODEL_CYLINDER,LIME,0,-.18,0,.073,.08,.073);
+    at(MODEL_SPHERE,SKIN,0,-.27,0,.105,.12,.075);
+    at(MODEL_SPHERE,SKIN,side*.08,-.22,.035,.045,.07,.04);
+    if(!carry) for(let i=0;i<4;i++) at(MODEL_SPHERE,SKIN,-.045+i*.03,-.34,.035,.014,.047,.018);
+    if(carry) carry(forward+elbow); pop();
+  }
+  function drawHead(look) {
+    push(); move(.025,1.0,.025); rotY(look);rotZ(-.08);rotX(pose.nod);
+    at(MODEL_SPHERE,SKIN,0,.015,0,.39,.48,.31);
+    const open=1-.98*pose.blink;
+    for(const side of [-1,1]) {
+      push();move(side*.158,.06,.328);rotZ(side*-.12);
+      at(MODEL_SPHERE,WHITE,0,0,0,.125,.185*open,.015);
+      at(MODEL_SPHERE,CAFE,-.007,-.006,.018,.067,.116*open,.012);
+      at(MODEL_SPHERE,INK,-.01,-.005,.029,.045,.094*open,.006);
+      at(MODEL_SPHERE,WHITE,-.024,.047*open,.037,.023,.03*open,.004);
+      at(MODEL_SPHERE,WHITE,.014,-.021*open,.037,.01,.013*open,.004);pop();
+      push();move(side*.158,.285,.325);rotZ(side*-.13);draw(EYEBROW,CAFE,.115,.075,.01);pop();
+      at(MODEL_SPHERE,ROSE,side*.27,-.105,.24,.062,.035,.012);
+    }
+    push();move(0,-.14,.308);rotZ(-.12);
+    draw(SMILE,CAFE,.235,.16,.01);
+    push();move(0,0,.002);draw(TEETH,WHITE,.222,.16,.01);pop();
+    at(MODEL_SPHERE,ROSE,-.045,-.104,.008,.078,.025,.007);pop();
+    drawAlforjitaHat();
+    at(MODEL_SPHERE,BLUE,0,.335,.07,.405,.15,.31);
+    at(MODEL_CYLINDER,BLUE,0,.285,.09,.374,.085,.30);
+    at(MODEL_SPHERE,INK,0,.235,.31,.36,.026,.2);
+    at(MODEL_SPHERE,GOLD,.065,.34,.378,.062,.077,.012);
+    at(MODEL_SPHERE,GOLD,-.26,.27,.32,.023);
+    pop();
+  }
+  const SATCHEL_LETTERS=[[-.1,.28,-.05,.23,WHITE],[.07,.26,-.015,-.14,TILE],[-.01,.21,.08,.12,PAPEL]];
+  function applySatchelFrame(bagSway) {
+    move(-.1,.16,.34);rotZ(bagSway);move(-.24,-.14,-.18);rotZ(-.12);
+  }
+  function drawLetterArt(index) {
+    const color=SATCHEL_LETTERS[index][4];
+    at(BOX,color,0,0,0,.25,.27,.018);
+    at(BOX,AIRMAIL_RED,.065,.075,.014,.04,.045,.005);
+    at(BOX,INK,-.025,-.02,.014,.1,.005,.004);
+    at(BOX,INK,-.015,-.04,.014,.12,.005,.004);
+    if(index===0) for(let i=0;i<5;i++) at(BOX,i%2?BLUE:AIRMAIL_RED,-.1+i*.05,.128,.014,.024,.012,.005);
+  }
+  const courierBob=p=>Math.abs(Math.cos(p.phase))*.045*p.stride+Math.sin(p.gesture*Math.PI)*.05;
+  const courierPitch=p=>.07*p.stride-Math.sin(p.gesture*Math.PI)*.1;
+  const satchelSway=p=>.18*Math.sin(p.phase-.8)*p.stride;
+  function applyCourierRoot(p) {move(p.x,courierBob(p),p.z);rotY(p.heading);}
+  function applyCourierTorso(p) {move(0,.62,0);rotX(courierPitch(p));}
+  function drawFallingLetters() {
+    for(const index of [0,1]) {
+      const release=DELIVERY_TIMING.letterRelease(index);
+      if(pose.clock<release) continue;
+      const atRelease=poseAt(release,{}),[x,y,z,angle]=SATCHEL_LETTERS[index];
+      // Reuse the exact root/torso/bag hierarchy at release; never guess a
+      // screen position or depend on the previous frame to launch the letter.
+      push();applyCourierRoot(atRelease);applyCourierTorso(atRelease);applySatchelFrame(satchelSway(atRelease));
+      move(x,y,z);
+      const origin=[top[12],top[13],top[14]];
+      pop();
+      const motion=DELIVERY_TIMING.paperMotion(index,pose.clock,origin[1]);
+      const age=motion.elapsed,q=motion.progress,flutter=Math.sin(age*12)*.15*(1-q);
+      push();move(origin[0]+(-.32+index*.13)*age+flutter*.12,motion.y,origin[2]+(.32+index*.12)*age);
+      rotY(atRelease.heading+q*(index?-.25:.3));
+      rotX(courierPitch(atRelease)+(Math.PI/2-courierPitch(atRelease))*q);
+      rotZ(satchelSway(atRelease)-.12+angle+q*(index?.4:-.35)+flutter);
+      drawLetterArt(index);pop();
+    }
+  }
+  function drawSatchel(detailed, bagSway) {
+    // Pivot stays exactly at the strap attachment; leather and letters move together.
+    push();applySatchelFrame(bagSway);
+    at(BOX,INK,0,.19,0,.53,.025,.22);
+    push(); move(0,0,.005); draw(SATCHEL_BODY,LEATHER,.32,.43,.17); pop();
+    if(detailed) {
+      // Letters stay inside until their release beat; the third never leaves.
+      SATCHEL_LETTERS.forEach(([x,y,z,angle],index)=>{
+        if(pose.clock>=DELIVERY_TIMING.letterRelease(index)) return;
+        push();move(x,y,z);rotZ(angle);drawLetterArt(index);pop();
+      });
+      // Rounded horizontal metal plate, not a buckle, zip or external pocket.
+      at(MODEL_SPHERE,INK,0,-.015,.174,.078,.027,.012);
+      at(MODEL_SPHERE,METAL_PLATE,0,-.015,.185,.061,.018,.006);
+      at(MODEL_SPHERE,CAFE,.24,.14,.17,.043,.043,.015);
+      at(MODEL_SPHERE,LEATHER,.24,.14,.185,.025,.025,.008);
+      for(const side of [-1,1]) for(let i=0;i<5;i++) {
+        const x=side*(.2+i*.012),y=-.18+i*.055;
+        at(BOX,CAFE,x,y,.166,.006,.039,.005);
+        push();move(x,y,.172);rotZ(side*.6);draw(BOX,INK,.028,.005,.004);pop();
+      }
+    }
+    pop();
+  }
+  function drawCourier(pose, detailed = true) {
+    const swing = Math.sin(pose.phase) * 0.62 * pose.stride;
+    const lift = Math.max(0, Math.sin(pose.phase + Math.PI / 2));
+    const opposite = Math.max(0, -Math.sin(pose.phase + Math.PI / 2));
+    push();
+    applyCourierRoot(pose);
+    // The knee bends on the leg swinging forward; arms below oppose the same-side leg.
+    drawLeg(-1, swing, opposite * 0.75 * pose.stride);
+    drawLeg(1, -swing, lift * 0.75 * pose.stride);
+    push();
+    applyCourierTorso(pose);
+    // Alforjita's bell-shaped fuchsia/lime cloth, not a generic uniform.
+    if(!detailed) at(TAPER,LIME,0,.37,0,.45,1.03,.32);
+    if(detailed) {
+      push(); move(0,.37,.005); draw(ROBE_LIME,LIME,.46,1.03,.33); draw(ROBE_FUCHSIA,FUCHSIA,.46,1.03,.33); pop();
+      at(MODEL_CYLINDER,FUCHSIA,0,.77,0,.23,.09,.2);
+      at(MODEL_CYLINDER,LIME,0,.81,0,.23,.035,.2);
+    }
+    // Continuous curved leather strap, clear of the torso; no detached ends.
+    draw(STRAP_EDGE,CAFE,1,1,1);
+    push();move(0,0,.008);draw(STRAP_CENTER,LEATHER,1,1,1);pop();
+    const bagSway=satchelSway(pose);
+    drawSatchel(detailed,bagSway);
+    if(detailed) drawHead(pose.look);
+    // Near arm carries the envelope and offers it; the other one waves.
+    drawArm(1, -pose.gesture * 1.72 - swing * 0.7 * (1 - pose.gesture), pose.gesture * 0.98, -pose.gesture * 0.12 - 0.14, (armAngle) => {
+      push();
+      move(0, -0.36, 0.03);
+      rotX(-armAngle);
+      // Faces the viewer on the walk, clear of the satchel, instead of showing its edge.
+      move(-0.14 * (1 - pose.gesture), 0, 0);
+      rotY(-pose.heading);
+      rotZ(0.08);
+      enManoMatriz.set(top);
+      pop();
+    });
+    drawArm(-1, -.8 + swing*.2, .2, -.75);
+    pop();
+    pop();
+  }
+
+  // --- Courier timeline: walks, stops and looks at the visitor, raises the letter.
+  const WALK=DELIVERY_TIMING.walk,TURN=DELIVERY_TIMING.turn,RAISE=DELIVERY_TIMING.raise,END=DELIVERY_TIMING.hand;
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  const smooth = (v) => { const x = clamp01(v); return x * x * (3 - 2 * x); };
+  const mix = (a, b, v) => a + (b - a) * v;
+  const START_X=DELIVERY_TIMING.startX,STOP_X=DELIVERY_TIMING.endX,PATH_Z=DELIVERY_TIMING.endZ;
+  const walkHeading=Math.atan2(STOP_X-START_X,PATH_Z-DELIVERY_TIMING.startZ);
+  const pose = { x: 0, z: PATH_Z, heading: 0, phase: 0, stride: 0, gesture: 0, look: 0, nod: 0, handoff: 1 };
+  function poseAt(time,target=pose) {
+    const eased=DELIVERY_TIMING.walkProgress(time);
+    target.x = mix(START_X, STOP_X, eased);
+    target.z=mix(DELIVERY_TIMING.startZ,PATH_Z,eased);
+    target.phase=eased*DELIVERY_TIMING.distance*Math.PI*2/DELIVERY_TIMING.stride;
+    target.stride = Math.min(smooth(time / 0.2), smooth((WALK - time) / 0.2));
+    target.heading=time<WALK?walkHeading:mix(walkHeading,0,smooth((time-WALK)/TURN));
+    target.gesture=smooth((time-WALK-TURN)/RAISE);
+    // Head first: turns to the visitor, glances at the letter while lifting it, then back.
+    const mira = smooth((time - WALK * 0.85) / TURN);
+    target.look = mix(-0.5 * smooth(time / 0.2), 0, mira) - Math.sin(target.gesture * Math.PI) * 0.42;
+    target.nod = -Math.sin(target.gesture * Math.PI) * 0.16;
+    return target;
+  }
+
+  const LIGHT = (() => { const l = Math.hypot(-0.55, 1, 0.62); return [-0.55 / l, 1 / l, 0.62 / l]; })();
+  let width = 1, height = 1, frames = 0, lost = false, vista = null;
+
+  function perspective(fovY, aspect, near, far) {
+    const f = 1 / Math.tan(fovY / 2);
+    return [f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) / (near - far), -1, 0, 0, (2 * far * near) / (near - far), 0];
+  }
+  function lookAt(eye, target) {
+    const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    const unit = (a) => { const l = Math.hypot(a[0], a[1], a[2]); return a.map((x) => x / l); };
+    const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    const z = unit(sub(eye, target)), x = unit(cross([0, 1, 0], z)), y = cross(z, x);
+    return [x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, -dot(x, eye), -dot(y, eye), -dot(z, eye), 1];
+  }
+  function multiply(a, b) {
+    const out = new Float32Array(16);
+    for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) {
+      out[c * 4 + r] = a[r] * b[c * 4] + a[r + 4] * b[c * 4 + 1] + a[r + 8] * b[c * 4 + 2] + a[r + 12] * b[c * 4 + 3];
+    }
+    return out;
+  }
+
+  // Beans that jump out of the letter when it opens, toward the camera.
+  const GRANOS = Array.from({ length: 34 }, (_, i) => {
+    const r = (n) => { const v = Math.sin((i + 1) * n) * 43758.5453; return v - Math.floor(v); };
+    return { vx: (r(12.9) - 0.5) * 3.4, vy: 0.5 + r(78.2) * 2.2, vz: 0.4 + r(37.7) * 2.2, giro: 4 + r(5.3) * 9, tam: 0.8 + r(9.1) * 0.7, fruto: i % 6 === 0 };
+  });
+  const DORSO = mixColor(PAPEL, CAFE, 0.18);
+  const E = 1.25, SOBRE_A = 0.62 * E, SOBRE_H = 0.42 * E;
+  const manoMezclada = new Float32Array(16);
+
+  function plano(activo) { gl.uniform1f(uniform.uPlano, activo ? 1 : 0); }
+
+  // The letter: a real 3D object with its own flap, front and card.
+  function dibujarCarta(p, ajuste, tarjeta) {
+    for (let i = 0; i < 16; i++) manoMezclada[i] = enManoMatriz[i] + ([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1][i] - enManoMatriz[i]) * (i < 12 ? ajuste : 0);
+    manoMezclada[12] += 0.08 * (1 - ajuste);
+    manoMezclada[14] += 0.1 + ajuste * 0.5;
+    push();
+    top.set(manoMezclada);
+    plano(true);
+    const cae = p.crece;
+    // Back and front drop away once the card has come out.
+    if (cae < 0.98) {
+      at(BOX, DORSO, 0, -cae * 1.6, -0.016 * E, SOBRE_A, SOBRE_H, 0.01);
+      at(BOX, PAPEL, 0, -0.07 * E - cae * 1.6, 0.014 * E, SOBRE_A, 0.28 * E, 0.012);
+      for(let i=0;i<9;i++) for(const side of [-1,1]) {
+        at(BOX,i%2?BLUE:AIRMAIL_RED,(-.275+i*.069)*E,side*.19*E-cae*1.6,.035*E,.032*E,.016*E,.003);
+      }
+      // Diagonal folds of the front
+      for (const lado of [-1, 1]) {
+        push(); move(lado * 0.155 * E, -0.075 * E - cae * 1.6, 0.022 * E); rotZ(lado * 0.56); draw(BOX, DORSO, 0.36 * E, 0.006, 0.004); pop();
+      }
+      push();
+      // Once past the top, the flap stays behind the card that comes out.
+      move(0, SOBRE_H / 2 - cae * 1.6, p.abre > 0.5 ? -0.03 * E : 0.024 * E);
+      rotX(-p.abre * Math.PI * 0.94);
+      push(); move(0, -0.13 * E, 0); draw(TRIANGULO, mixColor(WHITE, TILE, Math.sin(p.abre * Math.PI) * 0.2), SOBRE_A, 0.26 * E, 0.008); pop();
+
+      pop();
+    }
+    // The card: same size and place as the HTML postcard at the end of its growth.
+    if (p.abre > 0.3) {
+      const w = mix(0.56 * E, tarjeta.w, p.crece), h = mix(0.25 * E, tarjeta.h, p.crece);
+      const x = mix(0, tarjeta.x, p.crece), y = mix(-0.07 * E + p.sale * 0.32 * E, tarjeta.y, p.crece);
+      const z = mix(0.002, 0.05, p.crece);
+      at(BOX, PAPEL, x, y, z, w, h, 0.006);
+      // Printed details that give way to the real text.
+      const u = w / (0.56 * E);
+      if (p.crece < 1) {
+        at(BOX, TINTA, x - w * 0.14, y + h * 0.26, z + 0.005, w * 0.5, Math.max(0.018, h * 0.08), 0.002);
+        at(BOX, TINTA, x - w * 0.2, y + h * 0.12, z + 0.005, w * 0.38, Math.max(0.018, h * 0.08), 0.002);
+        at(BOX, SUAVE, x - w * 0.12, y - h * 0.08, z + 0.005, w * 0.54, Math.max(0.008, h * 0.025), 0.002);
+        at(BOX, SUAVE, x - w * 0.16, y - h * 0.16, z + 0.005, w * 0.46, Math.max(0.008, h * 0.025), 0.002);
+        at(BOX, TINTA, x + w * 0.37, y + h * 0.26, z + 0.005, 0.1 * u, 0.13 * u, 0.002);
+        at(BOX, OCRE, x + w * 0.37, y + h * 0.25, z + 0.008, 0.05 * u, 0.05 * u, 0.002);
+      }
+    }
+    plano(false);
+    pop();
+  }
+
+  function dibujarGranos(p, c) {
+    if (p.salto <= 0 || p.salto > 1.4) return;
+    const t = p.salto;
+    for (const g of GRANOS) {
+      push();
+      move(c[0] + g.vx * t, c[1] + 0.1 + g.vy * t - 2.2 * t * t, c[2] + 0.05 + g.vz * t);
+      rotX(t * g.giro); rotZ(t * g.giro * 0.7);
+      draw(BALL, g.fruto ? OCRE : CAFE, 0.05 * g.tam, 0.034 * g.tam, 0.034 * g.tam);
+      pop();
+    }
+  }
+
+  function dibujarHumo(tiempo) {
+    for (let i = 0; i < 5; i++) {
+      const f = (tiempo * 0.45 + i / 5) % 1;
+      at(BALL, mixColor(PAPEL, HILL, f * 0.3), 1.96 + Math.sin(f * 5 + i) * 0.1 * f, 2.95 + f * 0.9, -1.35, 0.05 + f * 0.1);
+    }
+  }
+
+  // Everything comes from the controller's values: this function has no clock of its own.
+  function render(p) {
+    if (lost) return;
+    poseAt(p.camino);
+    pose.clock=p.reloj;
+    pose.fabric=.035*Math.sin(pose.phase*1.5-.4)*pose.stride;
+    pose.blink=Math.exp(-Math.pow(((p.reloj%3.8)-1.7)/.11,2));
+    const aspect = width / height;
+    const vertical = aspect < 1.05;
+    const close = smooth((p.camino - WALK * 0.7) / (END - WALK * 0.7));
+    const base = Math.max(12.2, (vertical ? 9.4 : 13.8) / aspect);
+    // The camera swings around the stage as the courier arrives.
+    const yaw=mix(.35,-.24,smooth(p.camino/END));
+    const pitch = mix(0.46, 0.3, smooth(p.camino / END));
+    const distance = base * mix(1.08, vertical ? .69 : .73, close);
+    const t0 = [mix(.25, .55, close), mix(vertical ? 1.5 : 1.3, 1.65, close), mix(0, 0.8, close)];
+    const e0 = [t0[0] + Math.sin(yaw) * Math.cos(pitch) * distance, t0[1] + Math.sin(pitch) * distance, t0[2] + Math.cos(yaw) * Math.cos(pitch) * distance];
+
+    // First pass of the courier only to learn where the letter is this frame.
+    gl.colorMask(false, false, false, false);
+    gl.depthMask(false);
+    drawCourier(pose, false);
+    gl.colorMask(true, true, true, true);
+    gl.depthMask(true);
+    const c = [enManoMatriz[12], enManoMatriz[13], enManoMatriz[14]];
+
+    // Close-up: straight in front of the letter, near enough to fill the phone or the screen.
+    const cerca = Math.max(1.79, 1.82 / aspect);
+    const z = p.zoom;
+    const eye = [mix(e0[0], c[0], z), mix(e0[1], c[1], z), mix(e0[2], c[2] + cerca, z)];
+    const target = [mix(t0[0], c[0], z), mix(t0[1], c[1], z), mix(t0[2], c[2], z)];
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clearStencil(0);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+    gl.disable(gl.BLEND);
+    gl.depthMask(true);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+    vista = multiply(perspective(0.52, aspect, 0.1, 60), lookAt(eye, target));
+    gl.uniformMatrix4fv(uniform.uViewProj, false, vista);
+    gl.uniform3fv(uniform.uLight, LIGHT);
+    gl.uniform1f(uniform.uShadow, 0);
+    plano(false);
+
+    if (p.funde < 1) {
+      gl.uniform1f(uniform.uFunde, p.funde);
+      drawPlinth();
+      drawHills();
+      drawShop();
+      // No rooftop smoke: the source entrance has a flat parapet.
+      drawCourier(pose);
+      drawFallingLetters();
+      gl.uniform1f(uniform.uShadow, 1);
+      gl.disable(gl.CULL_FACE);
+      gl.enable(gl.BLEND);
+      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.depthMask(false);
+      gl.enable(gl.STENCIL_TEST);
+      gl.stencilFunc(gl.EQUAL, 1, 255);
+      gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+      drawHills();
+      drawShop();
+      drawCourier(pose, false);
+      drawFallingLetters();
+      gl.disable(gl.STENCIL_TEST);
+      gl.disable(gl.BLEND);
+      gl.enable(gl.CULL_FACE);
+      gl.depthMask(true);
+      gl.uniform1f(uniform.uShadow, 0);
+    }
+    gl.uniform1f(uniform.uFunde, 0);
+    // Card size in world units, so that on screen it lands exactly on the HTML rectangle.
+    const porPixel = (2 * cerca * Math.tan(0.26)) / height;
+    const tarjeta = { w: p.rect.w * porPixel, h: p.rect.h * porPixel, x: (p.rect.cx - width / 2) * porPixel, y: (height / 2 - p.rect.cy) * porPixel };
+    dibujarCarta(p, z, tarjeta);
+    dibujarGranos(p, c);
+    frames++;
+  }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    width = Math.max(1, canvas.clientWidth);
+    height = Math.max(1, canvas.clientHeight);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+  }
+  resize();
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); lost = true; onLost(); });
+
+  return {
+    DURACION: END,
+    render,
+    resize,
+    frames: () => frames,
+    stop() { lost = true; },
+  };
+}
+</script>
+<script id="app">
+(function () {
+  const raiz = document.documentElement;
+  const $ = (id) => document.getElementById(id);
+  const canvas = $('scene'), respaldo = $('respaldo'), postal = $('postal'), saltar = $('saltar'), repetir = $('repetir'), frase = $('frase');
+  const sonido = $('sonido'), silenciar = $('silenciar');
+  const fragmentos = [...document.querySelectorAll('.fragmento')];
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)');
+  const parametros = new URLSearchParams(location.search);
+  const forzarRespaldo = parametros.get('fallback') === '1';
+  const lento = Math.max(1, Number(parametros.get('lento')) || 1); // Only for reviewing frames.
+
+  fragmentos.forEach((f) => f.querySelector('img').addEventListener('error', () => f.remove()));
+
+  // --- Timeline, in seconds. This is the one clock: every visual is a function of T.
+  const WALK=DELIVERY_TIMING.walk,MANO=DELIVERY_TIMING.hand,ZOOM=DELIVERY_TIMING.zoom,ZOOM_FIN=DELIVERY_TIMING.zoomEnd;
+  const ABRE=DELIVERY_TIMING.open,ABRE_FIN=DELIVERY_TIMING.openEnd,SALTO=ABRE+.2,SALE=DELIVERY_TIMING.cardOut,SALE_FIN=DELIVERY_TIMING.cardOutEnd;
+  const CRECE=DELIVERY_TIMING.grow,CRECE_FIN=DELIVERY_TIMING.growEnd,FIN=DELIVERY_TIMING.finish,SIN_RESPALDO=DELIVERY_TIMING.fallback;
+  const INICIOS=DELIVERY_TIMING.images;
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const suave = (v) => { const x = clamp(v); return x * x * (3 - 2 * x); };
+  const fuerte = (v) => { const x = clamp(v); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+  const salida = (v) => 1 - Math.pow(1 - clamp(v), 3);
+
+  let escena = null, T = 0, corrida = 0, raf = 0, ultimo = 0, activa = false, guardia = 0;
+  let rect = null, centros = [], estado = '';
+
+  // Invert the courier's eased position so step cues cross the same phase boundaries as the feet.
+  function tiempoPaso(numero) { return DELIVERY_TIMING.stepTime(numero); }
+
+  const pistas = ['paso-1', 'paso-2', 'paso-3', 'paso-4', 'sobre-entrega', 'cafe-servido'];
+  const cues = [
+    ...[1,2,3,4,5].map(numero=>({t:tiempoPaso(numero),pista:`paso-${(numero-1)%4+1}`,grupo:'paso'})),
+    { t: MANO, pista: 'sobre-entrega', grupo: 'entrega' },
+    { t: INICIOS[3], pista: 'cafe-servido', grupo: 'cafe' },
+  ];
+  const ESPERA_AUDIO = 1200;
+  let pedidoSonido = 0;
+  let contexto = null, carga = null, habilitado = false, mudo = false, siguienteCue = 0;
+  const buffers = new Map(), fuentes = new Set();
+  raiz.dataset.audio = 'off';
+  raiz.dataset.audioDisparos = '0';
+  raiz.dataset.audioFuentes = '0';
+
+  function mostrarControlesAudio() {
+    const disponible = !!escena && !reducido.matches;
+    const enFinal = raiz.dataset.estado === 'invitacion';
+    const activo = habilitado && raiz.dataset.audio !== 'fallo';
+    sonido.hidden = !disponible || activo;
+    silenciar.hidden = !disponible || !activo || enFinal;
+    // The fixed controls would cover the invitation, so the offer moves into its footer.
+    sonido.classList.toggle('boton--linea', enFinal);
+    if (enFinal) repetir.parentElement.append(sonido); else silenciar.before(sonido);
+  }
+
+  function pararFuentes() {
+    for (const fuente of fuentes) {
+      fuente.onended = null;
+      try { fuente.stop(); } catch (_) { /* Already stopped. */ }
+      fuente.disconnect();
+      fuente.volumen.disconnect();
+    }
+    fuentes.clear();
+    raiz.dataset.audioFuentes = '0';
+  }
+
+  function dispararCue(cue) {
+    if (!habilitado || mudo || !contexto || contexto.state !== 'running' || document.hidden) return;
+    const buffer = buffers.get(cue.pista);
+    if (!buffer) return;
+    if (cue.grupo === 'paso') {
+      for (const fuente of [...fuentes]) if (fuente.grupo === 'paso') {
+        fuente.onended = null;
+        try { fuente.stop(); } catch (_) { /* Already stopped. */ }
+        fuente.disconnect();
+        fuente.volumen.disconnect();
+        fuentes.delete(fuente);
+      }
+    }
+    try {
+      const fuente = contexto.createBufferSource();
+      const volumen = contexto.createGain();
+      fuente.buffer = buffer;
+      fuente.grupo = cue.grupo;
+      fuente.volumen = volumen;
+      volumen.gain.value = 0.32;
+      fuente.connect(volumen).connect(contexto.destination);
+      fuente.onended = () => {
+        fuente.disconnect();
+        volumen.disconnect();
+        fuentes.delete(fuente);
+        raiz.dataset.audioFuentes = String(fuentes.size);
+      };
+      fuentes.add(fuente);
+      fuente.start();
+      raiz.dataset.audioDisparos = String(Number(raiz.dataset.audioDisparos) + 1);
+      raiz.dataset.audioFuentes = String(fuentes.size);
+    } catch (_) {
+      raiz.dataset.audio = 'fallo'; mostrarControlesAudio();
+    }
+  }
+
+  function avanzarCues(desde, hasta) {
+    while (siguienteCue < cues.length && cues[siguienteCue].t <= hasta) {
+      const cue = cues[siguienteCue++];
+      if (cue.t > desde) dispararCue(cue);
+    }
+  }
+
+  async function habilitarAudio() {
+    if (!window.AudioContext && !window.webkitAudioContext) { raiz.dataset.audio = 'fallo'; mostrarControlesAudio(); return; }
+    try {
+      if (!contexto) contexto = new (window.AudioContext || window.webkitAudioContext)();
+      await contexto.resume();
+      if (document.hidden) await contexto.suspend();
+      else if (contexto.state !== 'running') throw new Error('Audio blocked');
+      habilitado = true;
+      raiz.dataset.audio = mudo ? 'silenciado' : buffers.size ? 'on' : 'cargando';
+      mostrarControlesAudio();
+      if (!carga) {
+        carga = Promise.all(pistas.map(async (pista) => {
+          try {
+            const respuesta = await fetch(`recursos/sonido/${pista}.mp3`);
+            if (!respuesta.ok) throw new Error('Audio resource unavailable');
+            buffers.set(pista, await contexto.decodeAudioData(await respuesta.arrayBuffer()));
+          } catch (_) { /* Missing effects never block visuals. */ }
+        })).then(() => {
+          raiz.dataset.audio = mudo ? 'silenciado' : buffers.size ? 'on' : 'fallo';
+          mostrarControlesAudio();
+        });
+      }
+      await carga;
+    } catch (_) {
+      habilitado = false;
+      raiz.dataset.audio = 'fallo';
+      mostrarControlesAudio();
+    }
+  }
+
+  function ponerEstado(e) { if (e !== estado) { estado = e; raiz.dataset.estado = e; mostrarControlesAudio(); } }
+  function etapa(t) { return t < WALK ? 'llegada' : t < ZOOM ? 'entrega' : t < SALE ? 'apertura' : t < FIN ? 'montaje' : 'invitacion'; }
+
+  function medir() {
+    postal.style.transform = 'none';
+    const r = postal.getBoundingClientRect();
+    rect = { w: r.width, h: r.height, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+    centros = fragmentos.map((f) => { f.style.transform = 'none'; const q = f.getBoundingClientRect(); return [innerWidth / 2 - (q.left + q.width / 2), innerHeight / 2 - (q.top + q.height / 2)]; });
+  }
+
+  // Draws the moment T. A pure function of the clock, so skipping can never leave a half state.
+  function pintar(t) {
+    ponerEstado(etapa(t));
+    if (escena && t < FIN) {
+      escena.render({
+        reloj: t,
+        camino: Math.min(t, MANO),
+        zoom: fuerte((t - ZOOM) / (ZOOM_FIN - ZOOM)),
+        funde: suave((t-(ZOOM+.5))/.7),
+        abre: fuerte((t - ABRE) / (ABRE_FIN - ABRE)),
+        sale: salida((t - SALE) / (SALE_FIN - SALE)),
+        crece: fuerte((t - CRECE) / (CRECE_FIN - CRECE)),
+        salto: Math.max(0, (t - SALTO) * 0.8),
+        rect,
+      });
+      raiz.dataset.frames = escena.frames();
+    }
+    if (!escena) {
+      respaldo.style.opacity=1-suave((t-(CRECE+.2))/.5);
+    }
+    frase.style.opacity=1-suave((t-(WALK+.2))/.6);
+
+    // The card in the scene is already in place: the real text simply appears on it.
+    const aparece = suave((t - (CRECE_FIN - 0.1)) / 0.25);
+    postal.style.opacity = aparece;
+    if (!escena) postal.style.transform = `translateY(${(1 - aparece) * 16}px)`;
+
+    fragmentos.forEach((f, i) => {
+      const img = f.querySelector('img');
+      const entra = salida((t - INICIOS[i]) / 0.55);
+      const sale = suave((t - (CRECE + 0.25)) / 0.45);
+      if (!img.complete || !img.naturalWidth || entra <= 0 || sale >= 1) { f.style.visibility = 'hidden'; return; }
+      f.style.visibility = 'visible';
+      f.style.opacity = entra * (1 - sale);
+      const lado = i % 2 ? 1 : -1;
+      f.style.transform = `translate3d(${centros[i][0] * (1 - entra)}px, ${centros[i][1] * (1 - entra)}px, ${(1 - entra) * -420}px) rotateY(${(1 - entra) * lado * 48}deg) rotateZ(${lado * 2 + (1 - entra) * lado * 10}deg)`;
+    });
+  }
+
+  function bucle(ahora) {
+    raf = 0;
+    if (!activa) return;
+    const anterior = T;
+    T += Math.min(ahora - ultimo, 100) / 1000 / lento;
+    ultimo = ahora;
+    if (T >= FIN) { irA('invitacion'); return; }
+    avanzarCues(anterior, T);
+    pintar(T);
+    raf = requestAnimationFrame(bucle);
+  }
+
+  function detener() {
+    activa = false;
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+    clearTimeout(guardia);
+  }
+
+  // The only way to change stage. Each run has a number, so nothing from an old run can act.
+  function irA(destino, conFoco) {
+    detener();
+    pararFuentes();
+    if (destino === 'invitacion') {
+      T = FIN;
+      ponerEstado('invitacion');
+      raiz.classList.remove('intro');
+      for (const f of fragmentos) f.style.visibility = 'hidden';
+      postal.style.opacity = 1;
+      postal.style.transform = 'none';
+      frase.style.opacity = 0;
+      canvas.style.visibility = 'hidden';
+      respaldo.style.opacity = 0;
+      const moverFoco = conFoco || document.activeElement === saltar;
+      saltar.hidden = true;
+      repetir.hidden = reducido.matches;
+      mostrarControlesAudio();
+      if (moverFoco) $('titulo').focus({ preventScroll: true });
+      return;
+    }
+    corrida++;
+    raiz.dataset.corrida = corrida;
+    raiz.dataset.audioDisparos = '0';
+    siguienteCue = 0;
+    scrollTo(0, 0);
+    raiz.classList.add('intro');
+    saltar.hidden = false;
+    repetir.hidden = true;
+    canvas.style.visibility = 'visible';
+    respaldo.style.opacity = 1;
+    medir();
+    T = escena ? 0 : SIN_RESPALDO;
+    mostrarControlesAudio();
+    pintar(T);
+    activa = true;
+    ultimo = performance.now();
+    raf = requestAnimationFrame(bucle);
+    // Whatever happens, nobody waits for the invitation.
+    guardia = setTimeout(() => { if (!document.hidden) irA('invitacion'); }, (FIN+4)*1000*lento);
+  }
+
+  function usarRespaldo(motivo) {
+    if (escena) escena.stop();
+    pararFuentes();
+    escena = null;
+    canvas.hidden = true;
+    respaldo.hidden = false;
+    if (estado === 'invitacion') respaldo.style.opacity = 0;
+    raiz.dataset.renderer = 'respaldo';
+    raiz.dataset.motivo = motivo;
+    if (activa) T = Math.max(T, SIN_RESPALDO);
+    mostrarControlesAudio();
+  }
+
+  saltar.addEventListener('click', () => { pedidoSonido++; irA('invitacion', true); });
+  repetir.addEventListener('click', () => { pedidoSonido++; irA('llegada'); saltar.focus({ preventScroll: true }); });
+  // The run restarts once the effects are ready, or after a short wait on a slow network,
+  // so the first footsteps are not lost. Skip or repeat cancels the pending restart.
+  sonido.addEventListener('click', async () => {
+    const pedido = ++pedidoSonido;
+    await Promise.race([habilitarAudio(), new Promise((listo) => setTimeout(listo, ESPERA_AUDIO))]);
+    if (pedido === pedidoSonido) irA('llegada');
+  });
+  silenciar.addEventListener('click', () => {
+    mudo = !mudo;
+    silenciar.setAttribute('aria-pressed', String(mudo));
+    silenciar.textContent = mudo ? 'Activar sonido' : 'Silenciar';
+    if (mudo) pararFuentes();
+    raiz.dataset.audio = mudo ? 'silenciado' : buffers.size ? 'on' : 'cargando';
+  });
+
+  // The clock stops with the tab and carries on from the same moment.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      clearTimeout(guardia);
+      pararFuentes();
+      if (contexto) contexto.suspend().catch(() => { raiz.dataset.audio = 'fallo'; mostrarControlesAudio(); });
+    } else if (activa && !raf) {
+      if (habilitado && contexto) contexto.resume().then(() => {
+        if (document.hidden) return contexto.suspend();
+        if (contexto.state !== 'running') raiz.dataset.audio = 'fallo'; mostrarControlesAudio();
+      }).catch(() => { raiz.dataset.audio = 'fallo'; mostrarControlesAudio(); });
+      ultimo = performance.now();
+      raf = requestAnimationFrame(bucle);
+      guardia = setTimeout(() => irA('invitacion'), (FIN+4)*1000*lento);
+    }
+  });
+
+  new ResizeObserver(() => {
+    if (escena) escena.resize();
+    if (activa) { medir(); pintar(T); }
+  }).observe(document.documentElement);
+
+  reducido.addEventListener('change', () => {
+    if (reducido.matches) irA('invitacion');
+    mostrarControlesAudio();
+  });
+
+  // --- Start
+  raiz.dataset.renderer = 'webgl';
+  if (forzarRespaldo) usarRespaldo('forzado');
+  else {
+    try { escena = createMiniature(canvas, { onLost: () => usarRespaldo('contexto-perdido') }); } catch (e) { escena = null; }
+    if (!escena) usarRespaldo('sin-webgl');
+  }
+  if (reducido.matches) irA('invitacion');
+  else irA('llegada');
+})();
+</script>
+</body>
+</html>

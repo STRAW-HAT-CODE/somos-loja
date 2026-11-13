@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#185269" />
+    <title>Coopser Somos Loja | 100 % Café Especial</title>
+    <style>
+      @font-face {
+        font-family: Manrope;
+        src: url("./fuentes/manrope-latin-var.woff2") format("woff2");
+        font-style: normal;
+        font-weight: 200 800;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: Cormorant;
+        src: url("./fuentes/cormorant-latin-var.woff2") format("woff2");
+        font-style: normal italic;
+        font-weight: 300 700;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: light;
+        /* Paleta oficial del Manual de Marca Coopser Somos Loja */
+        --teal: #185269;
+        --teal-dark: #0f3849;
+        --coral: #fc9e6e;
+        --coral-deep: #e07b47;
+        --stone: #e0e0d5;
+        /* Armonía vintage del código QR de café y pergamino */
+        --parchment: #f5ebd6;
+        --parchment-warm: #efe0c2;
+        --parchment-border: #d5b887;
+        --coffee: #4a2a18;
+        --coffee-gold: #b88946;
+        --cherry: #b82920;
+        --leaf: #3b6822;
+        --entrance-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family: Manrope, system-ui, -apple-system, sans-serif;
+        background: #142834;
+        color: var(--teal);
+      }
+
+      .canvas {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: clamp(20px, 3vw, 48px);
+        padding: clamp(20px, 3.5vh, 40px) clamp(24px, 4.5vw, 72px) clamp(76px, 10vh, 110px);
+        isolation: isolate;
+        overflow: hidden;
+      }
+
+      /* Video de fondo: 100% nítido y protagonista */
+      .scene,
+      .scene video,
+      .scene::after {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .scene {
+        z-index: -2;
+        background: #1a2e3b url("./recursos/plaza.jpg") center center / cover no-repeat;
+      }
+
+      .scene video {
+        object-fit: cover;
+        object-position: center center;
+        /* Sin filtro sepia opaco: colores vivos y claros para que se aprecie la tienda */
+        filter: contrast(1.03) saturate(1.05);
+      }
+
+      .scene video.is-unavailable {
+        display: none;
+      }
+
+      /* Sombra sutil solo en los bordes para dar contraste sin tapar el video */
+      .scene::after {
+        content: "";
+        z-index: 1;
+        background: radial-gradient(
+          circle at 50% 48%,
+          rgba(0, 0, 0, 0) 35%,
+          rgba(12, 28, 38, 0.28) 100%
+        );
+        pointer-events: none;
+      }
+
+      /* Columna izquierda: Identidad de marca (2 logos) + Mensaje + CTA */
+      .intro {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: min(100%, clamp(340px, 39vw, 475px));
+      }
+
+      /* Tarjeta principal con acabado pergamino/cristal ligero */
+      .brand-showcase {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: clamp(18px, 2.5vh, 28px) clamp(18px, 2vw, 26px);
+        border-radius: 26px;
+        background: rgba(245, 235, 214, 0.88);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 2px solid rgba(213, 184, 135, 0.85);
+        box-shadow:
+          0 20px 48px rgba(10, 24, 34, 0.38),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      }
+
+      /* Composición equilibrada de los 2 logos: Somos Loja Tienda + Sello 100 % Café Especial */
+      .logos-lockup {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(14px, 1.8vw, 24px);
+        width: 100%;
+        padding: clamp(2px, 0.5vh, 6px) 0;
+      }
+
+      .logo-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .logo-item--tienda img {
+        display: block;
+        width: auto;
+        height: clamp(122px, 14vw, 168px);
+        object-fit: contain;
+        filter: drop-shadow(0 8px 18px rgba(15, 56, 73, 0.18));
+      }
+
+      .logos-divider {
+        position: relative;
+        width: 1.5px;
+        height: clamp(86px, 9.8vw, 124px);
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(184, 137, 70, 0.55) 20%,
+          rgba(252, 158, 110, 0.85) 50%,
+          rgba(184, 137, 70, 0.55) 80%,
+          transparent 100%
+        );
+        flex-shrink: 0;
+      }
+
+      .logos-divider::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 7px;
+        height: 7px;
+        background: var(--coral);
+        border: 1.5px solid rgba(245, 235, 214, 0.95);
+        transform: translate(-50%, -50%) rotate(45deg);
+        box-shadow: 0 0 8px rgba(252, 158, 110, 0.5);
+      }
+
+      .logo-item--sello {
+        width: clamp(134px, 15.2vw, 182px);
+        aspect-ratio: 1 / 1;
+      }
+
+      .logo-item--sello img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transform: scale(1.2);
+        filter: drop-shadow(0 10px 22px rgba(15, 56, 73, 0.26));
+      }
+
+      /* Lema dentro de la tarjeta para mantener el video 100% despejado */
+      .tagline {
+        margin: clamp(10px, 1.4vh, 14px) 0 0;
+        padding-top: clamp(8px, 1.1vh, 12px);
+        border-top: 1px solid rgba(184, 137, 70, 0.28);
+        width: 100%;
+        text-align: center;
+        font-family: Cormorant, Georgia, serif;
+        font-size: clamp(19px, 1.75vw, 25px);
+        font-style: italic;
+        font-weight: 600;
+        line-height: 1.12;
+        color: var(--coffee);
+      }
+
+      .actions-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+        margin-top: clamp(12px, 1.6vh, 16px);
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 44px;
+        padding: 0.8em 1.7em;
+        border-radius: 999px;
+        background: linear-gradient(105deg, var(--teal) 0%, #1f6b87 100%);
+        border: 1.5px solid rgba(252, 158, 110, 0.65);
+        box-shadow:
+          0 12px 26px rgba(10, 28, 38, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        color: var(--parchment);
+        font-size: clamp(11.5px, 0.95vw, 14px);
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        line-height: 1.1;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: transform 180ms var(--entrance-ease), box-shadow 180ms ease;
+      }
+
+      .cta__arrow {
+        color: var(--coral);
+        font-size: 1.15em;
+        transition: transform 180ms var(--entrance-ease);
+      }
+
+      .cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 30px rgba(10, 28, 38, 0.5);
+      }
+
+      .cta:hover .cta__arrow {
+        transform: translateX(3px);
+      }
+
+      .cta:active {
+        transform: translateY(1px) scale(0.98);
+      }
+
+      .cta:focus-visible {
+        outline: 3px solid var(--coral);
+        outline-offset: 4px;
+      }
+
+      .campaign-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 13px 5px 7px;
+        border-radius: 999px;
+        background: rgba(245, 235, 214, 0.92);
+        border: 1.5px solid var(--parchment-border);
+        box-shadow: 0 8px 20px rgba(10, 28, 38, 0.28);
+        color: var(--coffee);
+        font-size: clamp(11px, 0.85vw, 12.5px);
+        font-weight: 700;
+        letter-spacing: 0.03em;
+      }
+
+      .campaign-chip img {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+      }
+
+      /* Columna derecha: Tarjeta protagonista del Código QR de Café */
+      .qr-showcase {
+        position: relative;
+        z-index: 3;
+        width: min(100%, clamp(255px, 27vw, 365px));
+        margin: 0;
+      }
+
+      .qr-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: clamp(12px, 1.3vw, 18px);
+        border-radius: 26px;
+        background: linear-gradient(165deg, rgba(251, 243, 226, 0.93) 0%, rgba(240, 224, 192, 0.91) 100%);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 2px solid var(--parchment-border);
+        box-shadow:
+          0 22px 54px rgba(10, 24, 34, 0.45),
+          0 0 0 4px rgba(245, 235, 214, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        text-align: center;
+        text-decoration: none;
+        color: var(--coffee);
+        transition: transform 240ms var(--entrance-ease), box-shadow 240ms ease;
+      }
+
+      .qr-card:hover {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow:
+          0 28px 64px rgba(10, 24, 34, 0.55),
+          0 0 0 6px rgba(252, 158, 110, 0.38),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      .qr-card__header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        margin-bottom: 8px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: rgba(74, 42, 24, 0.08);
+        border: 1px solid rgba(184, 137, 70, 0.35);
+        color: var(--coffee);
+        font-size: clamp(9.5px, 0.78vw, 11.5px);
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .qr-card__header-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--cherry);
+        box-shadow: 0 0 0 3px rgba(184, 41, 32, 0.2);
+      }
+
+      .qr-card__frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1011 / 1024;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1.5px solid rgba(184, 137, 70, 0.55);
+        box-shadow: inset 0 0 16px rgba(74, 42, 24, 0.12);
+        background: #f3e2be;
+      }
+
+      .qr-card__img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .qr-card__caption {
+        margin-top: clamp(8px, 1.1vh, 12px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .qr-card__title {
+        font-size: clamp(11.5px, 1vw, 14px);
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--teal);
+      }
+
+      .qr-card__subtitle {
+        font-family: Cormorant, Georgia, serif;
+        font-style: italic;
+        font-weight: 600;
+        font-size: clamp(15px, 1.25vw, 18.5px);
+        color: var(--coffee);
+        line-height: 1.15;
+      }
+
+      /* Pie de página con onda cálida más baja para dejar ver todo el video */
+      .footer {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        height: clamp(66px, 8.8vh, 102px);
+        color: var(--teal);
+        pointer-events: none;
+      }
+
+      .footer svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: calc(100% + 2px);
+      }
+
+      .footer-label {
+        position: absolute;
+        right: 0;
+        bottom: clamp(14px, 2vh, 26px);
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(10px, 1.4vw, 18px);
+        font-size: clamp(10.5px, 1.05vw, 15px);
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--teal);
+        white-space: nowrap;
+      }
+
+      .rule {
+        display: inline-block;
+        width: clamp(26px, 3.5vw, 48px);
+        height: 3.5px;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--coral), var(--teal));
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .intro,
+        .qr-showcase,
+        .footer-label {
+          animation: arrive 800ms var(--entrance-ease) both;
+        }
+        .qr-showcase {
+          animation-delay: 110ms;
+        }
+        .footer-label {
+          animation-delay: 200ms;
+        }
+        @keyframes arrive {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+
+      /* Adaptación para Tablets Verticales, Teléfonos y Pancartas Verticales */
+      @media (max-width: 900px), (orientation: portrait) {
+        .canvas {
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+          gap: clamp(16px, 2.2vh, 24px);
+          padding: clamp(18px, 2.5vh, 32px) clamp(16px, 4vw, 36px) clamp(76px, 9.5vh, 104px);
+        }
+
+        .intro {
+          align-items: center;
+          width: min(100%, 465px);
+        }
+
+        .logo-item--tienda img {
+          height: clamp(114px, 24vw, 152px);
+        }
+
+        .logo-item--sello {
+          width: clamp(124px, 26vw, 166px);
+        }
+
+        .qr-showcase {
+          width: min(100%, clamp(245px, 52vw, 330px));
+        }
+      }
+
+      @media (max-width: 540px) {
+        .canvas {
+          padding: 14px 14px 74px;
+          gap: 14px;
+        }
+
+        .brand-showcase {
+          padding: 14px 14px;
+          border-radius: 20px;
+        }
+
+        .logos-lockup {
+          gap: clamp(10px, 3.2vw, 16px);
+        }
+
+        .logo-item--tienda img {
+          height: clamp(98px, 28vw, 126px);
+        }
+
+        .logos-divider {
+          height: clamp(68px, 19vw, 90px);
+        }
+
+        .logo-item--sello {
+          width: clamp(106px, 31vw, 138px);
+        }
+
+        .qr-showcase {
+          width: min(84vw, 290px);
+        }
+
+        .qr-card {
+          padding: 11px;
+          border-radius: 20px;
+        }
+
+        .footer {
+          height: 62px;
+        }
+
+        .footer-label {
+          bottom: 12px;
+          font-size: 9.5px;
+          letter-spacing: 0.13em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="canvas">
+      <div class="scene" aria-hidden="true">
+        <video id="plaza-video" autoplay muted loop playsinline poster="./recursos/plaza.jpg"></video>
+      </div>
+
+      <section class="intro" aria-label="Identidad Somos Loja Tienda y 100 % Café Especial Somos Loja Coopser">
+        <div class="brand-showcase">
+          <h1 class="logos-lockup" aria-label="Somos Loja Tienda • 100 % Café Especial Somos Loja Coopser">
+            <span class="logo-item logo-item--tienda">
+              <img
+                src="./recursos/logo-somos-loja-tienda.png"
+                alt="Somos Loja Tienda"
+                width="300"
+                height="386"
+              />
+            </span>
+            <span class="logos-divider" aria-hidden="true"></span>
+            <span class="logo-item logo-item--sello">
+              <img
+                src="./recursos/sello-circular.webp"
+                alt="100 % Café Especial • Somos Loja Coopser"
+                width="320"
+                height="320"
+              />
+            </span>
+          </h1>
+
+          <p class="tagline">Tierra de gente noble, historia viva y el mejor café de especialidad que inspira.</p>
+        </div>
+
+        <div class="actions-row">
+          <a class="cta" id="courier-link" href="#">
+            <span>CONOCE MÁS</span>
+            <span class="cta__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
+
+      <figure class="qr-showcase">
+        <a class="qr-card" id="qr-card-link" href="#" aria-label="Escanear o abrir invitación de Loja 100 % Café Especial">
+          <div class="qr-card__header">
+            <span class="qr-card__header-dot" aria-hidden="true"></span>
+            <span>LOJA 100 % CAFÉ ESPECIAL</span>
+          </div>
+          <div class="qr-card__frame">
+            <img
+              class="qr-card__img"
+              src="./recursos/qr-cafe-loja.jpg"
+              alt="Código QR enmarcado en planta de café de especialidad de Loja"
+              width="1011"
+              height="1024"
+            />
+          </div>
+          <figcaption class="qr-card__caption">
+            <span class="qr-card__title">ESCANEA EL CÓDIGO QR</span>
+            <span class="qr-card__subtitle">Recibe tu postal de Alforjita y descubre la tienda</span>
+          </figcaption>
+        </a>
+      </figure>
+
+      <footer class="footer">
+        <svg viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
+          <path fill="rgba(245, 235, 214, 0.92)" d="M0 57C245 8 440 54 665 38c246-17 458-49 775 20v102H0Z" />
+        </svg>
+        <div class="footer-label">
+          <span class="rule" aria-hidden="true"></span>
+          <span>COOPSER • TIENDA DE EMPRENDIMIENTOS</span>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // Replace this when the public courier invitation URL is available.
+      const COURIER_INVITATION_URL = `http://${location.hostname}:4325/`;
+
+      const link = document.getElementById("courier-link");
+      const qrLink = document.getElementById("qr-card-link");
+      const video = document.getElementById("plaza-video");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      if (link) link.href = COURIER_INVITATION_URL;
+      if (qrLink) qrLink.href = COURIER_INVITATION_URL;
+      video.addEventListener("error", () => video.classList.add("is-unavailable"));
+
+      function syncVideo() {
+        if (reducedMotion.matches) {
+          video.pause();
+          video.removeAttribute("src");
+          video.load();
+          video.classList.add("is-unavailable");
+          return;
+        }
+
+        video.classList.remove("is-unavailable");
+        if (!video.hasAttribute("src")) video.src = "./recursos/plaza.mp4";
+        video.play().catch(() => video.classList.add("is-unavailable"));
+      }
+
+      reducedMotion.addEventListener("change", syncVideo);
+      syncVideo();
+    </script>
+  </body>
+</html>
