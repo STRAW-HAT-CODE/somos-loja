@@ -123,7 +123,7 @@ export const capitulos = [
 // Store figures. "más de 300" is the suggested wording; the client still has to confirm it against "alrededor de 300".
 export const cifras = {
   socios: 'más de 300',
-  marcasTienda: 'más de 50',
+  marcasTienda: '25',
   marcasEvento: '25',
 };
 

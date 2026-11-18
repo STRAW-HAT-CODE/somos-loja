@@ -1,4 +1,4 @@
-// Watercolor beans rain onto the paper with the scroll and settle into the 50 brands.
+// Watercolor beans rain onto the paper with the scroll and settle into the 25 brands.
 // Same contract as granos-vintage.js, but painted sprites on a 2D canvas: no WebGL,
 // no Three.js, and nothing redraws while the scroll is still.
 const SPRITES = ['/granos/grano-acuarela-1.webp', '/granos/grano-acuarela-2.webp'];
@@ -20,7 +20,7 @@ function muestrear(cantidad) {
   const g = c.getContext('2d', { willReadFrequently: true });
   g.font = '800 330px Manrope, system-ui, sans-serif';
   g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText('50', 260, 175);
+  g.fillText('25', 260, 175);
   const { data } = g.getImageData(0, 0, 520, 320);
   const puntos = [];
   for (let y = 0; y < 320; y += 3) for (let x = 0; x < 520; x += 3) if (data[(y * 520 + x) * 4 + 3] > 128) puntos.push([x, y]);
